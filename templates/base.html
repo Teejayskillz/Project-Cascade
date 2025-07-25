@@ -1,0 +1,104 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en" >
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <meta name="description" content="{% block meta_description %}A default description for your amazing website.{% endblock meta_description %}">
+    <meta name="keywords" content="{% block meta_keywords %}django, python, web development{% endblock meta_keywords %}">
+    <meta name="author" content="Your Name or Company">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-LN+7fdVzj6u52u30Kp6M/trliBMCMKTyK833zpbD+pXdCLuTusPj697FH4R/5mcr" crossorigin="anonymous">
+
+    <title>{% block title %}My Awesome Site{% endblock title %}</title>
+
+    <link rel="stylesheet" href="{% static 'css/main.css' %}">
+    
+    {% block extra_head %}
+    {% endblock extra_head %}
+
+<style>
+    .bi-scissors{
+        width: 50px;
+        height: 50px;
+    }
+    .navbar{
+        border: 1px solid #ddd;
+        border-radius: 5px;
+        padding-right: 200px;
+        padding-left: 200px;
+        
+    }
+    .navbar-nav .nav-link {
+  padding-left: 1.5rem;  /* Adjust as desired, e.g., 1.5rem, 2rem, 20px */
+  padding-right: 1.5rem; /* Ensure left and right padding are consistent */
+}
+/* Define your navy blue color as a CSS variable for easy management */
+:root {
+  --my-navy-blue: #1A2B47; /* A common deep navy blue hex code */
+  /* Or use a lighter/different shade like #000080 or #0000A0 */
+}
+
+/* Style for the active nav-pill background and text */
+.nav-pills .nav-link.active {
+  background-color: var(--my-navy-blue); /* Navy blue background for active pill */
+  color: white; /* White text for contrast on navy blue */
+}
+
+/* Style for inactive nav-pill text (makes the text navy blue) */
+.nav-pills .nav-link:not(.active) {
+  color: var(--my-navy-blue); /* Navy blue text for inactive pills */
+}
+
+
+.nav-pills .nav-link:not(.active):hover {
+  background-color: rgba(26, 43, 71, 0.1); /* Light transparent navy background on hover */
+  color: var(--my-navy-blue); /* Keep text navy blue on hover */
+}
+
+
+
+</style>
+</head>
+<body>
+
+        <div class="container">
+  <header class="d-flex flex-wrap justify-content-center py-3 mb-4 border-bottom">
+    <a href="/" class="d-flex align-items-center mb-3 mb-md-0 me-md-auto link-body-emphasis text-decoration-none">
+      <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-scissors" viewBox="0 0 16 16">
+  <path d="M3.5 3.5c-.614-.884-.074-1.962.858-2.5L8 7.226 11.642 1c.932.538 1.472 1.616.858 2.5L8.81 8.61l1.556 2.661a2.5 2.5 0 1 1-.794.637L8 9.73l-1.572 2.177a2.5 2.5 0 1 1-.794-.637L7.19 8.61zm2.5 10a1.5 1.5 0 1 0-3 0 1.5 1.5 0 0 0 3 0m7 0a1.5 1.5 0 1 0-3 0 1.5 1.5 0 0 0 3 0"/>
+</svg>
+      <span class="fs-4">Modern Cuts</span>
+    </a>
+    
+    <ul class="nav nav-pills navbar">
+      <li class="nav-item"><a href="#" class="nav-link active" aria-current="page">Home</a></li>
+      <li class="nav-item"><a href="#" class="nav-link">Features</a></li>
+      <li class="nav-item"><a href="#" class="nav-link">Pricing</a></li>
+      <li class="nav-item"><a href="#" class="nav-link">FAQs</a></li>
+      <li class="nav-item"><a href="#" class="nav-link">About</a></li>
+    </ul>
+  </header>
+</div>
+
+
+    <main class="container">
+        {% block content %}
+        <p>This is default content. If you see this, the child template did not provide a content block.</p>
+        {% endblock content %}
+    </main>
+
+    <footer>
+        <p>&copy; {% now "Y" %} Your Company Name. All Rights Reserved.</p>
+        <p>Explore more resources at <a href="https://www.your-site.com">My Awesome Site</a>.</p>
+    </footer>
+
+    <script src="{% static 'js/main.js' %}"></script>
+    
+    {% block extra_scripts %}
+    {% endblock extra_scripts %}
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/js/bootstrap.bundle.min.js" integrity="sha384-ndDqU0Gzau9qJ1lfW4pNLlhNTkCfHzAVBReH9diLvGRem5+R9g2FzA8ZGN954O5Q" crossorigin="anonymous"></script>
+
+</body>
+</html>
