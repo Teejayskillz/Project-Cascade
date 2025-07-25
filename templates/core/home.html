@@ -1,0 +1,854 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Book JRA - Subscribe to Your Favorite Authors{% endblock %}
+
+{% block meta_description %}Discover and subscribe to your favorite authors on Book JRA. Get exclusive access to premium content, early releases, and direct author interactions in the ultimate literary community.{% endblock %}
+
+{% block meta_keywords %}book subscription, author platform, exclusive content, premium books, literary community, reading subscription, author access{% endblock %}
+
+{% block extra_head %}
+    <link rel="canonical" href="https://www.bookjra.com/">
+    <style>
+        :root {
+            --netflix-red: #E50914;
+            --netflix-dark-red: #B20710;
+            --dark-bg: #141414;
+            --light-gray: #F8F9FA;
+            --medium-gray: #6C757D;
+            --text-white: #FFFFFF;
+            --text-dark: #212529;
+            --success-green: #28A745;
+            --warning-orange: #FD7E14;
+            --info-blue: #17A2B8;
+            --purple: #8B5CF6;
+            --gold: #FFD700;
+        }
+
+        /* Hero Section */
+        .hero-section {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 50%, #f093fb 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero-section::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 1000"><defs><radialGradient id="a"><stop offset="0" stop-color="%23ffffff" stop-opacity=".1"/><stop offset="1" stop-color="%23ffffff" stop-opacity="0"/></radialGradient></defs><g opacity=".8"><circle fill="url(%23a)" cx="200" cy="200" r="180"/><circle fill="url(%23a)" cx="800" cy="800" r="250"/><circle fill="url(%23a)" cx="400" cy="600" r="120"/></g></svg>') no-repeat center center;
+            background-size: cover;
+            opacity: 0.3;
+        }
+
+        .hero-content {
+            position: relative;
+            z-index: 2;
+            text-align: center;
+            color: white;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        .hero-title {
+            font-size: 4rem;
+            font-weight: 900;
+            margin-bottom: 1.5rem;
+            background: linear-gradient(45deg, #ffffff, #f093fb);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            animation: fadeInUp 1s ease-out;
+        }
+
+        .hero-subtitle {
+            font-size: 1.5rem;
+            margin-bottom: 2rem;
+            opacity: 0.95;
+            animation: fadeInUp 1s ease-out 0.3s both;
+        }
+
+        .hero-cta {
+            display: flex;
+            gap: 1.5rem;
+            justify-content: center;
+            flex-wrap: wrap;
+            animation: fadeInUp 1s ease-out 0.6s both;
+        }
+
+        .btn-hero-primary {
+            background: linear-gradient(45deg, var(--netflix-red), var(--netflix-dark-red));
+            color: white;
+            padding: 1.2rem 2.5rem;
+            border-radius: 50px;
+            text-decoration: none;
+            font-weight: 700;
+            font-size: 1.1rem;
+            transition: all 0.3s ease;
+            box-shadow: 0 10px 30px rgba(229, 9, 20, 0.3);
+            border: none;
+            cursor: pointer;
+        }
+
+        .btn-hero-primary:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 40px rgba(229, 9, 20, 0.4);
+            color: white;
+        }
+
+        .btn-hero-secondary {
+            background: rgba(255, 255, 255, 0.2);
+            color: white;
+            padding: 1.2rem 2.5rem;
+            border-radius: 50px;
+            text-decoration: none;
+            font-weight: 700;
+            font-size: 1.1rem;
+            transition: all 0.3s ease;
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            backdrop-filter: blur(10px);
+        }
+
+        .btn-hero-secondary:hover {
+            background: rgba(255, 255, 255, 0.3);
+            transform: translateY(-5px);
+            color: white;
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(50px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Featured Authors Section */
+        .featured-authors {
+            padding: 6rem 0;
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+        }
+
+        .section-title {
+            text-align: center;
+            font-size: 3rem;
+            font-weight: 800;
+            color: var(--text-dark);
+            margin-bottom: 1rem;
+            background: linear-gradient(45deg, var(--netflix-red), var(--purple));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .section-subtitle {
+            text-align: center;
+            font-size: 1.2rem;
+            color: var(--medium-gray);
+            margin-bottom: 4rem;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .authors-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 2rem;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .author-card {
+            background: white;
+            border-radius: 20px;
+            padding: 2rem;
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.1);
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .author-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, var(--netflix-red), var(--purple));
+        }
+
+        .author-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 25px 50px rgba(0, 0, 0, 0.15);
+        }
+
+        .author-avatar {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            background: linear-gradient(45deg, var(--netflix-red), var(--purple));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 2rem;
+            margin: 0 auto 1.5rem;
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+        }
+
+        .author-name {
+            font-size: 1.4rem;
+            font-weight: 700;
+            color: var(--text-dark);
+            text-align: center;
+            margin-bottom: 0.5rem;
+        }
+
+        .author-genre {
+            color: var(--medium-gray);
+            text-align: center;
+            margin-bottom: 1rem;
+            font-size: 0.95rem;
+        }
+
+        .author-stats {
+            display: flex;
+            justify-content: space-around;
+            margin-bottom: 1.5rem;
+            padding: 1rem;
+            background: rgba(229, 9, 20, 0.05);
+            border-radius: 12px;
+        }
+
+        .stat-item {
+            text-align: center;
+        }
+
+        .stat-number {
+            font-size: 1.2rem;
+            font-weight: 700;
+            color: var(--netflix-red);
+        }
+
+        .stat-label {
+            font-size: 0.8rem;
+            color: var(--medium-gray);
+            text-transform: uppercase;
+        }
+
+        .author-subscribe {
+            width: 100%;
+            background: linear-gradient(45deg, var(--netflix-red), var(--netflix-dark-red));
+            color: white;
+            border: none;
+            padding: 0.875rem;
+            border-radius: 12px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .author-subscribe:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(229, 9, 20, 0.3);
+        }
+
+        /* Subscription Plans */
+        .subscription-plans {
+            padding: 6rem 0;
+            background: var(--dark-bg);
+            color: white;
+        }
+
+        .plans-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+
+        .plan-card {
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 2.5rem;
+            text-align: center;
+            position: relative;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            transition: all 0.3s ease;
+        }
+
+        .plan-card.featured {
+            border: 2px solid var(--netflix-red);
+            transform: scale(1.05);
+        }
+
+        .plan-card.featured::before {
+            content: 'Most Popular';
+            position: absolute;
+            top: -15px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: var(--netflix-red);
+            color: white;
+            padding: 0.5rem 1.5rem;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: 600;
+        }
+
+        .plan-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+        }
+
+        .plan-name {
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+            color: var(--netflix-red);
+        }
+
+        .plan-price {
+            font-size: 3rem;
+            font-weight: 900;
+            margin-bottom: 0.5rem;
+        }
+
+        .plan-period {
+            color: var(--medium-gray);
+            margin-bottom: 2rem;
+        }
+
+        .plan-features {
+            list-style: none;
+            padding: 0;
+            margin-bottom: 2rem;
+        }
+
+        .plan-features li {
+            padding: 0.75rem 0;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            display: flex;
+            align-items: center;
+        }
+
+        .plan-features li i {
+            color: var(--success-green);
+            margin-right: 0.75rem;
+            width: 16px;
+        }
+
+        .plan-subscribe {
+            width: 100%;
+            background: linear-gradient(45deg, var(--netflix-red), var(--netflix-dark-red));
+            color: white;
+            border: none;
+            padding: 1rem;
+            border-radius: 12px;
+            font-weight: 700;
+            font-size: 1.1rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .plan-subscribe:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px rgba(229, 9, 20, 0.4);
+        }
+
+        /* Features Section */
+        .features-section {
+            padding: 6rem 0;
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+            color: white;
+        }
+
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 3rem;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .feature-item {
+            text-align: center;
+            padding: 2rem;
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            transition: all 0.3s ease;
+        }
+
+        .feature-item:hover {
+            transform: translateY(-10px);
+            background: rgba(255, 255, 255, 0.15);
+        }
+
+        .feature-icon {
+            width: 80px;
+            height: 80px;
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 1.5rem;
+            font-size: 2rem;
+        }
+
+        .feature-title {
+            font-size: 1.3rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+        }
+
+        .feature-description {
+            opacity: 0.9;
+            line-height: 1.6;
+        }
+
+        /* Testimonials */
+        .testimonials {
+            padding: 6rem 0;
+            background: white;
+        }
+
+        .testimonials-slider {
+            max-width: 800px;
+            margin: 0 auto;
+            text-align: center;
+        }
+
+        .testimonial-item {
+            padding: 2rem;
+            background: rgba(229, 9, 20, 0.05);
+            border-radius: 20px;
+            margin-bottom: 2rem;
+            border-left: 4px solid var(--netflix-red);
+        }
+
+        .testimonial-text {
+            font-size: 1.2rem;
+            font-style: italic;
+            color: var(--text-dark);
+            margin-bottom: 1.5rem;
+            line-height: 1.7;
+        }
+
+        .testimonial-author {
+            font-weight: 700;
+            color: var(--netflix-red);
+        }
+
+        .testimonial-role {
+            color: var(--medium-gray);
+            font-size: 0.9rem;
+        }
+
+        /* CTA Section */
+        .cta-section {
+            padding: 6rem 0;
+            background: linear-gradient(135deg, var(--dark-bg) 0%, #2c2c2c 100%);
+            color: white;
+            text-align: center;
+        }
+
+        .cta-title {
+            font-size: 2.5rem;
+            font-weight: 800;
+            margin-bottom: 1rem;
+        }
+
+        .cta-subtitle {
+            font-size: 1.2rem;
+            margin-bottom: 2.5rem;
+            opacity: 0.9;
+        }
+
+        .cta-buttons {
+            display: flex;
+            gap: 1.5rem;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        /* Mobile Responsive */
+        @media (max-width: 768px) {
+            .hero-title {
+                font-size: 2.5rem;
+            }
+
+            .hero-subtitle {
+                font-size: 1.2rem;
+            }
+
+            .hero-cta {
+                flex-direction: column;
+                align-items: center;
+            }
+
+            .section-title {
+                font-size: 2rem;
+            }
+
+            .authors-grid,
+            .plans-grid,
+            .features-grid {
+                grid-template-columns: 1fr;
+                gap: 1.5rem;
+            }
+
+            .plan-card.featured {
+                transform: none;
+            }
+
+            .cta-title {
+                font-size: 2rem;
+            }
+
+            .cta-buttons {
+                flex-direction: column;
+                align-items: center;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .hero-content {
+                padding: 1rem;
+            }
+
+            .hero-title {
+                font-size: 2rem;
+            }
+
+            .section-title {
+                font-size: 1.7rem;
+            }
+
+            .author-card,
+            .plan-card,
+            .feature-item {
+                padding: 1.5rem;
+            }
+        }
+
+        /* Animations */
+        .fade-in-up {
+            opacity: 0;
+            transform: translateY(50px);
+            transition: all 0.6s ease;
+        }
+
+        .fade-in-up.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* Loading animations */
+        .loading-placeholder {
+            background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
+            background-size: 200% 100%;
+            animation: loading 1.5s infinite;
+        }
+
+        @keyframes loading {
+            0% { background-position: 200% 0; }
+            100% { background-position: -200% 0; }
+        }
+    </style>
+{% endblock %}
+
+{% block content %}
+    <section class="hero-section">
+        <div class="hero-content">
+            <h1 class="hero-title">Discover Your Next Favorite Author</h1>
+            <p class="hero-subtitle">Subscribe to exclusive content, early releases, and personal stories from the world's most talented writers</p>
+            <div class="hero-cta">
+                <a href="https://www.bookjra.com/signup" class="btn-hero-primary">
+                    <i class="fas fa-rocket me-2"></i>Start Your Journey
+                </a>
+                <a href="https://www.bookjra.com/demo" class="btn-hero-secondary">
+                    <i class="fas fa-play me-2"></i>Watch Demo
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <section class="featured-authors">
+        <div class="container">
+            <h2 class="section-title">Featured Authors</h2>
+            <p class="section-subtitle">Connect with bestselling authors and discover new voices in literature</p>
+            
+            <div class="authors-grid">
+                <div class="author-card fade-in-up">
+                    <div class="author-avatar">
+                        <i class="fas fa-user"></i>
+                    </div>
+                    <h3 class="author-name">Sarah Johnson</h3>
+                    <p class="author-genre">Mystery & Thriller</p>
+                    <div class="author-stats">
+                        <div class="stat-item">
+                            <div class="stat-number">15</div>
+                            <div class="stat-label">Books</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-number">2.3K</div>
+                            <div class="stat-label">Subscribers</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-number">4.9</div>
+                            <div class="stat-label">Rating</div>
+                        </div>
+                    </div>
+                    <button class="author-subscribe" data-author="Sarah Johnson">
+                        <i class="fas fa-plus me-2"></i>Subscribe
+                    </button>
+                </div>
+
+                <div class="author-card fade-in-up">
+                    <div class="author-avatar">
+                        <i class="fas fa-user"></i>
+                    </div>
+                    <h3 class="author-name">Michael Chen</h3>
+                    <p class="author-genre">Science Fiction</p>
+                    <div class="author-stats">
+                        <div class="stat-item">
+                            <div class="stat-number">8</div>
+                            <div class="stat-label">Books</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-number">1.8K</div>
+                            <div class="stat-label">Subscribers</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-number">4.7</div>
+                            <div class="stat-label">Rating</div>
+                        </div>
+                    </div>
+                    <button class="author-subscribe" data-author="Michael Chen">
+                        <i class="fas fa-plus me-2"></i>Subscribe
+                    </button>
+                </div>
+
+                <div class="author-card fade-in-up">
+                    <div class="author-avatar">
+                        <i class="fas fa-user"></i>
+                    </div>
+                    <h3 class="author-name">Emily Rodriguez</h3>
+                    <p class="author-genre">Romance & Drama</p>
+                    <div class="author-stats">
+                        <div class="stat-item">
+                            <div class="stat-number">22</div>
+                            <div class="stat-label">Books</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-number">3.1K</div>
+                            <div class="stat-label">Subscribers</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-number">4.8</div>
+                            <div class="stat-label">Rating</div>
+                        </div>
+                    </div>
+                    <button class="author-subscribe" data-author="Emily Rodriguez">
+                        <i class="fas fa-plus me-2"></i>Subscribe
+                    </button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="subscription-plans">
+        <div class="container">
+            <h2 class="section-title" style="color: white;">Choose Your Plan</h2>
+            <p class="section-subtitle" style="color: rgba(255,255,255,0.8);">Unlock different levels of access and exclusive content</p>
+            
+            <div class="plans-grid">
+                <div class="plan-card fade-in-up">
+                    <h3 class="plan-name">Basic Reader</h3>
+                    <div class="plan-price">$9</div>
+                    <div class="plan-period">per month</div>
+                    <ul class="plan-features">
+                        <li><i class="fas fa-check"></i> Access to 3 authors</li>
+                        <li><i class="fas fa-check"></i> Basic content library</li>
+                        <li><i class="fas fa-check"></i> Monthly newsletters</li>
+                        <li><i class="fas fa-check"></i> Community access</li>
+                    </ul>
+                    <button class="plan-subscribe" data-plan="Basic Reader">Get Started</button>
+                </div>
+
+                <div class="plan-card featured fade-in-up">
+                    <h3 class="plan-name">Premium Reader</h3>
+                    <div class="plan-price">$19</div>
+                    <div class="plan-period">per month</div>
+                    <ul class="plan-features">
+                        <li><i class="fas fa-check"></i> Access to 10 authors</li>
+                        <li><i class="fas fa-check"></i> Full content library</li>
+                        <li><i class="fas fa-check"></i> Early access to releases</li>
+                        <li><i class="fas fa-check"></i> Direct author messages</li>
+                        <li><i class="fas fa-check"></i> Exclusive events</li>
+                    </ul>
+                    <button class="plan-subscribe" data-plan="Premium Reader">Most Popular</button>
+                </div>
+
+                <div class="plan-card fade-in-up">
+                    <h3 class="plan-name">Literary Elite</h3>
+                    <div class="plan-price">$39</div>
+                    <div class="plan-period">per month</div>
+                    <ul class="plan-features">
+                        <li><i class="fas fa-check"></i> Unlimited author access</li>
+                        <li><i class="fas fa-check"></i> Complete archive access</li>
+                        <li><i class="fas fa-check"></i> Video calls with authors</li>
+                        <li><i class="fas fa-check"></i> Manuscript previews</li>
+                        <li><i class="fas fa-check"></i> VIP community</li>
+                        <li><i class="fas fa-check"></i> Priority support</li>
+                    </ul>
+                    <button class="plan-subscribe" data-plan="Literary Elite">Go Elite</button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="features-section">
+        <div class="container">
+            <h2 class="section-title" style="color: white;">Why Choose Book JRA?</h2>
+            <p class="section-subtitle" style="color: rgba(255,255,255,0.9);">Experience literature like never before with our exclusive features</p>
+            
+            <div class="features-grid">
+                <div class="feature-item fade-in-up">
+                    <div class="feature-icon">
+                        <i class="fas fa-crown"></i>
+                    </div>
+                    <h3 class="feature-title">Exclusive Content</h3>
+                    <p class="feature-description">Access stories, poems, and essays available nowhere else. Get behind-the-scenes insights into your favorite author's creative process.</p>
+                </div>
+
+                <div class="feature-item fade-in-up">
+                    <div class="feature-icon">
+                        <i class="fas fa-rocket"></i>
+                    </div>
+                    <h3 class="feature-title">Early Access</h3>
+                    <p class="feature-description">Be the first to read new releases, preview upcoming books, and get sneak peeks at works in progress.</p>
+                </div>
+
+                <div class="feature-item fade-in-up">
+                    <div class="feature-icon">
+                        <i class="fas fa-comments"></i>
+                    </div>
+                    <h3 class="feature-title">Direct Interaction</h3>
+                    <p class="feature-description">Connect directly with authors through messages, live Q&As, and exclusive virtual events.</p>
+                </div>
+
+                <div class="feature-item fade-in-up">
+                    <div class="feature-icon">
+                        <i class="fas fa-users"></i>
+                    </div>
+                    <h3 class="feature-title">Community</h3>
+                    <p class="feature-description">Join a passionate community of readers and discuss your favorite books with like-minded literature enthusiasts.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="testimonials">
+        <div class="container">
+            <h2 class="section-title">What Our Readers Say</h2>
+            <div class="testimonials-slider">
+                <div class="testimonial-item fade-in-up">
+                    <p class="testimonial-text">"Book JRA has completely transformed my reading experience. Having direct access to my favorite authors and getting exclusive content is like having a VIP pass to the literary world!"</p>
+                    <div class="testimonial-author">Jessica Martinez</div>
+                    <div class="testimonial-role">Premium Reader</div>
+                </div>
+                
+                <div class="testimonial-item fade-in-up">
+                    <p class="testimonial-text">"The early access feature is incredible. I've read so many amazing stories before they were published anywhere else. It's like being part of an exclusive book club!"</p>
+                    <div class="testimonial-author">David Thompson</div>
+                    <div class="testimonial-role">Literary Elite Member</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="cta-section">
+        <div class="container">
+            <h2 class="cta-title">Ready to Start Your Literary Journey?</h2>
+            <p class="cta-subtitle">Join thousands of readers who are already enjoying exclusive author content</p>
+            <div class="cta-buttons">
+                <a href="https://www.bookjra.com/signup" class="btn-hero-primary">
+                    <i class="fas fa-user-plus me-2"></i>Sign Up Now
+                </a>
+                <a href="https://www.bookjra.com/authors" class="btn-hero-secondary">
+                    <i class="fas fa-eye me-2"></i>Browse Authors
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <script>
+        // Intersection Observer for animations
+        const observerOptions = {
+            threshold: 0.1,
+            rootMargin: '0px 0px -50px 0px'
+        };
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('visible');
+                }
+            });
+        }, observerOptions);
+
+        // Observe all fade-in-up elements
+        document.querySelectorAll('.fade-in-up').forEach(el => {
+            observer.observe(el);
+        });
+
+        // Subscription button interactions
+        document.querySelectorAll('.author-subscribe, .plan-subscribe').forEach(button => {
+            button.addEventListener('click', function() {
+                // Add click animation
+                this.style.transform = 'scale(0.95)';
+                setTimeout(() => {
+                    this.style.transform = '';
+                }, 150);
+
+                // Show success message (you can customize this)
+                const originalText = this.innerHTML;
+                this.innerHTML = '<i class="fas fa-check me-2"></i>Subscribed!';
+                this.disabled = true; // Disable button after subscription
+
+                // Revert button text after a short delay
+                setTimeout(() => {
+                    this.innerHTML = originalText;
+                    this.disabled = false;
+                }, 2000);
+
+                // In a real application, you'd send an AJAX request here
+                // to handle the subscription logic on the backend.
+                const type = this.classList.contains('author-subscribe') ? 'author' : 'plan';
+                const data = type === 'author' ? this.dataset.author : this.dataset.plan;
+                console.log(`Attempting to subscribe to ${type}: ${data}`);
+            });
+        });
+    </script>
+{% endblock %}
+
+{% block extra_js %}
+{% endblock %}
