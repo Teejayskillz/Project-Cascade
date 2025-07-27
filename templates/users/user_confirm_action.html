@@ -1,0 +1,64 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}{{ page_title }} - Book JRA{% endblock %}
+
+{% block extra_head %}
+    <meta name="description" content="Confirm action for a user account on Book JRA.">
+    <meta name="keywords" content="confirm action, user management, delete user, Book JRA">
+{% endblock extra_head %}
+
+{% block content %}
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-md-8 col-lg-6">
+
+            <div class="card text-center shadow-lg border-2" style="border-color: var(--netflix-red); border-radius: 15px;">
+                <div class="card-body p-4 p-md-5">
+
+                    <i class="fas fa-exclamation-triangle fa-4x mb-4" style="color: #ffc107;"></i>
+
+                    <h2 class="card-title mb-3" style="color: var(--netflix-red); font-weight: 700;">
+                        {{ page_title }}
+                    </h2>
+
+                    <p class="lead text-muted">{{ confirm_message }}</p>
+                    
+                    <div class="bg-light p-3 rounded-3 my-4">
+                        <p class="mb-1 text-muted">You are performing this action on:</p>
+                        <p class="mb-0 fs-5 fw-bold" style="color: var(--dark-bg);">
+                            <i class="fas fa-user-shield me-2"></i>{{ user_obj.username }}
+                        </p>
+                    </div>
+
+                    <form method="post" action="
+                        {% if action == 'delete' %}
+                            {% url 'user_delete' user_obj.pk %}
+                        {% else %}
+                            {% url 'user_toggle_active' user_obj.pk %}
+                        {% endif %}
+                    ">
+                        {% csrf_token %}
+                        <div class="d-grid gap-2 d-sm-flex justify-content-sm-center mt-4">
+                            <button type="submit" class="btn btn-lg text-white" style="background-color: var(--netflix-red);">
+                                <i class="fas fa-check-circle me-2"></i>{{ confirm_button_text }}
+                            </button>
+                            <a href="{% url back_url %}" class="btn btn-lg btn-secondary">
+                                <i class="fas fa-times-circle me-2"></i>Cancel
+                            </a>
+                        </div>
+                    </form>
+
+                </div>
+            </div>
+
+            <div class="text-center mt-4">
+                <p class="text-muted small">
+                    Your security is our priority. Read our <a href="#" class="fw-bold" style="color: var(--netflix-red);">Security Policy</a>.
+                </p>
+            </div>
+
+        </div>
+    </div>
+</div>
+{% endblock content %}
