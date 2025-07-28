@@ -1,0 +1,252 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}User Dashboard | Book JRA{% endblock title %}
+
+{% block extra_head %}
+    <meta name="description" content="Your personal dashboard for Book JRA. Manage subscriptions, view your library, and edit your profile.">
+    <meta name="keywords" content="dashboard, my account, book subscriptions, user profile, author library">
+    <link rel="canonical" href="{{ request.build_absolute_uri }}">
+
+    <style>
+        .dashboard-header {
+            text-align: center;
+            margin-bottom: 2.5rem;
+            padding-bottom: 1.5rem;
+            border-bottom: 1px solid #dee2e6;
+        }
+
+        .dashboard-header h1 {
+            font-weight: 700;
+            color: var(--text-dark);
+        }
+
+        .dashboard-header .lead {
+            color: var(--medium-gray);
+            max-width: 600px;
+            margin: 0.5rem auto 0;
+        }
+
+        .stat-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2.5rem;
+        }
+
+        .stat-card {
+            background: #ffffff;
+            border-radius: 15px;
+            padding: 1.5rem;
+            text-align: center;
+            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.08);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            border: 1px solid #e9ecef;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 12px 35px rgba(0, 0, 0, 0.12);
+        }
+
+        .stat-card .icon-wrapper {
+            font-size: 2.5rem;
+            color: var(--netflix-red);
+            margin-bottom: 1rem;
+            height: 50px;
+        }
+
+        .stat-card h3 {
+            font-size: 1rem;
+            font-weight: 600;
+            color: var(--medium-gray);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 0.5rem;
+        }
+
+        .stat-card .stat-number {
+            font-size: 2.2rem;
+            font-weight: 700;
+            color: var(--text-dark);
+            line-height: 1.2;
+        }
+
+        .dashboard-actions-section {
+            background-color: #f8f9fa;
+            padding: 2rem;
+            border-radius: 15px;
+            text-align: center;
+            border: 1px solid #e9ecef;
+        }
+
+        .dashboard-actions-section h4 {
+            color: var(--text-dark);
+            font-weight: 600;
+            margin-bottom: 1.5rem;
+        }
+
+        .action-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.75rem 1.5rem;
+            margin: 0.5rem;
+            border-radius: 25px;
+            text-decoration: none;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            border: none;
+            color: white;
+            background: linear-gradient(45deg, var(--netflix-red), var(--netflix-dark-red));
+            box-shadow: 0 4px 15px rgba(229, 9, 20, 0.3);
+        }
+
+        .action-btn:hover {
+            color: white;
+            transform: translateY(-3px);
+            box-shadow: 0 6px 20px rgba(229, 9, 20, 0.4);
+        }
+
+        .action-btn.secondary {
+            background: #6c757d;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        .action-btn.secondary:hover {
+            background: #5a6268;
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3);
+        }
+
+        .seo-footer-links {
+            text-align: center;
+            margin-top: 3rem;
+            font-size: 0.9rem;
+            color: var(--medium-gray);
+        }
+
+        .seo-footer-links a {
+            color: var(--netflix-red);
+            text-decoration: none;
+            font-weight: 500;
+        }
+
+        .seo-footer-links a:hover {
+            text-decoration: underline;
+        }
+    </style>
+{% endblock extra_head %}
+
+{% block content %}
+<div class="container py-5">
+
+    <div class="dashboard-header">
+        <h1 class="display-5" id="dashboard-greeting">Welcome Back, {{ user.first_name|default:user.username }}!</h1>
+        <p class="lead">This is your command center. View your stats, manage content, and access key features.</p>
+    </div>
+
+    <div class="stat-grid">
+        <div class="stat-card">
+            <div class="icon-wrapper"><i class="fas fa-user-shield"></i></div>
+            <h3>Your Role</h3>
+            <p class="stat-number">
+                {% if user.is_superuser %}Admin
+                {% elif user.is_staff %}Staff
+                {% elif user.groups.exists %}{% for group in user.groups.all %}{{ group.name }}{% if not forloop.last %}, {% endif %}{% endfor %}
+                {% else %}Reader
+                {% endif %}
+            </p>
+        </div>
+
+        <div class="stat-card">
+            <div class="icon-wrapper"><i class="fas fa-crown"></i></div>
+            <h3>Active Subscriptions</h3>
+            <p class="stat-number animate-counter">{{ user_subscriptions_count|default:"0" }}</p>
+        </div>
+
+        <div class="stat-card">
+            <div class="icon-wrapper"><i class="fas fa-book-bookmark"></i></div>
+            <h3>Books in Library</h3>
+            <p class="stat-number animate-counter">{{ user_library_count|default:"0" }}</p>
+        </div>
+
+        {% if user.is_staff %}
+            <div class="stat-card">
+                <div class="icon-wrapper"><i class="fas fa-users"></i></div>
+                <h3>Total Site Users</h3>
+                <p class="stat-number animate-counter">{{ total_users|default:"0" }}</p>
+            </div>
+            <div class="stat-card">
+                <div class="icon-wrapper"><i class="fas fa-user-check"></i></div>
+                <h3>Active Users (24h)</h3>
+                <p class="stat-number animate-counter">{{ active_users|default:"0" }}</p>
+            </div>
+        {% endif %}
+    </div>
+
+    <div class="dashboard-actions-section">
+        <h4>Quick Actions</h4>
+        <div class="d-flex justify-content-center flex-wrap">
+            <a href="#" class="action-btn"><i class="fas fa-user-edit"></i> Edit Profile</a>
+            <a href="#" class="action-btn"><i class="fas fa-list-check"></i> Manage Subscriptions</a>
+            {% if user.is_staff %}
+                <a href="{% url 'user_list' %}" class="action-btn"><i class="fas fa-users-cog"></i> Manage Users</a>
+            {% endif %}
+            <a href="{% url 'logout_user' %}" class="action-btn secondary"><i class="fas fa-sign-out-alt"></i> Logout</a>
+        </div>
+    </div>
+
+    <p class="seo-footer-links">
+        Need help? Visit our <a href="#">Help Center</a> or check out download links at <a href="https://www.example.com">My Awesome Site</a>.
+    </p>
+
+</div>
+{% endblock content %}
+
+{% block extra_scripts %}
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+    // 1. Dynamic Greeting Functionality
+    const greetingElement = document.getElementById('dashboard-greeting');
+    if (greetingElement) {
+        const currentHour = new Date().getHours();
+        let timeOfDayGreeting = "Welcome Back";
+
+        if (currentHour >= 5 && currentHour < 12) {
+            timeOfDayGreeting = "Good Morning";
+        } else if (currentHour >= 12 && currentHour < 18) {
+            timeOfDayGreeting = "Good Afternoon";
+        } else {
+            timeOfDayGreeting = "Good Evening";
+        }
+        greetingElement.textContent = `${timeOfDayGreeting}, {{ user.first_name|default:user.username }}!`;
+    }
+
+    // 2. Animate Counter Functionality
+    const counters = document.querySelectorAll('.animate-counter');
+    const animationDuration = 1500; // in milliseconds
+
+    const animateValue = (element, start, end, duration) => {
+        if (start === end) return;
+        let startTimestamp = null;
+        const step = (timestamp) => {
+            if (!startTimestamp) startTimestamp = timestamp;
+            const progress = Math.min((timestamp - startTimestamp) / duration, 1);
+            element.innerText = Math.floor(progress * (end - start) + start).toLocaleString();
+            if (progress < 1) {
+                window.requestAnimationFrame(step);
+            }
+        };
+        window.requestAnimationFrame(step);
+    };
+
+    counters.forEach(counter => {
+        const targetValue = parseInt(counter.textContent.replace(/,/g, ''), 10);
+        // Animate only if the target is a valid number greater than 0
+        if (!isNaN(targetValue) && targetValue > 0) {
+            animateValue(counter, 0, targetValue, animationDuration);
+        }
+    });
+});
+</script>
+{% endblock extra_scripts %}
