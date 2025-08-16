@@ -3,6 +3,7 @@ from django import forms
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth import get_user_model
 from django.contrib.auth.models import Group
+from .models import Profile
 
 User = get_user_model()
 
@@ -72,3 +73,33 @@ class UserRegistrationForm(UserCreationForm):
             reader_group, created = Group.objects.get_or_create(name='reader')
             user.groups.add(reader_group)
         return user
+    
+class UserUpdateForm(forms.ModelForm):
+    """
+    A form for updating user information, excluding password fields.
+    """
+    class Meta:
+        model = User
+        fields = ('username', 'first_name', 'last_name', 'email', 'phone_number')
+    
+    def __init__(self, *args, **kwargs):
+        """
+        Add the Bootstrap 'form-control' class to each field's widget.
+        """
+        super().__init__(*args, **kwargs)
+        for field_name, field in self.fields.items():
+            field.widget.attrs['class'] = 'form-control form-control-lg'
+
+class ProfileUpdateForm(forms.ModelForm):
+    """
+    A form for updating user profile information.
+    """
+    class Meta:
+        model = Profile
+        fields = ('bio', 'profile_picture')
+    
+    def __init__(self, *args, **kwargs):
+       
+        super().__init__(*args, **kwargs)
+        for field_name, field in self.fields.items():
+            field.widget.attrs['class'] = 'form-control'           

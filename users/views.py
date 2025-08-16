@@ -1,5 +1,5 @@
 from django.shortcuts import render , get_object_or_404 , redirect
-from .forms import UserRegistrationForm 
+from .forms import UserRegistrationForm, UserUpdateForm, ProfileUpdateForm 
 from django.contrib.auth.forms import AuthenticationForm
 from django.contrib.auth import login, authenticate , logout
 from django.shortcuts import redirect
@@ -143,5 +143,41 @@ def user_delete_view(request, user_id):
 
 
 
+@login_required(login_url='login')
+def user_profile_view(request):
+    """
+    Displays the profile of the currently logged-in user.
+    """
+    user = request.user
+    context = {
+        'user': user,
+        'page_title': f"{user.username}'s Profile",
+    }
+    return render(request, 'users/user_profile.html', context)
 
-    
+@login_required(login_url='login')
+def edit_profile_view(request):
+    """
+    Allows the user to edit their profile information.
+    """
+    if request.method == 'POST':    
+        user_form = UserUpdateForm(request.POST, instance=request.user)
+        profile_form = ProfileUpdateForm(request.POST, request.FILES, instance=request.user.profile)
+        if user_form.is_valid() and profile_form.is_valid():
+            user_form.save()
+            profile_form.save()
+            messages.success(request, "Your profile has been updated successfully.")
+            return redirect('user_profile')
+        else:
+            messages.error(request, "Please correct the errors below.")
+    else:
+        user_form = UserUpdateForm(instance=request.user)
+        profile_form = ProfileUpdateForm(instance=request.user.profile)
+
+    context = {
+        'user_form': user_form,
+        'profile_form': profile_form,
+        'page_title': "Edit Profile",
+    }    
+
+    return render(request, 'users/edit_profile.html', context)

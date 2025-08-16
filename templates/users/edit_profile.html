@@ -1,0 +1,48 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}{{ page_title }}{% endblock title %}
+
+{% block content %}
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-md-10 col-lg-8">
+            <div class="card shadow-lg border-0">
+                <div class="card-header bg-white py-3">
+                    <h3 class="mb-0 text-center">{{ page_title }}</h3>
+                </div>
+                <div class="card-body p-4 p-md-5">
+                    
+                    <div class="text-center mb-4">
+                        {% if request.user.profile.profile_picture %}
+                            <img src="{{ request.user.profile.profile_picture.url }}" alt="Profile Picture" class="rounded-circle" width="120" height="120" style="object-fit: cover; border: 4px solid var(--netflix-red);">
+                        {% endif %}
+                    </div>
+
+                    <!-- IMPORTANT: enctype is required for file uploads -->
+                    <form method="POST" enctype="multipart/form-data">
+                        {% csrf_token %}
+                        
+                        <fieldset class="mb-4">
+                            <legend class="h5 border-bottom pb-2 mb-3">Account Details</legend>
+                            {{ user_form.as_p }}
+                        </fieldset>
+                        
+                        <fieldset class="mb-4">
+                            <legend class="h5 border-bottom pb-2 mb-3">Profile Details</legend>
+                            {{ profile_form.as_p }}
+                        </fieldset>
+                        
+                        <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+                            <a href="{% url 'user_profile' %}" class="btn btn-outline-secondary">Cancel</a>
+                            <button type="submit" class="btn" style="background-color: var(--netflix-red); color: white;">
+                                <i class="fas fa-save me-2"></i>Save Changes
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock content %}
