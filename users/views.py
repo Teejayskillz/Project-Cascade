@@ -8,6 +8,7 @@ from .models import userRegistration
 from django.contrib import messages
 
 
+
 def register_user(request):
     if request.method == 'POST':
         form = UserRegistrationForm(request.POST)
@@ -144,14 +145,16 @@ def user_delete_view(request, user_id):
 
 
 @login_required(login_url='login')
-def user_profile_view(request):
+def user_profile_view(request, username): # <-- 1. Accept 'username' here
     """
-    Displays the profile of the currently logged-in user.
+    Displays the profile of the user specified by the username in the URL.
     """
-    user = request.user
+    # 2. Fetch the user from the database using the username
+    profile_user = get_object_or_404(userRegistration, username=username) 
+
     context = {
-        'user': user,
-        'page_title': f"{user.username}'s Profile",
+        'profile_user': profile_user, # <-- 3. Pass this user to the template
+        'page_title': f"{profile_user.username}'s Profile",
     }
     return render(request, 'users/user_profile.html', context)
 
