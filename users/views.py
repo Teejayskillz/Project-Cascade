@@ -170,7 +170,7 @@ def edit_profile_view(request):
             user_form.save()
             profile_form.save()
             messages.success(request, "Your profile has been updated successfully.")
-            return redirect('user_profile')
+            return redirect('user_profile', username=request.user.username)  # Redirect to the user's profile page
         else:
             messages.error(request, "Please correct the errors below.")
     else:
