@@ -1,7 +1,6 @@
 {% extends 'base.html' %}
 {% load static %}
-
-{% block title %}User Dashboard | Book JRA{% endblock title %}
+{% load humanize %} {% block title %}User Dashboard | Book JRA{% endblock title %}
 
 {% block extra_head %}
     <meta name="description" content="Your personal dashboard for Book JRA. Manage subscriptions, view your library, and edit your profile.">
@@ -70,6 +69,13 @@
             font-weight: 700;
             color: var(--text-dark);
             line-height: 1.2;
+        }
+        
+        /* Small text for decimals */
+        .stat-number small {
+            font-size: 1.2rem;
+            font-weight: 600;
+            color: var(--medium-gray);
         }
 
         .dashboard-actions-section {
@@ -146,6 +152,19 @@
     </div>
 
     <div class="stat-grid">
+        
+        <div class="stat-card">
+            
+            <div class="icon-wrapper"><i class="fas fa-wallet"></i></div>
+            <h3>Wallet Balance</h3>
+            {% if wallet %}
+                <p class="stat-number">
+                    &#8358;<span class="animate-counter">{{ wallet.balance|floatformat:0 }}</span><small>{{ wallet.balance|stringformat:".2f"|slice:"-3" }}</small></p>
+            {% else %}
+                <p class="stat-number">&#8358;0<small>.00</small></p>
+            {% endif %}
+        </div>
+
         <div class="stat-card">
             <div class="icon-wrapper"><i class="fas fa-user-shield"></i></div>
             <h3>Your Role</h3>
@@ -178,7 +197,7 @@
             </div>
             <div class="stat-card">
                 <div class="icon-wrapper"><i class="fas fa-user-check"></i></div>
-                <h3>Active Users (24h)</h3>
+                <h3>Active Users</h3>
                 <p class="stat-number animate-counter">{{ active_users|default:"0" }}</p>
             </div>
         {% endif %}
@@ -187,7 +206,8 @@
     <div class="dashboard-actions-section">
         <h4>Quick Actions</h4>
         <div class="d-flex justify-content-center flex-wrap">
-            <a href="#" class="action-btn"><i class="fas fa-user-edit"></i> Edit Profile</a>
+            <a href="#" class="action-btn"><i class="fas fa-money-bill-wave"></i> Fund Wallet</a>
+            <a href="{% url 'edit_profile' %}" class="action-btn"><i class="fas fa-user-edit"></i> Edit Profile</a>
             <a href="#" class="action-btn"><i class="fas fa-list-check"></i> Manage Subscriptions</a>
             {% if user.is_staff %}
                 <a href="{% url 'user_list' %}" class="action-btn"><i class="fas fa-users-cog"></i> Manage Users</a>
@@ -232,6 +252,7 @@ document.addEventListener('DOMContentLoaded', function () {
         const step = (timestamp) => {
             if (!startTimestamp) startTimestamp = timestamp;
             const progress = Math.min((timestamp - startTimestamp) / duration, 1);
+            // Use toLocaleString to add commas to the animated number
             element.innerText = Math.floor(progress * (end - start) + start).toLocaleString();
             if (progress < 1) {
                 window.requestAnimationFrame(step);
@@ -242,8 +263,9 @@ document.addEventListener('DOMContentLoaded', function () {
 
     counters.forEach(counter => {
         const targetValue = parseInt(counter.textContent.replace(/,/g, ''), 10);
-        // Animate only if the target is a valid number greater than 0
-        if (!isNaN(targetValue) && targetValue > 0) {
+        // Animate only if the target is a valid number
+        if (!isNaN(targetValue)) {
+            // Animate from 0 to target value, unless the value is 0 itself
             animateValue(counter, 0, targetValue, animationDuration);
         }
     });
