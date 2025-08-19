@@ -159,7 +159,7 @@
             <h3>Wallet Balance</h3>
             {% if wallet %}
                 <p class="stat-number">
-                    &#8358;<span class="animate-counter">{{ wallet.balance|floatformat:0 }}</span><small>{{ wallet.balance|stringformat:".2f"|slice:"-3" }}</small></p>
+                    &#8358;<span class="animate-counter">{{ wallet.balance|floatformat:0 }}</span></p>
             {% else %}
                 <p class="stat-number">&#8358;0<small>.00</small></p>
             {% endif %}
