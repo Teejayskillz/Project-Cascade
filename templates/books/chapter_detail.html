@@ -1,36 +1,189 @@
 {% extends "base.html" %}
+{% load static %}
+{% load humanize %}
 
-{% block title %}{{ chapter.title }} – {{ chapter.story.title }}{% endblock %}
+{% block title %}{{ chapter.title }} by {{ chapter.story.author.username }} - Book JRA{% endblock %}
+
+{% block meta_description %}
+    Read Chapter {{ chapter.order }}: "{{ chapter.title }}" from the story "{{ chapter.story.title }}" by {{ chapter.story.author.username }}.
+{% endblock meta_description %}
+
+{% block extra_head %}
+<style>
+    /* Main Reading Container */
+    .reading-container {
+        max-width: 900px;
+        margin: 2rem auto;
+        padding: 3rem 2rem;
+        background: rgba(255, 255, 255, 0.9);
+        border-radius: 20px;
+        box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
+        border: 1px solid rgba(255, 255, 255, 0.2);
+    }
+    
+    /* Breadcrumb Navigation */
+    .custom-breadcrumb {
+        background: transparent;
+        padding: 0;
+        margin-bottom: 2rem;
+    }
+    
+    .custom-breadcrumb .breadcrumb-item a {
+        color: var(--netflix-red);
+        text-decoration: none;
+        font-weight: 500;
+        transition: color 0.3s ease;
+    }
+    
+    .custom-breadcrumb .breadcrumb-item a:hover {
+        color: var(--netflix-dark-red);
+    }
+    
+    .custom-breadcrumb .breadcrumb-item.active {
+        color: var(--medium-gray);
+    }
+
+    /* Chapter Header */
+    .chapter-header {
+        text-align: center;
+        margin-bottom: 2rem;
+    }
+    
+    .chapter-title {
+        font-family: 'Playfair Display', serif;
+        font-weight: 700;
+        font-size: 2.5rem;
+        color: var(--text-dark);
+        margin-bottom: 0.5rem;
+    }
+    
+    .story-link {
+        font-size: 1rem;
+        color: var(--medium-gray);
+        text-decoration: none;
+        transition: color 0.3s ease;
+    }
+    
+    .story-link:hover {
+        color: var(--text-dark);
+    }
+
+    /* Article Content */
+    .chapter-content {
+        line-height: 1.9;
+        font-size: 1.15rem;
+        color: var(--text-dark);
+    }
+    
+    .chapter-content p {
+        margin-bottom: 1.5rem;
+    }
+    
+    .chapter-content h1, .chapter-content h2, .chapter-content h3 {
+        font-family: 'Playfair Display', serif;
+        font-weight: 700;
+        margin-top: 2rem;
+        margin-bottom: 1rem;
+    }
+    
+    /* Navigation Buttons */
+    .chapter-nav {
+        margin-top: 3rem;
+        padding-top: 2rem;
+        border-top: 1px solid #e9ecef;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+    
+    .chapter-nav-btn {
+        display: inline-block;
+        padding: 12px 25px;
+        border-radius: 25px;
+        background-color: #f1f1f1;
+        color: var(--text-dark);
+        text-decoration: none;
+        font-weight: 600;
+        transition: all 0.3s ease;
+        min-width: 150px;
+        text-align: center;
+    }
+    
+    .chapter-nav-btn:hover {
+        background: var(--netflix-red);
+        color: white;
+        transform: translateY(-2px);
+        box-shadow: 0 5px 15px rgba(229, 9, 20, 0.2);
+    }
+    
+    .edit-link-container {
+        text-align: center;
+        margin-top: 2rem;
+    }
+    
+    .edit-chapter-link {
+        color: var(--netflix-red);
+        font-weight: 600;
+        transition: color 0.3s ease;
+        text-decoration: none;
+    }
+    
+    .edit-chapter-link:hover {
+        color: var(--netflix-dark-red);
+    }
+</style>
+{% endblock extra_head %}
 
 {% block content %}
-  <nav aria-label="breadcrumb">
-    <ol>
-      <li><a href="{% url 'story-detail' chapter.story.pk %}">{{ chapter.story.title }}</a></li>
-      <li>{{ chapter.title }}</li>
-    </ol>
-  </nav>
+<div class="container py-5">
+    <div class="reading-container">
+        <nav aria-label="breadcrumb">
+            <ol class="breadcrumb custom-breadcrumb">
+                <li class="breadcrumb-item"><a href="{% url 'story-detail' slug=chapter.story.slug %}">{{ chapter.story.title }}</a></li>
+                <li class="breadcrumb-item active" aria-current="page">{{ chapter.title }}</li>
+            </ol>
+        </nav>
+        
+        <div class="chapter-header">
+            <h1 class="chapter-title">{{ chapter.title }}</h1>
+            <a href="{% url 'user_profile' username=chapter.story.author.username %}" class="story-link">
+                By {{ chapter.story.author.username }}
+            </a>
+        </div>
+        
+        <article class="chapter-content">
+            {{ chapter.content|safe }}
+        </article>
+        
+        {% if user == chapter.story.author %}
+        <div class="edit-link-container">
+            <a href="{% url 'chapter-edit' story_pk=chapter.story.pk ch_pk=chapter.pk %}" class="edit-chapter-link">
+                <i class="fas fa-edit me-1"></i> Edit this Chapter
+            </a>
+        </div>
+        {% endif %}
 
-  <h1>{{ chapter.title }}</h1>
+        <div class="chapter-nav">
+            {% with prev=chapter.get_previous_by_order %}
+            <div>
+                {% if prev %}
+                <a href="{% url 'chapter-detail' story_pk=chapter.story.pk ch_pk=prev.pk %}" class="chapter-nav-btn">
+                    <i class="fas fa-arrow-left me-2"></i>Previous
+                </a>
+                {% endif %}
+            </div>
+            {% endwith %}
 
-  {# Render CKEditor content safely #}
-  <article>
-    {{ chapter.content|safe }}
-  </article>
-
-  {% if user == chapter.story.author %}
-    <p>
-      <a href="{% url 'chapter-edit' chapter.story.pk chapter.pk %}">Edit chapter</a>
-    </p>
-  {% endif %}
-
-  {# Optional: prev/next chapter links #}
-  <div style="display:flex; justify-content:space-between;">
-    {% with prev=chapter.get_previous_by_order %}
-      {% if prev %}<a href="{% url 'chapter-detail' chapter.story.pk prev.pk %}">← {{ prev.title }}</a>{% endif %}
-    {% endwith %}
-
-    {% with next=chapter.get_next_by_order %}
-      {% if next %}<a href="{% url 'chapter-detail' chapter.story.pk next.pk %}">{{ next.title }} →</a>{% endif %}
-    {% endwith %}
-  </div>
+            {% with next=chapter.get_next_by_order %}
+            <div>
+                {% if next %}
+                <a href="{% url 'chapter-detail' story_pk=chapter.story.pk ch_pk=next.pk %}" class="chapter-nav-btn">
+                    Next<i class="fas fa-arrow-right ms-2"></i>
+                </a>
+                {% endif %}
+            </div>
+            {% endwith %}
+        </div>
+    </div>
+</div>
 {% endblock %}

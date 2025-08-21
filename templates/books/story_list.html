@@ -207,7 +207,7 @@
                         </h3>
                         <p class="card-text">{{ story.synopsis|truncatewords:25 }}</p>
                         <div class="author-info">
-                            <img src="{% static 'images/author-avatar.jpg' %}" alt="Author avatar">
+                            <img src="{{ story.author.profile.profile_picture.url }}" alt="Author avatar">
                             <span>
                                 By <a href="{% url 'user_profile' username=story.author.username %}">{{ story.author.username }}</a>
                                 <span class="d-block text-muted small mt-1">{{ story.created_at|naturalday }}</span>

@@ -202,7 +202,7 @@
             <ol class="chapter-list">
                 {% for ch in story.chapters.all %}
                     <li class="chapter-item">
-                        <a href="{% url 'chapter-edit' story_pk=story.pk chapter_pk=ch.pk %}" class="chapter-link">
+                        <a href="{% url 'chapter-detail' story_pk=story.pk chapter_pk=ch.pk %}" class="chapter-link">
                             Chapter {{ forloop.counter }}: {{ ch.title }}
                         </a>
                         {% if user == story.author %}
