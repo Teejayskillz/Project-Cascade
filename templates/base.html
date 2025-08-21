@@ -319,6 +319,9 @@
                                 <i class="fas fa-home me-1"></i>Home
                             </a>
                         </li>
+                        <li class="nav-item">
+                             <a href="{% url 'story-list' %}" class="nav-link "><i>All Stories</i></a>
+                        </li>
 
                         {% if user.is_authenticated and user.is_staff %}
                         <li class="nav-item">
@@ -395,6 +398,7 @@
                     </a>
                 </div>
             </div>
+            
             {% endblock content %}
         </div>
     </main>

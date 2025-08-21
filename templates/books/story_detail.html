@@ -1,0 +1,225 @@
+{% extends "base.html" %}
+{% load static %}
+{% load humanize %}
+
+{% block title %}{{ story.title }} by {{ story.author.username }} - Book JRA{% endblock %}
+
+{% block meta_description %}
+    Read "{{ story.title }}", a captivating story by {{ story.author.username }}. Explore the synopsis and dive into the chapters now on Book JRA.
+{% endblock meta_description %}
+
+{% block extra_head %}
+<style>
+    .story-hero {
+        position: relative;
+        height: 450px;
+        margin-top: -2rem; /* Pull up to overlap with header */
+        overflow: hidden;
+        border-bottom-left-radius: 20px;
+        border-bottom-right-radius: 20px;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+    }
+    
+    .story-hero-bg {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        filter: brightness(0.5) blur(5px);
+        transform: scale(1.1);
+    }
+    
+    .story-info-overlay {
+        position: relative;
+        z-index: 10;
+        height: 100%;
+        background: rgba(0, 0, 0, 0.4);
+        display: flex;
+        align-items: center;
+        color: white;
+    }
+    
+    .story-cover {
+        width: 250px;
+        height: 350px;
+        object-fit: cover;
+        border-radius: 12px;
+        box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
+    }
+    
+    .story-title {
+        font-family: 'Playfair Display', serif;
+        font-weight: 700;
+        font-size: 3.5rem;
+        margin-bottom: 0.5rem;
+    }
+    
+    .author-link {
+        color: rgba(255, 255, 255, 0.8);
+        transition: color 0.3s ease;
+        text-decoration: none;
+    }
+    
+    .author-link:hover {
+        color: white;
+    }
+
+    .synopsis-container {
+        max-width: 900px;
+        margin: 3rem auto;
+        font-size: 1.1rem;
+        line-height: 1.8;
+        color: var(--text-dark);
+        padding: 2rem;
+        background: rgba(255, 255, 255, 0.9);
+        border-radius: 20px;
+        box-shadow: 0 5px 25px rgba(0, 0, 0, 0.05);
+    }
+
+    .section-heading {
+        font-family: 'Playfair Display', serif;
+        font-weight: 700;
+        color: var(--text-dark);
+        margin-top: 3rem;
+        margin-bottom: 1.5rem;
+        position: relative;
+    }
+
+    .section-heading::after {
+        content: '';
+        display: block;
+        width: 60px;
+        height: 3px;
+        background: var(--netflix-red);
+        margin-top: 0.5rem;
+        border-radius: 3px;
+    }
+
+    .chapter-list {
+        list-style: none;
+        padding-left: 0;
+    }
+
+    .chapter-item {
+        background: rgba(255, 255, 255, 0.9);
+        padding: 1.25rem 2rem;
+        border-radius: 12px;
+        margin-bottom: 1rem;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+
+    .chapter-item:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 8px 20px rgba(0, 0, 0, 0.05);
+    }
+
+    .chapter-link {
+        font-size: 1.15rem;
+        font-weight: 500;
+        color: var(--text-dark);
+        text-decoration: none;
+        transition: color 0.3s ease;
+    }
+
+    .chapter-link:hover {
+        color: var(--netflix-red);
+    }
+
+    .edit-link {
+        font-size: 0.9rem;
+        color: var(--medium-gray);
+        text-decoration: none;
+        transition: color 0.3s ease;
+    }
+
+    .edit-link:hover {
+        color: var(--netflix-red);
+    }
+
+    .cta-btn-group .btn {
+        border-radius: 25px;
+        padding: 12px 30px;
+        font-weight: 600;
+    }
+
+    .cta-btn-group .btn-danger {
+        background: linear-gradient(45deg, var(--netflix-red), var(--netflix-dark-red));
+        border: none;
+        color: white;
+    }
+</style>
+{% endblock extra_head %}
+
+{% block content %}
+<div class="story-hero">
+    {% if story.cover_image %}
+        <img src="{{ story.cover_image.url }}" class="story-hero-bg" alt="Background image for {{ story.title }}">
+    {% else %}
+        <img src="{% static 'images/placeholder-story.jpg' %}" class="story-hero-bg" alt="Background placeholder image">
+    {% endif %}
+    <div class="story-info-overlay">
+        <div class="container d-flex align-items-center">
+            <div class="me-5 d-none d-md-block">
+                {% if story.cover_image %}
+                    <img src="{{ story.cover_image.url }}" class="story-cover" alt="Cover of the book {{ story.title }}">
+                {% else %}
+                    <img src="{% static 'images/placeholder-story.jpg' %}" class="story-cover" alt="Placeholder book cover">
+                {% endif %}
+            </div>
+            <div>
+                <h1 class="story-title text-white">{{ story.title }}</h1>
+                <h2 class="h5 text-white-50">By <a href="{% url 'user_profile' username=story.author.username %}" class="author-link">{{ story.author.username }}</a></h2>
+                <div class="d-flex align-items-center mt-3">
+                    <span class="me-3 text-white-50"><i class="fas fa-book me-2"></i>{{ story.chapters.count }} chapters</span>
+                    <span class="me-3 text-white-50"><i class="fas fa-clock me-2"></i>{{ story.created_at|naturalday }}</span>
+                </div>
+                {% if user == story.author %}
+                    <div class="cta-btn-group mt-4">
+                        <a href="{% url 'chapter-add' story_pk=story.pk %}" class="btn btn-danger">
+                            <i class="fas fa-plus me-2"></i>Add New Chapter
+                        </a>
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="container mt-5">
+    <div class="synopsis-container">
+        <h2 class="section-heading">Synopsis</h2>
+        <p>{{ story.synopsis|linebreaksbr }}</p>
+    </div>
+
+    <div class="my-5">
+        <h2 class="section-heading">Chapters</h2>
+        {% if story.chapters.all %}
+            <ol class="chapter-list">
+                {% for ch in story.chapters.all %}
+                    <li class="chapter-item">
+                        <a href="{% url 'chapter-edit' story_pk=story.pk chapter_pk=ch.pk %}" class="chapter-link">
+                            Chapter {{ forloop.counter }}: {{ ch.title }}
+                        </a>
+                        {% if user == story.author %}
+                            <a href="{% url 'chapter-edit' story_pk=story.pk chapter_pk=ch.pk %}" class="edit-link">
+                                <i class="fas fa-edit me-1"></i>Edit
+                            </a>
+                        {% endif %}
+                    </li>
+                {% endfor %}
+            </ol>
+        {% else %}
+            <div class="text-center py-4">
+                <div class="alert alert-info no-stories-alert" role="alert">
+                    <p class="mb-0">No chapters have been added to this story yet.</p>
+                </div>
+            </div>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

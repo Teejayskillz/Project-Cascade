@@ -1,0 +1,271 @@
+{% extends "base.html" %}
+{% load static %}
+{% load humanize %}
+
+{% block title %}All Stories - Book JRA{% endblock %}
+
+{% block meta_description %}
+    Browse our curated collection of sleek, modern stories from diverse authors. Discover your next great read on Book JRA.
+{% endblock meta_description %}
+
+{% block extra_head %}
+<style>
+    /* Section and Heading Styles */
+    .story-list-section {
+        padding: 4rem 0;
+    }
+
+    .section-title {
+        font-family: 'Playfair Display', serif;
+        font-weight: 700;
+        color: var(--text-dark);
+        letter-spacing: -1px;
+        text-align: center;
+        margin-bottom: 1.5rem;
+        position: relative;
+    }
+
+    .section-title::after {
+        content: '';
+        display: block;
+        width: 60px;
+        height: 3px;
+        background: var(--netflix-red);
+        margin: 1rem auto 0;
+        border-radius: 3px;
+    }
+
+    .section-subtitle {
+        font-weight: 400;
+        color: var(--medium-gray);
+        text-align: center;
+        margin-bottom: 3rem;
+    }
+
+    /* Story Card Styles */
+    .story-card {
+        border: none;
+        border-radius: 12px;
+        overflow: hidden;
+        transition: transform 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94), box-shadow 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+        background: #fff;
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+        display: flex;
+        flex-direction: column;
+        min-height: 480px;
+    }
+
+    .story-card:hover {
+        transform: translateY(-8px);
+        box-shadow: 0 15px 40px rgba(0, 0, 0, 0.1);
+    }
+
+    .card-image-container {
+        position: relative;
+        overflow: hidden;
+        padding-top: 66.66%; /* 3:2 Aspect Ratio */
+    }
+    
+    .story-card-image {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        transition: transform 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+    }
+
+    .story-card:hover .story-card-image {
+        transform: scale(1.05);
+    }
+
+    .card-body {
+        padding: 1.5rem;
+        display: flex;
+        flex-direction: column;
+        flex-grow: 1;
+    }
+
+    .story-card-title {
+        font-size: 1.5rem;
+        font-weight: 600;
+        line-height: 1.3;
+        color: var(--text-dark);
+        margin-bottom: 0.5rem;
+        transition: color 0.3s ease;
+    }
+
+    .story-card-title a {
+        color: inherit;
+        text-decoration: none;
+    }
+
+    .story-card-title a:hover {
+        color: var(--netflix-red);
+    }
+
+    .card-text {
+        font-size: 0.95rem;
+        color: var(--medium-gray);
+        flex-grow: 1;
+        margin-bottom: 1.5rem;
+    }
+
+    .author-info {
+        font-size: 0.85rem;
+        color: var(--medium-gray);
+        display: flex;
+        align-items: center;
+        border-top: 1px solid #eef1f5;
+        padding-top: 1rem;
+        margin-top: auto;
+    }
+
+    .author-info img {
+        width: 30px;
+        height: 30px;
+        border-radius: 50%;
+        object-fit: cover;
+        margin-right: 0.5rem;
+    }
+
+    .author-info a {
+        color: var(--text-dark);
+        font-weight: 500;
+        text-decoration: none;
+        transition: color 0.3s ease;
+    }
+
+    .author-info a:hover {
+        color: var(--netflix-red);
+    }
+
+    /* Pagination Styles */
+    .pagination-container {
+        display: flex;
+        justify-content: center;
+        margin-top: 4rem;
+    }
+
+    .pagination .page-item .page-link {
+        border-radius: 50%;
+        width: 45px;
+        height: 45px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin: 0 0.5rem;
+        border: none;
+        color: var(--text-dark);
+        background: #f1f1f1;
+        transition: all 0.3s ease;
+    }
+    
+    .pagination .page-item.active .page-link,
+    .pagination .page-item .page-link:hover {
+        background: var(--netflix-red);
+        color: white;
+        box-shadow: 0 5px 20px rgba(229, 9, 20, 0.3);
+        transform: translateY(-2px);
+    }
+
+    /* No Stories State */
+    .no-stories-alert {
+        padding: 3rem 2rem;
+        border-radius: 12px;
+        background: rgba(255, 255, 255, 0.8);
+        box-shadow: 0 5px 25px rgba(0, 0, 0, 0.05);
+        color: var(--text-dark);
+        border: 1px solid rgba(229, 9, 20, 0.1);
+    }
+</style>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&display=swap">
+{% endblock extra_head %}
+
+{% block content %}
+<section class="story-list-section">
+    <div class="container">
+        <h1 class="section-title">All Stories</h1>
+        <p class="section-subtitle">A curated collection of captivating narratives from talented writers.</p>
+
+        {% if stories %}
+        <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4">
+            {% for story in stories %}
+            <div class="col">
+                <div class="story-card">
+                    <a href="{% url 'story-detail' slug=story.slug %}" class="card-image-container">
+                        {% if story.cover_image %}
+                            <img src="{{ story.cover_image.url }}" class="story-card-image" alt="Cover image for {{ story.title }}">
+                        {% else %}
+                            <img src="{% static 'images/placeholder-story.jpg' %}" class="story-card-image" alt="Placeholder image for story">
+                        {% endif %}
+                    </a>
+                    <div class="card-body">
+                        <h3 class="story-card-title">
+                            <a href="{% url 'story-detail' slug=story.slug %}">{{ story.title|truncatechars:50 }}</a>
+                        </h3>
+                        <p class="card-text">{{ story.synopsis|truncatewords:25 }}</p>
+                        <div class="author-info">
+                            <img src="{% static 'images/author-avatar.jpg' %}" alt="Author avatar">
+                            <span>
+                                By <a href="{% url 'user_profile' username=story.author.username %}">{{ story.author.username }}</a>
+                                <span class="d-block text-muted small mt-1">{{ story.created_at|naturalday }}</span>
+                            </span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+
+        {% if is_paginated %}
+        <div class="pagination-container">
+            <nav aria-label="Page navigation">
+                <ul class="pagination">
+                    {% if page_obj.has_previous %}
+                        <li class="page-item">
+                            <a class="page-link" href="?page={{ page_obj.previous_page_number }}" aria-label="Previous">
+                                <span aria-hidden="true">&laquo;</span>
+                            </a>
+                        </li>
+                    {% endif %}
+                    
+                    {% for i in paginator.page_range %}
+                        {% if page_obj.number == i %}
+                            <li class="page-item active" aria-current="page"><span class="page-link">{{ i }}</span></li>
+                        {% else %}
+                            <li class="page-item"><a class="page-link" href="?page={{ i }}">{{ i }}">{{ i }}</a></li>
+                        {% endif %}
+                    {% endfor %}
+                    
+                    {% if page_obj.has_next %}
+                        <li class="page-item">
+                            <a class="page-link" href="?page={{ page_obj.next_page_number }}" aria-label="Next">
+                                <span aria-hidden="true">&raquo;</span>
+                            </a>
+                        </li>
+                    {% endif %}
+                </ul>
+            </nav>
+        </div>
+        {% endif %}
+        
+        {% else %}
+        <div class="text-center py-5">
+            <div class="alert no-stories-alert" role="alert">
+                <h4 class="alert-heading fw-bold">No Stories Found! 😔</h4>
+                <p>It seems there are no stories available right now. Check back later or be the first to publish one!</p>
+                <hr>
+                <p class="mb-0">
+                    <a href="{% url 'story-create' %}" class="btn btn-outline-info">
+                        <i class="fas fa-pen-nib me-2"></i>Publish Your Story
+                    </a>
+                </p>
+            </div>
+        </div>
+        {% endif %}
+
+    </div>
+</section>
+{% endblock %}

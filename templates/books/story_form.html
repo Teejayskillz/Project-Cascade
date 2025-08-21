@@ -1,0 +1,111 @@
+{% extends "base.html" %}
+{% load static %}
+{% block title %}{% if form.instance.pk %}Edit Story{% else %}Create Story{% endif %} - Book JRA{% endblock %}
+
+{% block meta_description %}
+    {% if form.instance.pk %}Edit your story on Book JRA and update your work for your subscribers.{% else %}Create and publish your new story on Book JRA to connect with readers.{% endif %}
+{% endblock meta_description %}
+
+{% block extra_head %}
+<style>
+    .form-container {
+        max-width: 800px;
+        margin: 2rem auto;
+        padding: 2rem;
+        background: rgba(255, 255, 255, 0.9);
+        border-radius: 20px;
+        box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
+        border: 1px solid rgba(255, 255, 255, 0.2);
+    }
+    
+    .form-group label {
+        font-weight: 600;
+        color: var(--text-dark);
+        margin-bottom: 0.5rem;
+    }
+    
+    .form-control {
+        border-radius: 10px;
+        border: 1px solid #ccc;
+        padding: 0.75rem 1rem;
+        transition: border-color 0.3s ease, box-shadow 0.3s ease;
+    }
+    
+    .form-control:focus {
+        border-color: var(--netflix-red);
+        box-shadow: 0 0 0 0.25rem rgba(229, 9, 20, 0.25);
+    }
+    
+    .form-group .invalid-feedback {
+        display: block;
+        margin-top: 0.5rem;
+    }
+    
+    .submit-btn {
+        background: linear-gradient(45deg, var(--netflix-red), var(--netflix-dark-red));
+        color: white;
+        border: none;
+        border-radius: 25px;
+        padding: 12px 30px;
+        font-weight: 600;
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+    
+    .submit-btn:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 8px 20px rgba(229, 9, 20, 0.4);
+    }
+
+    .btn-link {
+        color: var(--netflix-red);
+        font-weight: 600;
+        transition: color 0.3s ease;
+    }
+
+    .btn-link:hover {
+        color: var(--netflix-dark-red);
+    }
+</style>
+{% endblock extra_head %}
+
+{% block content %}
+<div class="container py-5">
+    <div class="form-container">
+        <h1 class="text-center mb-4 display-5 fw-bold">
+            {% if form.instance.pk %}Edit Story{% else %}Create New Story{% endif %}
+        </h1>
+        <p class="text-center text-muted mb-5">
+            {% if form.instance.pk %}Update the details of your literary masterpiece.{% else %}Start your next great adventure. Fill in the details of your new story below.{% endif %}
+        </p>
+        <form method="post" enctype="multipart/form-data" novalidate>
+            {% csrf_token %}
+
+            {% for field in form %}
+            <div class="mb-4 form-group">
+                <label for="{{ field.id_for_label }}" class="form-label">{{ field.label }}</label>
+                {{ field }}
+                {% if field.help_text %}
+                <small class="form-text text-muted">{{ field.help_text|safe }}</small>
+                {% endif %}
+                {% if field.errors %}
+                <div class="invalid-feedback d-block">
+                    {% for error in field.errors %}
+                        {{ error }}
+                    {% endfor %}
+                </div>
+                {% endif %}
+            </div>
+            {% endfor %}
+
+            <div class="d-grid gap-2 d-md-flex justify-content-md-center mt-5">
+                <button type="submit" class="btn submit-btn btn-lg">
+                    <i class="fas fa-save me-2"></i> Save Story
+                </button>
+                <a href="{% url 'dashboard:dashboard' %}" class="btn btn-outline-secondary btn-lg" style="border-radius: 25px;">
+                    <i class="fas fa-arrow-left me-2"></i> Back to Dashboard
+                </a>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}

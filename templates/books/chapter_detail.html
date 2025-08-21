@@ -1,0 +1,36 @@
+{% extends "base.html" %}
+
+{% block title %}{{ chapter.title }} – {{ chapter.story.title }}{% endblock %}
+
+{% block content %}
+  <nav aria-label="breadcrumb">
+    <ol>
+      <li><a href="{% url 'story-detail' chapter.story.pk %}">{{ chapter.story.title }}</a></li>
+      <li>{{ chapter.title }}</li>
+    </ol>
+  </nav>
+
+  <h1>{{ chapter.title }}</h1>
+
+  {# Render CKEditor content safely #}
+  <article>
+    {{ chapter.content|safe }}
+  </article>
+
+  {% if user == chapter.story.author %}
+    <p>
+      <a href="{% url 'chapter-edit' chapter.story.pk chapter.pk %}">Edit chapter</a>
+    </p>
+  {% endif %}
+
+  {# Optional: prev/next chapter links #}
+  <div style="display:flex; justify-content:space-between;">
+    {% with prev=chapter.get_previous_by_order %}
+      {% if prev %}<a href="{% url 'chapter-detail' chapter.story.pk prev.pk %}">← {{ prev.title }}</a>{% endif %}
+    {% endwith %}
+
+    {% with next=chapter.get_next_by_order %}
+      {% if next %}<a href="{% url 'chapter-detail' chapter.story.pk next.pk %}">{{ next.title }} →</a>{% endif %}
+    {% endwith %}
+  </div>
+{% endblock %}
