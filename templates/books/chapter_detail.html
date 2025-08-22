@@ -73,6 +73,8 @@
         line-height: 1.9;
         font-size: 1.15rem;
         color: var(--text-dark);
+        word-wrap: break-word;
+        overflow-wrap: break-word;
     }
     
     .chapter-content p {
@@ -157,7 +159,7 @@
         
         {% if user == chapter.story.author %}
         <div class="edit-link-container">
-            <a href="{% url 'chapter-edit' story_pk=chapter.story.pk ch_pk=chapter.pk %}" class="edit-chapter-link">
+            <a href="{% url 'chapter-edit' story_pk=chapter.story.pk chapter_pk=chapter.pk %}" class="edit-chapter-link">
                 <i class="fas fa-edit me-1"></i> Edit this Chapter
             </a>
         </div>
@@ -167,7 +169,7 @@
             {% with prev=chapter.get_previous_by_order %}
             <div>
                 {% if prev %}
-                <a href="{% url 'chapter-detail' story_pk=chapter.story.pk ch_pk=prev.pk %}" class="chapter-nav-btn">
+                <a href="{% url 'chapter-detail' story_pk=chapter.story.pk chapter_pk=prev.pk %}" class="chapter-nav-btn">
                     <i class="fas fa-arrow-left me-2"></i>Previous
                 </a>
                 {% endif %}
