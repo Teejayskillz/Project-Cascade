@@ -1,0 +1,41 @@
+
+{% extends 'base.html' %}
+{% load humanize %}
+
+
+{% block title %}Manage Author Applications{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+    <h1 class="text-center mb-4">Manage Author Applications</h1>
+    
+    {% if applications %}
+        <div class="list-group">
+        {% for app in applications %}
+            <div class="list-group-item list-group-item-action mb-3">
+                <div class="d-flex w-100 justify-content-between">
+                    <h5 class="mb-1">Application from {{ app.user.username }}</h5>
+                    <small>{{ app.submission_date|naturaltime }}</small>
+                </div>
+                <p class="mb-1">{{ app.reason }}</p>
+                <a href="{{ user.sample_of_work.url }}" target="_blank" class="badge bg-primary">View Sample of Work</a>
+                
+                <div class="d-flex justify-content-end mt-2">
+    <form action="{% url 'users:approve_or_reject' app.id 'approve' %}" method="post" class="me-2">
+        {% csrf_token %}
+        <button type="submit" class="btn btn-success btn-sm">Approve</button>
+    </form>
+    
+    <form action="{% url 'users:approve_or_reject' app.id 'reject' %}" method="post">
+        {% csrf_token %}
+        <button type="submit" class="btn btn-danger btn-sm">Reject</button>
+    </form>
+</div>
+            </div>
+        {% endfor %}
+        </div>
+    {% else %}
+        <p class="text-center text-muted">No pending applications at this time.</p>
+    {% endif %}
+</div>
+{% endblock %}

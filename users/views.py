@@ -1,11 +1,12 @@
 # users/views.py
 from django.shortcuts import render, get_object_or_404, redirect
-from .forms import UserRegistrationForm, UserUpdateForm, ProfileUpdateForm 
+from .forms import UserRegistrationForm, UserUpdateForm, ProfileUpdateForm , AuthorApplicationForm
 from django.contrib.auth.forms import AuthenticationForm
 from django.contrib.auth import login, authenticate, logout
-from django.contrib.auth.decorators import login_required, permission_required
-from .models import CustomUser, Profile # Import CustomUser and Profile
+from django.contrib.auth.decorators import login_required, permission_required, user_passes_test
+from .models import CustomUser, Profile , AuthorApplication
 from django.contrib import messages
+
 
 
 def register_user(request):
@@ -174,3 +175,67 @@ def edit_profile_view(request):
         'page_title': "Edit Profile",
     }    
     return render(request, 'users/edit_profile.html', context)
+
+@login_required(login_url='login_user')
+def apply_for_author_view(request):
+    # Check if the user already has a pending or approved application
+    if AuthorApplication.objects.filter(user=request.user, status__in=['pending', 'approved']).exists():
+        messages.warning(request, "You already have a pending or approved application.")
+        return redirect('dashboard:dashboard')
+
+    if request.method == 'POST':
+        # Correctly instantiate the form with request.POST and request.FILES
+        form = AuthorApplicationForm(request.POST, request.FILES) 
+        if form.is_valid():
+            application = form.save(commit=False)
+            application.user = request.user
+            application.save()
+            messages.success(request, "Your application has been submitted successfully!")
+            return redirect('dashboard:dashboard')
+    else:
+        form = AuthorApplicationForm()
+
+    context = {
+        'form': form,
+        'page_title': 'Apply for Author Role',
+    }
+    return render(request, 'users/apply_for_author.html', context)
+
+@user_passes_test(lambda u: u.is_staff or u.is_superuser)
+def manage_author_applications(request):
+    """
+    Displays all pending author applications.
+    """
+    applications = AuthorApplication.objects.filter(status='pending').order_by('-id')
+    
+    context = {
+        'applications': applications
+    }
+    return render(request, 'users/manage_applications.html', context)
+
+
+@user_passes_test(lambda u: u.is_staff or u.is_superuser)
+def approve_or_reject_application(request, app_id, action): 
+    """
+    Approves or rejects a specific author application.
+    """
+    if request.method == 'POST':
+        application = get_object_or_404(AuthorApplication, id=app_id)  
+
+        if action == 'approve':
+            # Update the application status
+            application.status = 'approved'
+            application.save()
+            
+            # Get the user and update their role
+            user_to_promote = application.user
+            user_to_promote.role = 'author' 
+            user_to_promote.save()
+            
+            messages.success(request, "Application approved and user's role set to Author!")
+        elif action == 'reject':
+            application.status = 'rejected'
+            application.save()
+            messages.info(request, "Application rejected.")
+        
+    return redirect('users:manage_applications')

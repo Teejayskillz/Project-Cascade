@@ -3,7 +3,7 @@ from django import forms
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth import get_user_model
 from django.contrib.auth.models import Group
-from .models import Profile
+from .models import Profile, AuthorApplication
 
 User = get_user_model()
 
@@ -103,3 +103,14 @@ class ProfileUpdateForm(forms.ModelForm):
         super().__init__(*args, **kwargs)
         for field_name, field in self.fields.items():
             field.widget.attrs['class'] = 'form-control'           
+
+class AuthorApplicationForm(forms.ModelForm):
+    class Meta:
+        model = AuthorApplication
+        fields = ['reason', 'sample_of_work']
+        widgets = {
+            'reason': forms.Textarea(attrs={'rows': 5, 'placeholder': 'Tell us why you would be a good fit to be an author.'}),
+        }
+        labels = {
+            'reason': 'Reason for Application '
+        }

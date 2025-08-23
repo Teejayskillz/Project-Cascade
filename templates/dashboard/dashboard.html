@@ -201,19 +201,66 @@
         {% endif %}
     </div>
 
-    <div class="dashboard-actions-section">
-        <h4>Quick Actions</h4>
-        <div class="d-flex justify-content-center flex-wrap">
-            <a href="#" class="action-btn"><i class="fas fa-money-bill-wave"></i> Fund Wallet</a>
-            <a href="{% url 'edit_profile' %}" class="action-btn"><i class="fas fa-user-edit"></i> Edit Profile</a>
-            <a href="#" class="action-btn"><i class="fas fa-list-check"></i> Manage Subscriptions</a>
-            {% if user.is_staff or user.is_superuser %}
-                <a href="{% url 'user_list' %}" class="action-btn"><i class="fas fa-users-cog"></i> Manage Users</a>
+    {% comment %} 
+    The original code had a misplaced closing div tag here. 
+    It was causing the rest of the dashboard actions to appear outside the conditional logic. 
+    Removing it and combining the action sections below is the fix.
+    {% endcomment %}
+    
+    {% if not user.is_staff and not user.is_superuser %}
+    <div class="dashboard-actions-section mt-4">
+        <h4>Author Application Status</h4>
+        {% if author_application %}
+            <p class="lead mt-3">
+                Your application is currently: <strong>{{ author_application.get_status_display }}</strong>.
+                <br>
+                Submitted on {{ author_application.created_at|naturaltime }}.
+            </p>
+            
+            {% if author_application.status == 'pending' %}
+                <p class="text-muted">We will review your application as soon as possible.</p>
+            {% elif author_application.status == 'approved' %}
+                <div class="alert alert-success mt-3" role="alert">
+                    Congratulations! Your application has been approved. You are now an author!
+                </div>
+            {% elif author_application.status == 'rejected' %}
+                <div class="alert alert-danger mt-3" role="alert">
+                    Your application was rejected. Please review our guidelines for authors.
+                </div>
             {% endif %}
-            <a href="{% url 'logout_user' %}" class="action-btn secondary"><i class="fas fa-sign-out-alt"></i> Logout</a>
-        </div>
+            
+        {% else %}
+            <p class="lead mt-3">
+                You have not applied to be an author yet.
+            </p>
+        {% endif %}
     </div>
+    {% endif %}
 
+    {% comment %} 
+    This is the corrected "Quick Actions" section. 
+    It is now properly inside a single div and the if/else logic is correctly nested.
+    {% endcomment %}
+  <div class="dashboard-actions-section mt-4">
+    <h4>Quick Actions</h4>
+    <div class="d-flex justify-content-center flex-wrap">
+        <a href="#" class="action-btn"><i class="fas fa-money-bill-wave"></i> Fund Wallet</a>
+        <a href="{% url 'users:edit_profile' %}" class="action-btn"><i class="fas fa-user-edit"></i> Edit Profile</a>
+        <a href="#" class="action-btn"><i class="fas fa-list-check"></i> Manage Subscriptions</a>
+        
+        {% if user.is_staff or user.is_superuser %}
+            <a href="{% url 'users:user_list' %}" class="action-btn"><i class="fas fa-users-cog"></i> Manage Users</a>
+            <a href="{% url 'users:manage_applications' %}" class="action-btn"><i class="fas fa-file-invoice"></i> View Applications</a>
+        {% elif user.role == 'author' %}
+            <a href="{% url 'books:story-create' %}" class="action-btn"><i class="fas fa-plus-square"></i> Create Story</a>
+            <a href="{% url 'books:story-manage' %}" class="action-btn"><i class="fas fa-book-open-reader"></i> Manage Stories</a>
+        {% else %}
+            <a href="{% url 'users:apply_for_author' %}" class="action-btn"><i class="fas fa-pen-nib"></i> Apply to be an Author</a>
+        {% endif %}
+        
+        <a href="{% url 'users:logout_user' %}" class="action-btn secondary"><i class="fas fa-sign-out-alt"></i> Logout</a>
+    </div>
+</div>
     <p class="seo-footer-links">
         Need help? Visit our <a href="#">Help Center</a> or check out our <a href="https://www.example.com">documentation and guides</a>.
     </p>

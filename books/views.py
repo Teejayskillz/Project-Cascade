@@ -1,8 +1,9 @@
 # books/views.py
+
 from django.shortcuts import render, get_object_or_404, redirect
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.urls import reverse_lazy
-from django.views.generic import CreateView, UpdateView, DetailView, ListView
+from django.views.generic import CreateView, UpdateView, DetailView, ListView, DeleteView
 from .models import Story, Chapter
 from .forms import StoryForm, ChapterForm
 from django.core.exceptions import PermissionDenied
@@ -20,6 +21,17 @@ class IsObjectAuthorMixin(UserPassesTestMixin):
         obj = self.get_object()
         return self.request.user == obj.author
 
+class StoryManageView(AuthorRequiredMixin, ListView):
+    model = Story
+    template_name = 'books/story_manage.html'
+    context_object_name = 'stories'
+    paginate_by = 10
+
+    def get_queryset(self):
+        """
+        Returns a queryset of Story objects filtered by the current user as the author.
+        """
+        return Story.objects.filter(author=self.request.user).order_by('-published_date')
 
 class StoryCreateView(AuthorRequiredMixin, CreateView):
     model = Story
@@ -50,12 +62,7 @@ class ChapterCreateView(AuthorRequiredMixin, CreateView):
     template_name = 'books/chapter_form.html'
     
     def dispatch(self, request, *args, **kwargs):
-        # We now check that the user is an author first with the mixin
-        # before checking if they are the author of the specific story.
         self.story = get_object_or_404(Story, pk=self.kwargs['story_pk'])
-
-        # Instead of the manual check, we can raise PermissionDenied
-        # if the user is not the author of this specific story.
         if request.user != self.story.author:
             raise PermissionDenied
         
@@ -75,12 +82,9 @@ class ChapterUpdateView(IsObjectAuthorMixin, UpdateView):
     pk_url_kwarg = 'chapter_pk'
     
     def get_queryset(self):
-        # This is the correct way to ensure the user can only update their own chapters.
-        # This also acts as a security measure, raising a 404 if the object doesn't belong to the user.
         return Chapter.objects.filter(story__author=self.request.user)
     
     def get_success_url(self):
-        # Corrected way to get the object and its story
         chapter = self.get_object()
         return reverse_lazy('story-detail', kwargs={'pk': chapter.story.pk})
     
@@ -88,7 +92,7 @@ class ChapterDetailView(DetailView):
     model               = Chapter
     template_name       = "books/chapter_detail.html"
     context_object_name = "chapter"
-    pk_url_kwarg        = "chapter_pk"   # matches URL kwarg
+    pk_url_kwarg        = "chapter_pk"
 
     def get_queryset(self):
         return Chapter.objects.select_related("story")

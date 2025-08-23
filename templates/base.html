@@ -320,14 +320,14 @@
                             </a>
                         </li>
                         <li class="nav-item">
-    <a href="{% url 'story-list' %}" class="nav-link ">
+    <a href="{% url 'books:story-list' %}" class="nav-link ">
         <i class="fas fa-book me-1"></i>All Stories
     </a>
 </li>
 
                         {% if user.is_authenticated and user.is_staff %}
                         <li class="nav-item">
-                            <a href="{% url 'user_list' %}" class="nav-link">
+                            <a href="{% url 'users:user_list' %}" class="nav-link">
                                 <i class="fas fa-users me-1"></i>Manage Users
                             </a>
                         </li>
@@ -358,23 +358,23 @@
                                 </a>
                             </li>
                             <li class="nav-item">
-                                <a href="{% url 'user_profile' username=request.user.username %}" class="nav-link">
+                                <a href="{% url 'users:user_profile' username=request.user.username %}" class="nav-link">
                                     <i class="fas fa-user-circle me-1"></i>Profile
                                 </a>
                             </li>
                             <li class="nav-item">
-                                <a href="{% url 'logout_user' %}" class="nav-link">
+                                <a href="{% url 'users:logout_user' %}" class="nav-link">
                                     <i class="fas fa-sign-out-alt me-1"></i>Logout
                                 </a>
                             </li>
                         {% else %}
                             <li class="nav-item">
-                                <a href="{% url 'login_user' %}" class="nav-link">
+                                <a href="{% url 'users:login_user' %}" class="nav-link">
                                     <i class="fas fa-sign-in-alt me-1"></i>Login
                                 </a>
                             </li>
                             <li class="nav-item">
-                                <a href="{% url 'register_user' %}" class="nav-link">
+                                <a href="{% url 'users:register_user' %}" class="nav-link">
                                     <i class="fas fa-user-plus me-1"></i>Register
                                 </a>
                             </li>
