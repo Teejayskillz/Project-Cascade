@@ -1,6 +1,6 @@
 from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin
-from .models import userRegistration
+from .models import CustomUser
 # Register your models here.
 
 class CustomUserAdmin(UserAdmin):
@@ -10,5 +10,5 @@ class CustomUserAdmin(UserAdmin):
     )
     search_fields = UserAdmin.search_fields + ('phone_number',)
 
-admin.site.register(userRegistration, CustomUserAdmin)    
+admin.site.register(CustomUser, CustomUserAdmin)    
 
