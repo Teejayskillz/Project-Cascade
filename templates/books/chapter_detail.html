@@ -141,14 +141,14 @@
     <div class="reading-container">
         <nav aria-label="breadcrumb">
             <ol class="breadcrumb custom-breadcrumb">
-                <li class="breadcrumb-item"><a href="{% url 'story-detail' slug=chapter.story.slug %}">{{ chapter.story.title }}</a></li>
+                <li class="breadcrumb-item"><a href="{% url 'books:story-detail' slug=chapter.story.slug %}">{{ chapter.story.title }}</a></li>
                 <li class="breadcrumb-item active" aria-current="page">{{ chapter.title }}</li>
             </ol>
         </nav>
         
         <div class="chapter-header">
             <h1 class="chapter-title">{{ chapter.title }}</h1>
-            <a href="{% url 'user_profile' username=chapter.story.author.username %}" class="story-link">
+            <a href="{% url 'users:user_profile' username=chapter.story.author.username %}" class="story-link">
                 By {{ chapter.story.author.username }}
             </a>
         </div>
@@ -159,7 +159,7 @@
         
         {% if user == chapter.story.author %}
         <div class="edit-link-container">
-            <a href="{% url 'chapter-edit' story_pk=chapter.story.pk chapter_pk=chapter.pk %}" class="edit-chapter-link">
+            <a href="{% url 'books:chapter-edit' story_pk=chapter.story.pk chapter_pk=chapter.pk %}" class="edit-chapter-link">
                 <i class="fas fa-edit me-1"></i> Edit this Chapter
             </a>
         </div>
@@ -169,7 +169,7 @@
             {% with prev=chapter.get_previous_by_order %}
             <div>
                 {% if prev %}
-                <a href="{% url 'chapter-detail' story_pk=chapter.story.pk chapter_pk=prev.pk %}" class="chapter-nav-btn">
+                <a href="{% url 'books:chapter-detail' story_pk=chapter.story.pk chapter_pk=prev.pk %}" class="chapter-nav-btn">
                     <i class="fas fa-arrow-left me-2"></i>Previous
                 </a>
                 {% endif %}
@@ -179,7 +179,7 @@
             {% with next=chapter.get_next_by_order %}
             <div>
                 {% if next %}
-                <a href="{% url 'chapter-detail' story_pk=chapter.story.pk ch_pk=next.pk %}" class="chapter-nav-btn">
+                <a href="{% url 'books:chapter-detail' story_pk=chapter.story.pk ch_pk=next.pk %}" class="chapter-nav-btn">
                     Next<i class="fas fa-arrow-right ms-2"></i>
                 </a>
                 {% endif %}

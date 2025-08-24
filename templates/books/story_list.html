@@ -194,7 +194,7 @@
             {% for story in stories %}
             <div class="col">
                 <div class="story-card">
-                    <a href="{% url 'story-detail' slug=story.slug %}" class="card-image-container">
+                    <a href="{% url 'books:story-detail' slug=story.slug %}" class="card-image-container">
                         {% if story.cover_image %}
                             <img src="{{ story.cover_image.url }}" class="story-card-image" alt="Cover image for {{ story.title }}">
                         {% else %}
@@ -203,13 +203,13 @@
                     </a>
                     <div class="card-body">
                         <h3 class="story-card-title">
-                            <a href="{% url 'story-detail' slug=story.slug %}">{{ story.title|truncatechars:50 }}</a>
+                            <a href="{% url 'books:story-detail' slug=story.slug %}">{{ story.title|truncatechars:50 }}</a>
                         </h3>
                         <p class="card-text">{{ story.synopsis|truncatewords:25 }}</p>
                         <div class="author-info">
                             <img src="{{ story.author.profile.profile_picture.url }}" alt="Author avatar">
                             <span>
-                                By <a href="{% url 'user_profile' username=story.author.username %}">{{ story.author.username }}</a>
+                                By <a href="{% url 'users:user_profile' username=story.author.username %}">{{ story.author.username }}</a>
                                 <span class="d-block text-muted small mt-1">{{ story.created_at|naturalday }}</span>
                             </span>
                         </div>

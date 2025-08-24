@@ -1,41 +1,133 @@
-
 {% extends 'base.html' %}
 {% load humanize %}
 
-
 {% block title %}Manage Author Applications{% endblock %}
+
+{% block extra_head %}
+<style>
+    .application-card {
+        background: rgba(255, 255, 255, 0.9);
+        backdrop-filter: blur(10px);
+        border: 1px solid rgba(255, 255, 255, 0.2);
+        border-radius: 15px;
+        box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+        overflow: hidden;
+    }
+
+    .application-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 8px 40px rgba(0, 0, 0, 0.15);
+    }
+
+    .card-header {
+        background-color: var(--light-gray);
+        border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+        padding: 1rem 1.5rem;
+        font-weight: 600;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+
+    .card-body {
+        padding: 1.5rem;
+    }
+
+    .card-title {
+        font-size: 1.25rem;
+        color: var(--netflix-red);
+    }
+
+    .btn-action-group .btn {
+        border-radius: 20px;
+        font-weight: 500;
+        min-width: 90px;
+    }
+
+    .btn-approve {
+        background-color: #28a745;
+        border-color: #28a745;
+        color: #fff;
+    }
+
+    .btn-reject {
+        background-color: #dc3545;
+        border-color: #dc3545;
+        color: #fff;
+    }
+
+    .btn-sample {
+        background: linear-gradient(45deg, #007bff, #0056b3);
+        color: white;
+        border: none;
+        border-radius: 20px;
+        padding: 8px 20px;
+        text-decoration: none;
+        transition: all 0.3s ease;
+    }
+
+    .btn-sample:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 4px 15px rgba(0, 123, 255, 0.4);
+    }
+
+    .placeholder-text {
+        color: var(--medium-gray);
+    }
+</style>
+{% endblock %}
 
 {% block content %}
 <div class="container py-5">
-    <h1 class="text-center mb-4">Manage Author Applications</h1>
+    <h1 class="text-center mb-5">Manage Author Applications</h1>
     
     {% if applications %}
-        <div class="list-group">
+        <div class="row g-4 justify-content-center">
         {% for app in applications %}
-            <div class="list-group-item list-group-item-action mb-3">
-                <div class="d-flex w-100 justify-content-between">
-                    <h5 class="mb-1">Application from {{ app.user.username }}</h5>
-                    <small>{{ app.submission_date|naturaltime }}</small>
+            <div class="col-lg-8 col-md-10">
+                <div class="card application-card">
+                    <div class="card-body">
+                        <div class="d-flex w-100 justify-content-between align-items-center mb-3">
+                            <h5 class="card-title mb-0">
+                                <i class="fas fa-user-circle me-2"></i>Application from {{ app.user.username }}
+                            </h5>
+                            <small class="text-muted">{{ app.submission_date|naturaltime }}</small>
+                        </div>
+                        
+                        <p class="card-text mb-3">{{ app.reason|default:"No reason provided." }}</p>
+                        
+                        <div class="d-flex justify-content-between align-items-center flex-wrap">
+                            <a href="{{ app.sample_of_work.url }}" target="_blank" class="btn btn-sample mt-2">
+                                <i class="fas fa-file-alt me-1"></i>View Sample of Work
+                            </a>
+
+                            <div class="btn-group btn-action-group mt-2" role="group">
+                                <form action="{% url 'users:approve_or_reject' app.id 'approve' %}" method="post">
+                                    {% csrf_token %}
+                                    <button type="submit" class="btn btn-approve me-2">
+                                        <i class="fas fa-check-circle me-1"></i>Approve
+                                    </button>
+                                </form>
+                                
+                                <form action="{% url 'users:approve_or_reject' app.id 'reject' %}" method="post">
+                                    {% csrf_token %}
+                                    <button type="submit" class="btn btn-reject">
+                                        <i class="fas fa-times-circle me-1"></i>Reject
+                                    </button>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
                 </div>
-                <p class="mb-1">{{ app.reason }}</p>
-                <a href="{{ user.sample_of_work.url }}" target="_blank" class="badge bg-primary">View Sample of Work</a>
-                
-                <div class="d-flex justify-content-end mt-2">
-    <form action="{% url 'users:approve_or_reject' app.id 'approve' %}" method="post" class="me-2">
-        {% csrf_token %}
-        <button type="submit" class="btn btn-success btn-sm">Approve</button>
-    </form>
-    
-    <form action="{% url 'users:approve_or_reject' app.id 'reject' %}" method="post">
-        {% csrf_token %}
-        <button type="submit" class="btn btn-danger btn-sm">Reject</button>
-    </form>
-</div>
             </div>
         {% endfor %}
         </div>
     {% else %}
-        <p class="text-center text-muted">No pending applications at this time.</p>
+        <div class="text-center py-5">
+            <i class="fas fa-box-open fa-5x text-muted mb-3"></i>
+            <p class="lead placeholder-text">No pending applications at this time.</p>
+        </div>
     {% endif %}
 </div>
 {% endblock %}

@@ -37,7 +37,7 @@ class StoryCreateView(AuthorRequiredMixin, CreateView):
     model = Story
     form_class = StoryForm
     template_name = 'books/story_form.html'
-    success_url = reverse_lazy('story-list')
+    success_url = reverse_lazy('books:story-manage')
 
     def form_valid(self, form):
         form.instance.author = self.request.user

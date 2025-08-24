@@ -173,14 +173,14 @@
             </div>
             <div>
                 <h1 class="story-title text-white">{{ story.title }}</h1>
-                <h2 class="h5 text-white-50">By <a href="{% url 'user_profile' username=story.author.username %}" class="author-link">{{ story.author.username }}</a></h2>
+                <h2 class="h5 text-white-50">By <a href="{% url 'users:user_profile' username=story.author.username %}" class="author-link">{{ story.author.username }}</a></h2>
                 <div class="d-flex align-items-center mt-3">
                     <span class="me-3 text-white-50"><i class="fas fa-book me-2"></i>{{ story.chapters.count }} chapters</span>
                     <span class="me-3 text-white-50"><i class="fas fa-clock me-2"></i>{{ story.created_at|naturalday }}</span>
                 </div>
                 {% if user == story.author %}
                     <div class="cta-btn-group mt-4">
-                        <a href="{% url 'chapter-add' story_pk=story.pk %}" class="btn btn-danger">
+                        <a href="{% url 'books:chapter-add' story_pk=story.pk %}" class="btn btn-danger">
                             <i class="fas fa-plus me-2"></i>Add New Chapter
                         </a>
                     </div>
@@ -202,11 +202,11 @@
             <ol class="chapter-list">
                 {% for ch in story.chapters.all %}
                     <li class="chapter-item">
-                        <a href="{% url 'chapter-detail' story_pk=story.pk chapter_pk=ch.pk %}" class="chapter-link">
+                        <a href="{% url 'books:chapter-detail' story_pk=story.pk chapter_pk=ch.pk %}" class="chapter-link">
                             Chapter {{ forloop.counter }}: {{ ch.title }}
                         </a>
                         {% if user == story.author %}
-                            <a href="{% url 'chapter-edit' story_pk=story.pk chapter_pk=ch.pk %}" class="edit-link">
+                            <a href="{% url 'books:chapter-edit' story_pk=story.pk chapter_pk=ch.pk %}" class="edit-link">
                                 <i class="fas fa-edit me-1"></i>Edit
                             </a>
                         {% endif %}
