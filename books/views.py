@@ -96,3 +96,22 @@ class ChapterDetailView(DetailView):
 
     def get_queryset(self):
         return Chapter.objects.select_related("story")
+    
+class StoryDeleteView(AuthorRequiredMixin, IsObjectAuthorMixin, DeleteView):
+    model = Story
+    template_name = 'books/story_confirm_delete.html'
+    success_url = reverse_lazy('books:story-manage')
+    context_object_name = 'story'
+
+class ChapterDeleteView(AuthorRequiredMixin, DeleteView):
+    model = Chapter
+    template_name = 'books/chapter_confirm_delete.html'
+    context_object_name = 'chapter'
+    pk_url_kwarg = 'chapter_pk'
+
+    def get_queryset(self):
+        return Chapter.objects.filter(story__author=self.request.user)
+
+    def get_success_url(self):
+        chapter = self.get_object()
+        return reverse_lazy('books:story-detail', kwargs={'pk': chapter.story.pk})        

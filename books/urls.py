@@ -28,4 +28,13 @@ urlpatterns = [
     views.ChapterDetailView.as_view(),
     name="chapter-detail"
 ),
+
+    path("stories/<slug:slug>/delete/", views.StoryDeleteView.as_view(), name="story-delete"),
+
+    # CHAPTER DELETE
+    path(
+        "stories/<slug:slug>/chapters/<int:chapter_pk>/delete/",
+        views.ChapterDeleteView.as_view(),
+        name="chapter-delete"
+    ),
 ]
