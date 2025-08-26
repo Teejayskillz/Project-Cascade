@@ -11,6 +11,7 @@ https://docs.djangoproject.com/en/4.2/ref/settings/
 """
 
 from pathlib import Path
+import os
 import environ
 import pymysql
 
@@ -29,7 +30,9 @@ DEBUG = env.bool("DEBUG", default=True)
 # See https://docs.djangoproject.com/en/4.2/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-#jvyk2=96k_*+vx83=d9!zi)a*6g4^2(qyit1eak_zg5==!nj7'
+SECRET_KEY = os.getenv('SECRET_KEY')
+
+
 
 # SECURITY WARNING: don't run with debug turned on in production!
 
