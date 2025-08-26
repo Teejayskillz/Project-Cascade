@@ -34,7 +34,7 @@ SECRET_KEY = 'django-insecure-#jvyk2=96k_*+vx83=d9!zi)a*6g4^2(qyit1eak_zg5==!nj7
 # SECURITY WARNING: don't run with debug turned on in production!
 
 
-ALLOWED_HOSTS = ['jaraflix.com','www.jaraflix.com', 'localhost', 'http://127.0.0.1:8000']
+ALLOWED_HOSTS = ['jaraflix.com','www.jaraflix.com', 'localhost', '127.0.0.1']
 
 
 # Application definition

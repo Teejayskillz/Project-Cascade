@@ -5,29 +5,71 @@
 {% block title %}Apply for Author | JARAFLIX{% endblock title %}
 
 {% block extra_head %}
-    <meta name="description" content="Apply to become an author at JARAFLIX.">
-    <meta name="keywords" content="author application, content creator, user roles, JARAFLIX">
+    <meta name="description" content="Apply to become an author at JARAFLIX. Connect with your audience and publish your work.">
+    <meta name="keywords" content="author application, content creator, user roles, JARAFLIX, write, publish, stories, books">
     <link rel="canonical" href="{{ request.build_absolute_uri }}">
+    
+    <style>
+        .btn-jaraflix-gradient {
+            background: linear-gradient(45deg, var(--netflix-red), var(--netflix-dark-red));
+            color: white;
+            border: none;
+            border-radius: 25px;
+            padding: 12px 30px;
+            transition: all 0.3s ease;
+            font-weight: 600;
+            box-shadow: 0 4px 15px rgba(229, 9, 20, 0.4);
+        }
+        
+        .btn-jaraflix-gradient:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(229, 9, 20, 0.6);
+            color: white;
+        }
+        
+        .apply-card {
+            background: rgba(255, 255, 255, 0.9);
+            backdrop-filter: blur(10px);
+            border: none;
+            border-radius: 20px;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.15);
+        }
+
+        .form-control {
+            border-radius: 10px;
+            padding: 10px 15px;
+        }
+    </style>
 {% endblock extra_head %}
 
 {% block content %}
 <div class="container py-5">
     <div class="row justify-content-center">
         <div class="col-md-8 col-lg-6">
-            <div class="card shadow-lg p-4">
-                <h2 class="card-title text-center mb-4">Apply for Author Role</h2>
-                <p class="text-center text-muted mb-4">
-                    Fill out the form below to submit your application. We will review it and get back to you soon.
-                </p>
+            <div class="card apply-card p-md-5 p-4">
+                <div class="text-center mb-5">
+                    <div class="d-inline-block p-3 rounded-circle" style="background: rgba(229, 9, 20, 0.1);">
+                        <i class="fas fa-edit fa-2x" style="color: var(--netflix-red);"></i>
+                    </div>
+                    <h2 class="card-title fw-bold mt-4 mb-2">Apply to Become a JARAFLIX Author</h2>
+                    <p class="text-muted lead">
+                        Join our community of storytellers. Submit your application and let us discover your talent.
+                    </p>
+                </div>
                 <form method="post" class="needs-validation" novalidate enctype="multipart/form-data">
-    {% csrf_token %}
-    {{ form|crispy }}
-    <div class="d-grid mt-4">
-        <button class="btn btn-primary btn-lg" type="submit">Submit Application</button>
-    </div>
-</form>
+                    {% csrf_token %}
+                    {{ form|crispy }}
+                    <div class="d-grid mt-4">
+                        <button class="btn btn-jaraflix-gradient btn-lg" type="submit">
+                            <i class="fas fa-paper-plane me-2"></i>Submit Application
+                        </button>
+                    </div>
+                </form>
             </div>
         </div>
     </div>
 </div>
 {% endblock content %}
+
+{% block extra_scripts %}
+    {% endblock extra_scripts %}
