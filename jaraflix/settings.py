@@ -100,7 +100,7 @@ WSGI_APPLICATION = 'jaraflix.wsgi.application'
 # https://docs.djangoproject.com/en/4.2/ref/settings/#databases
 
 DATABASES = {
-    'default': env.db(),
+    'default': env.db('DATABASE_URL'),
 }
 
 # Password validation
