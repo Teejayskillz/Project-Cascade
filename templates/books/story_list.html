@@ -140,6 +140,24 @@
     .author-info a:hover {
         color: var(--netflix-red);
     }
+    
+    .genre-tag {
+        display: inline-block;
+        background-color: #f0f2f5;
+        color: var(--text-dark);
+        font-size: 0.8rem;
+        font-weight: 500;
+        padding: 0.3rem 0.6rem;
+        border-radius: 5px;
+        margin-right: 0.5rem;
+        margin-bottom: 0.5rem;
+        text-decoration: none;
+        transition: background-color 0.3s ease;
+    }
+    
+    .genre-tag:hover {
+        background-color: #e2e6e9;
+    }
 
     /* Pagination Styles */
     .pagination-container {
@@ -206,6 +224,11 @@
                             <a href="{% url 'books:story-detail' slug=story.slug %}">{{ story.title|truncatechars:50 }}</a>
                         </h3>
                         <p class="card-text">{{ story.synopsis|truncatewords:25 }}</p>
+                        <div class="d-flex flex-wrap mb-2">
+                            {% for genre in story.genres.all|slice:":3" %}
+                                <a href="{% url 'books:stories-by-genre' genre_slug=genre.slug %}" class="genre-tag">{{ genre.name }}</a>
+                            {% endfor %}
+                        </div>
                         <div class="author-info">
                             <img src="{{ story.author.profile.profile_picture.url }}" alt="Author avatar">
                             <span>
@@ -235,7 +258,7 @@
                         {% if page_obj.number == i %}
                             <li class="page-item active" aria-current="page"><span class="page-link">{{ i }}</span></li>
                         {% else %}
-                            <li class="page-item"><a class="page-link" href="?page={{ i }}">{{ i }}">{{ i }}</a></li>
+                            <li class="page-item"><a class="page-link" href="?page={{ i }}">{{ i }}</a></li>
                         {% endif %}
                     {% endfor %}
                     
