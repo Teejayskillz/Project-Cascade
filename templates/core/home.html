@@ -124,7 +124,7 @@
 
     .card-image-container {
         position: relative;
-        padding-top: 150%; /* 2:3 Aspect Ratio */
+        padding-top: 150%; /* Reverted to 2:3 aspect ratio for better look */
         overflow: hidden;
     }
     
@@ -143,7 +143,7 @@
     }
     
     .story-card .card-body {
-        padding: 1.5rem;
+        padding: 0.75rem; /* Further reduced padding */
         flex-grow: 1;
         display: flex;
         flex-direction: column;
@@ -151,10 +151,10 @@
     
     .story-card-title {
         font-family: 'Playfair Display', serif;
-        font-size: 1.5rem;
+        font-size: 1rem; /* Further reduced font size */
         font-weight: 700;
-        margin-bottom: 0.5rem;
-        line-height: 1.3;
+        margin-bottom: 0.2rem;
+        line-height: 1.2;
     }
 
     .story-card-title a {
@@ -169,8 +169,8 @@
 
     .card-text {
         color: var(--text-dark);
-        font-size: 0.95rem;
-        margin-bottom: 1rem;
+        font-size: 0.75rem; /* Further reduced font size */
+        margin-bottom: 0.5rem;
         flex-grow: 1;
     }
 
@@ -181,12 +181,16 @@
     }
 
     .author-info img {
-        width: 40px;
-        height: 40px;
+        width: 25px; /* Further reduced avatar size */
+        height: 25px;
         border-radius: 50%;
         object-fit: cover;
-        margin-right: 0.75rem;
-        border: 2px solid var(--netflix-red);
+        margin-right: 0.5rem; /* Reduced margin */
+        border: 1px solid var(--netflix-red); /* Reduced border size */
+    }
+    
+    .author-info span {
+        font-size: 0.75rem;
     }
 
     .author-info span a {
@@ -321,9 +325,9 @@
                         <p class="card-text">{{ story.synopsis|truncatewords:25 }}</p>
                         <div class="author-info">
                             {% if story.author.profile.profile_picture %}
-                                <img src="{{ story.author.profile.profile_picture.url }}" alt="Author avatar">
+                                <img src="{{ story.author.profile.profile_picture.url }}" class="story-card-author-image" alt="Author avatar">
                             {% else %}
-                                <img src="{% static 'images/default-avatar.png' %}" alt="Default avatar">
+                                <img src="{% static 'images/default-avatar.png' %}" class="story-card-author-image" alt="Default avatar">
                             {% endif %}
                             <span>
                                 By <a href="{% url 'users:user_profile' username=story.author.username %}">{{ story.author.username }}</a>
