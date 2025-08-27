@@ -531,6 +531,44 @@
                 this.classList.add('active');
             });
         });
+
+        
     </script>
+    <script>
+    function fetchNotifications() {
+        fetch("{% url 'notifications:get_unread_notifications' %}")
+            .then(response => response.json())
+            .then(data => {
+                // Update badge
+                const badge = document.querySelector('#navbarDropdownNotifications .badge');
+                if (badge) {
+                    badge.textContent = data.count > 0 ? data.count : "";
+                }
+
+                // Update dropdown
+                const dropdown = document.querySelector('#navbarDropdownNotifications + .dropdown-menu');
+                dropdown.innerHTML = "";
+
+                if (data.notifications.length === 0) {
+                    dropdown.innerHTML = `<li><a class="dropdown-item notification-item" href="#">No notifications yet.</a></li>`;
+                } else {
+                    data.notifications.forEach(n => {
+                        dropdown.innerHTML += `
+                            <li>
+                                <a class="dropdown-item notification-item" href="#">
+                                    ${n.actor} ${n.verb}
+                                    <small>${n.timestamp}</small>
+                                </a>
+                            </li>`;
+                    });
+                }
+            });
+    }
+
+    // Fetch every 10s
+    setInterval(fetchNotifications, 5000);
+    document.addEventListener("DOMContentLoaded", fetchNotifications);
+</script>
+
 </body>
 </html>

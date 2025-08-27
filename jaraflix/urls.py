@@ -26,7 +26,7 @@ urlpatterns = [
     path('', include('users.urls', namespace='users')),
     path('', include('dashboard.urls')),
     path('', include('books.urls')),
-    
+    path("notifications/", include("user_notifications.urls")),
 ]
 if settings.DEBUG:
     urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
