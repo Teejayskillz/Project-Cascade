@@ -1,0 +1,98 @@
+{% extends "base.html" %}
+{% load static %}
+{% load humanize %}
+
+{% block title %}Explore Genres - JARAFLIX{% endblock %}
+
+{% block meta_description %}
+    Browse all story genres on JARAFLIX. Find your next favorite story by exploring genres like Fantasy, Romance, Horror, and more.
+{% endblock meta_description %}
+
+{% block extra_head %}
+<style>
+    .genre-card {
+        background-color: #fff;
+        border-radius: 12px;
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+        height: 150px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        text-align: center;
+        position: relative;
+        overflow: hidden;
+    }
+
+    .genre-card::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0, 0, 0, 0.1);
+        opacity: 0;
+        transition: opacity 0.3s ease;
+        z-index: 1;
+    }
+
+    .genre-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+    }
+
+    .genre-card:hover::before {
+        opacity: 1;
+    }
+    
+    .genre-card-title {
+        color: var(--text-dark);
+        font-weight: 600;
+        font-size: 1.5rem;
+        transition: color 0.3s ease;
+        position: relative;
+        z-index: 2;
+    }
+
+    .genre-card:hover .genre-card-title {
+        color: var(--netflix-red);
+    }
+
+    .section-heading {
+        font-family: 'Playfair Display', serif;
+        font-weight: 700;
+        color: var(--text-dark);
+        margin-top: 3rem;
+        margin-bottom: 1.5rem;
+        position: relative;
+    }
+
+    .section-heading::after {
+        content: '';
+        display: block;
+        width: 60px;
+        height: 3px;
+        background: var(--netflix-red);
+        margin-top: 0.5rem;
+        border-radius: 3px;
+    }
+</style>
+{% endblock extra_head %}
+
+{% block content %}
+<div class="container mt-5">
+    <h1 class="section-heading">All Genres</h1>
+    <div class="row">
+        {% for genre in genres %}
+        <div class="col-6 col-md-4 col-lg-3 mb-4">
+            <a href="{% url 'books:stories-by-genre' genre_slug=genre.slug %}" class="card-link text-decoration-none">
+                <div class="genre-card">
+                    <h5 class="genre-card-title">{{ genre.name }}</h5>
+                </div>
+            </a>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}

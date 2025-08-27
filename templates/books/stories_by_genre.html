@@ -1,0 +1,107 @@
+{% extends "base.html" %}
+{% load static %}
+{% load humanize %}
+
+{% block title %}Stories - {{ genre.name }} - JARAFLIX{% endblock %}
+
+{% block meta_description %}
+    Read all {{ genre.name }} stories on JARAFLIX. Explore a collection of captivating tales in the genre you love.
+{% endblock meta_description %}
+
+{% block extra_head %}
+<style>
+    .story-card {
+        border: none;
+        border-radius: 12px;
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+        overflow: hidden;
+        background-color: #fff;
+    }
+
+    .story-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+    }
+
+    .story-card-image {
+        height: 250px;
+        object-fit: cover;
+        transition: transform 0.5s ease;
+    }
+
+    .story-card:hover .story-card-image {
+        transform: scale(1.05);
+    }
+
+    .story-card-body {
+        padding: 1.5rem;
+    }
+
+    .story-card-title {
+        font-family: 'Playfair Display', serif;
+        font-weight: 700;
+        font-size: 1.25rem;
+        margin-bottom: 0.5rem;
+        color: var(--text-dark);
+        transition: color 0.3s ease;
+    }
+
+    .story-card:hover .story-card-title {
+        color: var(--netflix-red);
+    }
+
+    .story-card-author {
+        font-size: 0.9rem;
+        color: var(--medium-gray);
+    }
+
+    .section-heading {
+        font-family: 'Playfair Display', serif;
+        font-weight: 700;
+        color: var(--text-dark);
+        margin-top: 3rem;
+        margin-bottom: 1.5rem;
+        position: relative;
+    }
+
+    .section-heading::after {
+        content: '';
+        display: block;
+        width: 60px;
+        height: 3px;
+        background: var(--netflix-red);
+        margin-top: 0.5rem;
+        border-radius: 3px;
+    }
+</style>
+{% endblock extra_head %}
+
+{% block content %}
+<div class="container mt-5">
+    <h1 class="section-heading">All Stories in {{ genre.name }}</h1>
+    <div class="row">
+        {% for story in stories %}
+        <div class="col-6 col-md-4 col-lg-3 mb-4">
+            <a href="{% url 'books:story-detail' slug=story.slug %}" class="card-link text-decoration-none">
+                <div class="story-card h-100">
+                    {% if story.cover_image %}
+                        <img src="{{ story.cover_image.url }}" class="story-card-image w-100" alt="Cover of {{ story.title }}">
+                    {% else %}
+                        <img src="{% static 'images/placeholder-story.jpg' %}" class="story-card-image w-100" alt="Placeholder cover">
+                    {% endif %}
+                    <div class="story-card-body">
+                        <h5 class="story-card-title">{{ story.title }}</h5>
+                        <p class="story-card-author">By {{ story.author.username }}</p>
+                    </div>
+                </div>
+            </a>
+        </div>
+        {% empty %}
+        <div class="alert alert-info text-center" role="alert">
+            No stories found in this genre.
+        </div>
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}

@@ -37,4 +37,7 @@ urlpatterns = [
         views.ChapterDeleteView.as_view(),
         name="chapter-delete"
     ),
+
+    path('genres/', views.genre_list, name='genre-list'),
+    path('genres/<slug:genre_slug>/', views.stories_by_genre, name='stories-by-genre'),
 ]

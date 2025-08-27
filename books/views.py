@@ -4,7 +4,7 @@ from django.shortcuts import render, get_object_or_404, redirect
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.urls import reverse_lazy
 from django.views.generic import CreateView, UpdateView, DetailView, ListView, DeleteView
-from .models import Story, Chapter
+from .models import Story, Chapter, Genre
 from .forms import StoryForm, ChapterForm
 from django.core.exceptions import PermissionDenied
 
@@ -142,3 +142,25 @@ class ChapterDeleteView(AuthorRequiredMixin, DeleteView):
     def get_success_url(self):
         chapter = self.get_object()
         return reverse_lazy('books:story-detail', kwargs={'pk': chapter.story.pk})        
+    
+def genre_list(request):
+    """
+    View to list all available genres.
+    """
+    genres = Genre.objects.all().order_by('name')
+    context = {
+        'genres': genres
+    }
+    return render(request, 'books/genre_list.html', context)
+
+def stories_by_genre(request, genre_slug):
+    """
+    View to list all stories for a specific genre.
+    """
+    genre = get_object_or_404(Genre, slug=genre_slug)
+    stories = Story.objects.filter(genres=genre).order_by('-published_date')
+    context = {
+        'genre': genre,
+        'stories': stories,
+    }
+    return render(request, 'books/stories_by_genre.html', context)    

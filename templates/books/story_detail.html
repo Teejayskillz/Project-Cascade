@@ -8,7 +8,12 @@
     Read "{{ story.title }}", a captivating story by {{ story.author.username }}. Explore the synopsis and dive into the chapters now on JARAFLIX.
 {% endblock meta_description %}
 
+{% block meta_keywords %}
+    {{ story.title }}, {{ story.author.username }}, JARAFLIX, read online, {% for genre in story.genres.all %}{{ genre.name }}{% if not forloop.last %}, {% endif %}{% endfor %}
+{% endblock meta_keywords %}
+
 {% block extra_head %}
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=Montserrat:wght@400;500;600&display=swap" rel="stylesheet">
 <style>
     .story-hero {
         position: relative;
@@ -64,6 +69,16 @@
     
     .author-link:hover {
         color: white;
+    }
+    
+    .genre-link {
+        color: rgba(255, 255, 255, 0.8) !important;
+        text-decoration: none;
+        transition: color 0.3s ease;
+    }
+    
+    .genre-link:hover {
+        color: white !important;
     }
 
     .synopsis-container {
@@ -177,6 +192,14 @@
                 <div class="d-flex align-items-center mt-3">
                     <span class="me-3 text-white-50"><i class="fas fa-book me-2"></i>{{ story.chapters.count }} chapters</span>
                     <span class="me-3 text-white-50"><i class="fas fa-clock me-2"></i>{{ story.created_at|naturalday }}</span>
+                    {% if story.genres.all %}
+                        <span class="me-3 text-white-50">
+                            <i class="fas fa-tags me-2"></i>
+                            {% for genre in story.genres.all %}
+                                <a href="{% url 'books:stories-by-genre' genre_slug=genre.slug %}" class="genre-link">{{ genre.name }}</a>{% if not forloop.last %}, {% endif %}
+                            {% endfor %}
+                        </span>
+                    {% endif %}
                 </div>
                 {% if user == story.author %}
                     <div class="cta-btn-group mt-4">
