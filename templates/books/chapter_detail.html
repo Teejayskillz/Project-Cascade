@@ -2,7 +2,7 @@
 {% load static %}
 {% load humanize %}
 
-{% block title %}{{ chapter.title }} by {{ chapter.story.author.username }} - JARAFLIX{% endblock %}
+{% block title %}{{ chapter.title }} by {{ chapter.story.author.username }} - Book JRA{% endblock %}
 
 {% block meta_description %}
     Read Chapter {{ chapter.order }}: "{{ chapter.title }}" from the story "{{ chapter.story.title }}" by {{ chapter.story.author.username }}.
@@ -166,26 +166,24 @@
         {% endif %}
 
         <div class="chapter-nav">
-            {% with prev=chapter.get_previous_by_order %}
-            <div>
-                {% if prev %}
-                <a href="{% url 'books:chapter-detail' story_pk=chapter.story.pk chapter_pk=prev.pk %}" class="chapter-nav-btn">
-                    <i class="fas fa-arrow-left me-2"></i>Previous
-                </a>
-                {% endif %}
-            </div>
-            {% endwith %}
+    {% if previous_chapter %}
+    <div>
+        <a href="{% url 'books:chapter-detail' story_pk=previous_chapter.story.pk chapter_pk=previous_chapter.pk %}"
+           class="chapter-nav-btn">
+            <i class="fas fa-arrow-left me-2"></i>Previous Chapter
+        </a>
+    </div>
+    {% endif %}
 
-            {% with next=chapter.get_next_by_order %}
-            <div>
-                {% if next %}
-                <a href="{% url 'books:chapter-detail' story_pk=chapter.story.pk ch_pk=next.pk %}" class="chapter-nav-btn">
-                    Next<i class="fas fa-arrow-right ms-2"></i>
-                </a>
-                {% endif %}
-            </div>
-            {% endwith %}
-        </div>
+    {% if next_chapter %}
+    <div>
+        <a href="{% url 'books:chapter-detail' story_pk=next_chapter.story.pk chapter_pk=next_chapter.pk %}"
+           class="chapter-nav-btn">
+            Next Chapter<i class="fas fa-arrow-right ms-2"></i>
+        </a>
+    </div>
+    {% endif %}
+</div>
     </div>
 </div>
 {% endblock %}

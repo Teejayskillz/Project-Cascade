@@ -2,7 +2,7 @@ from django.db import models
 from django.conf import settings
 from ckeditor_uploader.fields import RichTextUploadingField
 from django.utils.text import slugify
-from django.urls import reverse
+from django.urls import reverse, reverse_lazy
 # Create your models here.
 
 class Story(models.Model):
@@ -53,3 +53,7 @@ class Chapter(models.Model):
 
     def __str__(self):
         return f"{self.story.title} - Ep. {self.order}: {self.title}"
+    
+    def get_success_url(self):
+        # This assumes 'story' is the ForeignKey to the Story model
+        return reverse_lazy('books:story-detail', kwargs={'slug': self.story.slug})

@@ -99,7 +99,31 @@ class ChapterDetailView(DetailView):
 
     def get_queryset(self):
         return Chapter.objects.select_related("story")
-    
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        
+        current_chapter = self.get_object()
+        
+        # Find the next chapter in the same story with a higher order number
+        next_chapter = Chapter.objects.filter(
+            story=current_chapter.story,
+            order__gt=current_chapter.order
+        ).order_by('order').first()
+        
+        # Find the previous chapter with a lower order number
+        previous_chapter = Chapter.objects.filter(
+            story=current_chapter.story,
+            order__lt=current_chapter.order
+        ).order_by('-order').first()
+
+        # Add the chapters to the context
+        context['next_chapter'] = next_chapter
+        context['previous_chapter'] = previous_chapter
+        
+        return context
+
+
 class StoryDeleteView(AuthorRequiredMixin, IsObjectAuthorMixin, DeleteView):
     model = Story
     template_name = 'books/story_confirm_delete.html'
