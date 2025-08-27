@@ -32,6 +32,8 @@
             --medium-gray: #6C757D;
             --text-white: #FFFFFF;
             --text-dark: #212529;
+            --primary-color: #E50914;
+            --secondary-color: #F44336;
         }
 
         * {
@@ -44,6 +46,7 @@
             color: var(--text-dark);
             background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
             min-height: 100vh;
+            padding-bottom: 56px; /* Space for the fixed bottom nav bar */
         }
 
         /* Header Styles */
@@ -219,6 +222,11 @@
                 margin: 0.25rem 0;
                 text-align: center;
             }
+            
+            /* Hide the top navbar's main links on mobile */
+            .main-header .navbar-collapse {
+                display: none !important;
+            }
         }
 
         @media (max-width: 575.98px) {
@@ -319,6 +327,172 @@
             display: block;
             margin-top: 0.25rem;
         }
+
+        /* Mobile Bottom Nav Bar Styles */
+        .bottom-nav {
+            display: none; /* Hide by default */
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            background: var(--text-white);
+            box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.1);
+            z-index: 1000;
+            justify-content: space-around;
+            align-items: center;
+            padding: 0.5rem 0;
+            border-top: 1px solid #e0e0e0;
+        }
+
+        .bottom-nav .nav-link {
+            flex-grow: 1;
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            font-size: 0.75rem;
+            color: var(--medium-gray);
+            transition: color 0.3s ease;
+            position: relative;
+            text-decoration: none;
+        }
+
+        .bottom-nav .nav-link:hover,
+        .bottom-nav .nav-link.active {
+            color: var(--primary-color);
+        }
+
+        .bottom-nav .nav-link i {
+            font-size: 1.25rem;
+            margin-bottom: 0.25rem;
+        }
+        
+        .bottom-nav .nav-link .badge {
+            position: absolute;
+            top: 0.25rem;
+            right: 0.25rem;
+            font-size: 0.6rem;
+        }
+        
+        /* New mobile top header styles */
+        .mobile-top-header {
+            display: none; /* Hidden by default */
+            padding: 0.5rem 1rem;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            border-bottom-left-radius: 15px;
+            border-bottom-right-radius: 15px;
+        }
+
+        .mobile-top-header .profile-pic {
+            width: 38px;
+            height: 38px;
+            border-radius: 50%;
+            background-color: #e9ecef;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #6c757d;
+            border: 2px solid var(--netflix-red);
+            transition: all 0.3s ease;
+        }
+        
+        .mobile-top-header .profile-pic:hover {
+            transform: scale(1.1);
+        }
+
+        .mobile-top-header .profile-pic img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            border-radius: 50%;
+        }
+
+        /* Offcanvas Menu Styles */
+        .offcanvas.offcanvas-start {
+            background: linear-gradient(135deg, #f5f7fa 0%, #e0e6ed 100%);
+            width: 75%;
+            max-width: 300px;
+            border-right: none;
+            box-shadow: 4px 0 20px rgba(0, 0, 0, 0.1);
+            backdrop-filter: blur(15px);
+            -webkit-backdrop-filter: blur(15px);
+        }
+
+        .offcanvas-header {
+            border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+            padding: 1rem 1.5rem;
+        }
+        
+        .offcanvas-header .profile-pic-container {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background-color: #e9ecef;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #6c757d;
+            border: 2px solid var(--netflix-red);
+            margin-right: 1rem;
+        }
+        
+        .offcanvas-header .profile-pic-container img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            border-radius: 50%;
+        }
+        
+        .offcanvas-header .profile-pic-container i {
+            font-size: 1.5rem;
+        }
+
+        .offcanvas-header .offcanvas-title {
+            font-weight: 600;
+            color: var(--text-dark);
+        }
+
+        .offcanvas-body .list-group-item {
+            background-color: transparent;
+            border: none;
+            padding: 1rem 1.5rem;
+            transition: all 0.2s ease;
+            font-weight: 500;
+        }
+
+        .offcanvas-body .list-group-item i {
+            width: 25px;
+            text-align: center;
+            margin-right: 1rem;
+            color: var(--medium-gray);
+        }
+
+        .offcanvas-body .list-group-item:hover {
+            background-color: rgba(229, 9, 20, 0.1);
+            color: var(--netflix-red);
+            transform: translateX(5px);
+        }
+        .offcanvas-body .list-group-item:hover i {
+            color: var(--netflix-red);
+        }
+
+
+        @media (max-width: 991.98px) {
+            .bottom-nav {
+                display: flex;
+            }
+            .main-header {
+                display: none !important;
+            }
+            .mobile-top-header {
+                display: flex;
+            }
+        }
     </style>
 </head>
 <body>
@@ -326,17 +500,32 @@
         <div class="spinner"></div>
     </div>
 
-    <header class="main-header">
+    <!-- Mobile-only Top Header -->
+    <header class="mobile-top-header d-lg-none d-flex justify-content-between align-items-center">
+        <a class="profile-pic me-2" href="#" data-bs-toggle="offcanvas" data-bs-target="#sidebarOffcanvas" aria-controls="sidebarOffcanvas">
+             {% if user.profile.profile_picture %}
+                <img src="{{ user.profile.profile_picture.url }}" alt="{{ user.get_full_name|default:user.username }}'s Profile Picture">
+             {% else %}
+                <i class="fas fa-user"></i>
+             {% endif %}
+        </a>
+        <a href="/" class="logo me-auto ms-auto">
+            <i class="fas fa-book-open"></i>
+            <span>JARAFLIX</span>
+        </a>
+        <a href="#" class="btn btn-sm btn-light rounded-pill p-2" style="color: var(--netflix-red);">
+            <i class="fas fa-search"></i>
+        </a>
+    </header>
+
+    <!-- Desktop Header -->
+    <header class="main-header d-none d-lg-block">
         <div class="container">
             <div class="d-flex flex-wrap justify-content-between align-items-center py-3">
                 <a href="/" class="logo">
                     <i class="fas fa-book-open"></i>
                     <span>JARAFLIX</span>
                 </a>
-                
-                <button class="navbar-toggler d-lg-none" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-                    <i class="fas fa-bars"></i>
-                </button>
                 
                 <div class="collapse navbar-collapse d-lg-block" id="navbarNav">
                    <ul class="nav nav-pills custom-navbar ms-auto">
@@ -346,10 +535,10 @@
                             </a>
                         </li>
                         <li class="nav-item">
-    <a href="{% url 'books:story-list' %}" class="nav-link ">
-        <i class="fas fa-book me-1"></i>All Stories
-    </a>
-</li>
+                            <a href="{% url 'books:story-list' %}" class="nav-link ">
+                                <i class="fas fa-book me-1"></i>All Stories
+                            </a>
+                        </li>
 
                         {% if user.is_authenticated and user.is_staff %}
                         <li class="nav-item">
@@ -358,7 +547,6 @@
                             </a>
                         </li>
                         {% endif %}
-
                         
                         <li class="nav-item">
                             <a href="#" class="nav-link">
@@ -401,7 +589,7 @@
                                 </a>
                             </li>
                             <li class="nav-item">
-                                <a href="{% url 'users:user_profile' username=request.user.username %}" class="nav-link">
+                                <a class="nav-link" href="#" data-bs-toggle="offcanvas" data-bs-target="#sidebarOffcanvas" aria-controls="sidebarOffcanvas">
                                     <i class="fas fa-user-circle me-1"></i>Profile
                                 </a>
                             </li>
@@ -427,6 +615,43 @@
             </div>
         </div>
     </header>
+
+    <!-- Sliding Side Menu (Offcanvas) -->
+    <div class="offcanvas offcanvas-start" tabindex="-1" id="sidebarOffcanvas" aria-labelledby="sidebarOffcanvasLabel">
+      <div class="offcanvas-header">
+        <div class="profile-pic-container">
+            {% if user.profile.profile_picture %}
+                <img src="{{ user.profile.profile_picture.url }}" alt="{{ user.get_full_name|default:user.username }}'s Profile Picture">
+            {% else %}
+                <i class="fas fa-user"></i>
+            {% endif %}
+        </div>
+        <h5 class="offcanvas-title" id="sidebarOffcanvasLabel">
+          {{ user.get_full_name|default:user.username }}
+        </h5>
+        <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+      </div>
+      <div class="offcanvas-body">
+        <div class="list-group list-group-flush">
+          <a href="{% url 'users:user_profile' username=request.user.username %}" class="list-group-item list-group-item-action">
+            <i class="fas fa-user"></i> Profile
+          </a>
+          <a href="#" class="list-group-item list-group-item-action">
+            <i class="fas fa-cogs"></i> Settings
+          </a>
+          <a href="#" class="list-group-item list-group-item-action">
+            <i class="fas fa-tags"></i> Genres
+          </a>
+          <a href="#" class="list-group-item list-group-item-action">
+            <i class="fas fa-headset"></i> Help Center
+          </a>
+          <a href="{% url 'users:logout_user' %}" class="list-group-item list-group-item-action">
+            <i class="fas fa-sign-out-alt"></i> Logout
+          </a>
+        </div>
+      </div>
+    </div>
+
 
     <main class="main-content">
         <div class="container">
@@ -455,10 +680,10 @@
                     <h5><i class="fas fa-book-open me-2"></i>JARAFLIX</h5>
                     <p>Connecting readers with their favorite authors through exclusive subscriptions and premium content.</p>
                     <div class="social-links">
-                        <a href="#"><i class="fab fa-twitter"></i></a>
-                        <a href="#"><i class="fab fa-facebook"></i></a>
-                        <a href="#"><i class="fab fa-instagram"></i></a>
-                        <a href="#"><i class="fab fa-linkedin"></i></a>
+                        <a href="https://twitter.com/jaraflix"><i class="fab fa-twitter"></i></a>
+                        <a href="https://facebook.com/jaraflix"><i class="fab fa-facebook"></i></a>
+                        <a href="https://instagram.com/jaraflix"><i class="fab fa-instagram"></i></a>
+                        <a href="https://linkedin.com/jaraflix"><i class="fab fa-linkedin"></i></a>
                     </div>
                 </div>
                 
@@ -527,7 +752,11 @@
         // Add active state management for navigation
         document.querySelectorAll('.nav-link').forEach(link => {
             link.addEventListener('click', function() {
-                document.querySelectorAll('.nav-link').forEach(l => l.classList.remove('active'));
+                // Remove 'active' from all links in the same parent
+                const parentNav = link.closest('.nav');
+                if (parentNav) {
+                    parentNav.querySelectorAll('.nav-link').forEach(l => l.classList.remove('active'));
+                }
                 this.classList.add('active');
             });
         });
@@ -536,39 +765,80 @@
     </script>
     <script>
     function fetchNotifications() {
-        fetch("{% url 'notifications:get_unread_notifications' %}")
-            .then(response => response.json())
-            .then(data => {
-                // Update badge
-                const badge = document.querySelector('#navbarDropdownNotifications .badge');
-                if (badge) {
-                    badge.textContent = data.count > 0 ? data.count : "";
-                }
+        // Only fetch if a user is authenticated
+        if ("{% if user.is_authenticated %}true{% else %}false{% endif %}" === "true") {
+            fetch("{% url 'notifications:get_unread_notifications' %}")
+                .then(response => response.json())
+                .then(data => {
+                    // Update badge
+                    const badge = document.querySelector('.bottom-nav .notifications-link .badge');
+                    if (badge) {
+                        badge.textContent = data.count > 0 ? data.count : "";
+                        badge.style.display = data.count > 0 ? 'inline-block' : 'none';
+                    }
 
-                // Update dropdown
-                const dropdown = document.querySelector('#navbarDropdownNotifications + .dropdown-menu');
-                dropdown.innerHTML = "";
-
-                if (data.notifications.length === 0) {
-                    dropdown.innerHTML = `<li><a class="dropdown-item notification-item" href="#">No notifications yet.</a></li>`;
-                } else {
-                    data.notifications.forEach(n => {
-                        dropdown.innerHTML += `
-                            <li>
-                                <a class="dropdown-item notification-item" href="#">
-                                    ${n.actor} ${n.verb}
-                                    <small>${n.timestamp}</small>
-                                </a>
-                            </li>`;
-                    });
-                }
-            });
+                    // Update dropdown (only for desktop)
+                    const dropdown = document.querySelector('#navbarDropdownNotifications + .dropdown-menu');
+                    if (dropdown) {
+                        dropdown.innerHTML = "";
+                        if (data.notifications.length === 0) {
+                            dropdown.innerHTML = `<li><a class="dropdown-item notification-item" href="#">No notifications yet.</a></li>`;
+                        } else {
+                            data.notifications.forEach(n => {
+                                dropdown.innerHTML += `
+                                    <li>
+                                        <a class="dropdown-item notification-item" href="#">
+                                            ${n.actor} ${n.verb}
+                                            <small>${n.timestamp}</small>
+                                        </a>
+                                    </li>`;
+                            });
+                        }
+                    }
+                });
+        }
     }
 
     // Fetch every 10s
     setInterval(fetchNotifications, 5000);
     document.addEventListener("DOMContentLoaded", fetchNotifications);
 </script>
+
+<!-- Mobile Bottom Navigation Bar -->
+<nav class="bottom-nav d-lg-none">
+    <a href="{% url 'home' %}" class="nav-link active">
+        <i class="fas fa-home"></i>
+        <span>Home</span>
+    </a>
+    <a href="{% url 'books:story-list' %}" class="nav-link">
+        <i class="fas fa-book"></i>
+        <span>Library</span>
+    </a>
+    <a href="#" class="nav-link">
+        <i class="fas fa-search"></i>
+        <span>Search</span>
+    </a>
+    {% if user.is_authenticated %}
+    <a href="#" class="nav-link notifications-link">
+        <i class="fas fa-bell"></i>
+        <span>Notifications</span>
+        {% if request.user.notifications.unread %}
+            <span class="badge bg-danger rounded-pill">{{ request.user.notifications.unread.count }}</span>
+        {% else %}
+            <span class="badge bg-danger rounded-pill" style="display: none;"></span>
+        {% endif %}
+    </a>
+    <a href="{% url 'dashboard:dashboard' %}" class="nav-link">
+        <i class="fas fa-tachometer-alt"></i>
+        <span>Dashboard</span>
+    </a>
+    {% else %}
+    <a href="{% url 'users:login_user' %}" class="nav-link">
+        <i class="fas fa-sign-in-alt"></i>
+        <span>Login</span>
+    </a>
+    {% endif %}
+</nav>
 
 </body>
 </html>
