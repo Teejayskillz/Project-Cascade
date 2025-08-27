@@ -1,7 +1,7 @@
 from django.urls import path
 from django.conf import settings
 from django.conf.urls.static import static
-from .views import register_user , login_user, logout_user , user_list_view, user_add_view, user_delete_view , user_toggle_active_view , user_profile_view , edit_profile_view, apply_for_author_view, manage_author_applications, approve_or_reject_application
+from .views import register_user , login_user, logout_user , user_list_view, user_add_view, user_delete_view , user_toggle_active_view , user_profile_view , edit_profile_view, apply_for_author_view, manage_author_applications, approve_or_reject_application, user_follow_view, user_unfollow_view
 
 app_name = 'users'
 
@@ -18,4 +18,6 @@ urlpatterns = [
     path('manage-applications/', manage_author_applications, name='manage_applications'),
     path('apply-for-author/', apply_for_author_view, name='apply_for_author'),
     path('applications/<int:app_id>/<str:action>/', approve_or_reject_application, name='approve_or_reject'),
+    path("follow/<str:username>/", user_follow_view, name="user_follow"),
+    path("unfollow/<str:username>/", user_unfollow_view, name="user_unfollow"),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

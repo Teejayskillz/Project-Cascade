@@ -4,7 +4,7 @@ from .forms import UserRegistrationForm, UserUpdateForm, ProfileUpdateForm , Aut
 from django.contrib.auth.forms import AuthenticationForm
 from django.contrib.auth import login, authenticate, logout
 from django.contrib.auth.decorators import login_required, permission_required, user_passes_test
-from .models import CustomUser, Profile , AuthorApplication
+from .models import CustomUser, Profile, AuthorApplication, Follow
 from django.contrib import messages
 
 
@@ -136,9 +136,21 @@ def user_delete_view(request, user_id):
 @login_required(login_url='login_user')
 def user_profile_view(request, username):
     profile_user = get_object_or_404(CustomUser, username=username) 
+
+    # Default to False
+    is_following = False  
+
+    # Only check if the user is not viewing their own profile
+    if request.user != profile_user:
+        from .models import Follow
+        is_following = Follow.objects.filter(
+            follower=request.user, following=profile_user
+        ).exists()
+
     context = {
         'profile_user': profile_user,
         'page_title': f"{profile_user.username}'s Profile",
+        'is_following': is_following,   # ✅ added
     }
     return render(request, 'users/user_profile.html', context)
 
@@ -239,3 +251,41 @@ def approve_or_reject_application(request, app_id, action):
             messages.info(request, "Application rejected.")
         
     return redirect('users:manage_applications')
+
+@login_required
+def user_follow_view(request, username):
+    user_to_follow = get_object_or_404(CustomUser, username=username)
+
+    if request.user == user_to_follow:
+        messages.error(request, "You cannot follow yourself.")
+        return redirect('user_profile', username=username)
+
+    follow, created = Follow.objects.get_or_create(
+        follower=request.user, following=user_to_follow
+    )
+    if created:
+        messages.success(request, f"You are now following {user_to_follow.username}.")
+    else:
+        messages.info(request, f"You are already following {user_to_follow.username}.")
+
+    return redirect('users:user_profile', username=username)
+
+
+@login_required
+def user_unfollow_view(request, username):
+    user_to_unfollow = get_object_or_404(CustomUser, username=username)
+
+    if request.user == user_to_unfollow:
+        messages.error(request, "You cannot unfollow yourself.")
+        return redirect('user_profile', username=username)
+
+    deleted, _ = Follow.objects.filter(
+        follower=request.user, following=user_to_unfollow
+    ).delete()
+
+    if deleted:
+        messages.success(request, f"You have unfollowed {user_to_unfollow.username}.")
+    else:
+        messages.info(request, f"You are not following {user_to_unfollow.username}.")
+
+    return redirect('users:user_profile', username=username)

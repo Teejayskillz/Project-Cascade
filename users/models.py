@@ -73,4 +73,26 @@ class AuthorApplication(models.Model):
     def __str__(self):
         return f"Application from {self.user.username} - {self.get_status_display()}"    
 
-        
+class Follow(models.Model):
+    follower = models.ForeignKey(
+        'CustomUser',
+        on_delete=models.CASCADE,
+        related_name='following',
+        verbose_name='Follower'
+    )
+    following = models.ForeignKey(
+        'CustomUser',
+        on_delete=models.CASCADE,
+        related_name='followers',
+        verbose_name='Following'
+    )
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        constraints = [
+            models.UniqueConstraint(fields=['follower', 'following'], name='unique_follow')
+        ]
+        ordering = ['-created_at']
+
+    def __str__(self):
+        return f"{self.follower.username} follows {self.following.username}"
