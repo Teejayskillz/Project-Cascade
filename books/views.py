@@ -19,7 +19,7 @@ class AuthorRequiredMixin(LoginRequiredMixin, UserPassesTestMixin):
 class IsObjectAuthorMixin(UserPassesTestMixin):
     def test_func(self):
         obj = self.get_object()
-        return self.request.user == obj.author
+        return self.request.user == obj.story.author
 
 class StoryManageView(AuthorRequiredMixin, ListView):
     model = Story
@@ -73,8 +73,10 @@ class ChapterCreateView(AuthorRequiredMixin, CreateView):
         return super().form_valid(form)
     
     def get_success_url(self):
-        return self.story.get_absolute_url() or reverse_lazy('story-detail', kwargs={'pk': self.story.pk})
-    
+        # Correctly passing the story's slug
+        return reverse_lazy('books:story-detail', kwargs={'slug': self.story.slug})
+
+
 class ChapterUpdateView(IsObjectAuthorMixin, UpdateView):
     model = Chapter
     form_class = ChapterForm
@@ -86,8 +88,9 @@ class ChapterUpdateView(IsObjectAuthorMixin, UpdateView):
     
     def get_success_url(self):
         chapter = self.get_object()
-        return reverse_lazy('story-detail', kwargs={'pk': chapter.story.pk})
-    
+        # Correctly passing the story's slug
+        return reverse_lazy('books:story-detail', kwargs={'slug': chapter.story.slug})
+
 class ChapterDetailView(DetailView):
     model               = Chapter
     template_name       = "books/chapter_detail.html"

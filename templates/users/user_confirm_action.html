@@ -33,9 +33,9 @@
 
                     <form method="post" action="
                         {% if action == 'delete' %}
-                            {% url 'user_delete' user_obj.pk %}
+                            {% url 'users:user_delete' user_obj.pk %}
                         {% else %}
-                            {% url 'user_toggle_active' user_obj.pk %}
+                            {% url 'users:user_toggle_active' user_obj.pk %}
                         {% endif %}
                     ">
                         {% csrf_token %}
@@ -43,7 +43,7 @@
                             <button type="submit" class="btn btn-lg text-white" style="background-color: var(--netflix-red);">
                                 <i class="fas fa-check-circle me-2"></i>{{ confirm_button_text }}
                             </button>
-                            <a href="{% url back_url %}" class="btn btn-lg btn-secondary">
+                            <a href="{% url 'users:user_list' %}" class="btn btn-lg btn-secondary">
                                 <i class="fas fa-times-circle me-2"></i>Cancel
                             </a>
                         </div>
