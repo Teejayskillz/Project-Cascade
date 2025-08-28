@@ -77,16 +77,16 @@ class Chapter(models.Model):
     story = models.ForeignKey(Story, related_name='chapters', on_delete=models.CASCADE)
     title = models.CharField(max_length=200)
     content = RichTextUploadingField()
-    order = models.PositiveIntegerField(default=0)
+    chapter_number = models.PositiveIntegerField(default=0)
     created_date = models.DateTimeField(auto_now_add=True)
     updated_date = models.DateTimeField(auto_now=True)
 
     class Meta:
-        ordering = ['story','order']
-        unique_together = ('story', 'order')
+        ordering = ['story','chapter_number']
+        unique_together = ('story', 'chapter_number')
 
     def __str__(self):
-        return f"{self.story.title} - Ep. {self.order}: {self.title}"
+        return f"{self.story.title} - Ep. {self.chapter_number}: {self.title}"
     
     def get_success_url(self):
         return reverse_lazy('books:story-detail', kwargs={'slug': self.story.slug})

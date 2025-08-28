@@ -24,15 +24,13 @@ class StoryForm(forms.ModelForm):
 class ChapterForm(forms.ModelForm):
     class Meta:
         model = Chapter
-        fields = ['story', 'title', 'content', 'order']
+        fields = ['title', 'content', 'chapter_number']
         widgets = {
-            'story': forms.Select(attrs={'class': 'form-control'}),
             'title': forms.TextInput(attrs={'class': 'form-control'}),
             'content': CKEditorWidget(attrs={'class': 'form-control'}),
-            'order': forms.NumberInput(attrs={'class': 'form-control'}),
+            'chapter_number': forms.NumberInput(attrs={'class': 'form-control'}),
         }
     
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self.fields['story'].queryset = Story.objects.all()
-  
+     

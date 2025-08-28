@@ -108,14 +108,14 @@ class ChapterDetailView(DetailView):
         # Find the next chapter in the same story with a higher order number
         next_chapter = Chapter.objects.filter(
             story=current_chapter.story,
-            order__gt=current_chapter.order
-        ).order_by('order').first()
+            order__gt=current_chapter.chapter_number
+        ).order_by('chapter_number').first()
         
         # Find the previous chapter with a lower order number
         previous_chapter = Chapter.objects.filter(
             story=current_chapter.story,
-            order__lt=current_chapter.order
-        ).order_by('-order').first()
+            order__lt=current_chapter.chapter_number
+        ).order_by('-chapter_number').first()
 
         # Add the chapters to the context
         context['next_chapter'] = next_chapter

@@ -13,7 +13,7 @@ class StoryAdmin(admin.ModelAdmin):
 
 @admin.register(Chapter)
 class ChapterAdmin(admin.ModelAdmin):
-    list_display = ['title', 'story', 'order', 'created_date']
+    list_display = ['title', 'story', 'chapter_number', 'created_date']
     list_filter = ['story']
     search_fields = ['title', 'content']
     
