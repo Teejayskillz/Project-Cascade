@@ -500,7 +500,6 @@
         <div class="spinner"></div>
     </div>
 
-    <!-- Mobile-only Top Header -->
     <header class="mobile-top-header d-lg-none d-flex justify-content-between align-items-center">
         <a class="profile-pic me-2" href="#" data-bs-toggle="offcanvas" data-bs-target="#sidebarOffcanvas" aria-controls="sidebarOffcanvas">
              {% if user.profile.profile_picture %}
@@ -518,7 +517,6 @@
         </a>
     </header>
 
-    <!-- Desktop Header -->
     <header class="main-header d-none d-lg-block">
         <div class="container">
             <div class="d-flex flex-wrap justify-content-between align-items-center py-3">
@@ -562,9 +560,8 @@
                                     </span>
                                 {% endif %}
                             </li>
-                            <!-- Notifications Dropdown -->
                             <li class="nav-item dropdown">
-                                <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownNotifications" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                <a class="nav-link dropdown-toggle" href="{% url 'notifications:notification_list' %}" id="navbarDropdownNotifications" role="button" data-bs-toggle="dropdown" aria-expanded="false">
                                     <i class="fas fa-bell"></i>
                                     {% if request.user.notifications.unread %}
                                         <span class="badge bg-light text-danger">{{ request.user.notifications.unread.count }}</span>
@@ -573,13 +570,13 @@
                                 <ul class="dropdown-menu dropdown-menu-end dropdown-menu-dark" aria-labelledby="navbarDropdownNotifications">
                                     {% for notification in request.user.notifications.unread %}
                                         <li>
-                                            <a class="dropdown-item notification-item" href="#">
+                                            <a class="dropdown-item notification-item" href="{% url 'notifications:notification_list' %}">
                                                 {{ notification.actor }} {{ notification.verb }}
                                                 <small>{{ notification.timestamp|date:"P" }}</small>
                                             </a>
                                         </li>
                                     {% empty %}
-                                        <li><a class="dropdown-item notification-item" href="#">No notifications yet.</a></li>
+                                        <li><a class="dropdown-item notification-item" href="{% url 'notifications:notification_list' %}">No notifications yet.</a></li>
                                     {% endfor %}
                                 </ul>
                             </li>
@@ -616,7 +613,6 @@
         </div>
     </header>
 
-    <!-- Sliding Side Menu (Offcanvas) -->
     <div class="offcanvas offcanvas-start" tabindex="-1" id="sidebarOffcanvas" aria-labelledby="sidebarOffcanvasLabel">
       <div class="offcanvas-header">
         <div class="profile-pic-container">
@@ -770,33 +766,37 @@
 
         
     </script>
-    <script>
+   // Inside your <script> tag in base.html
+<script>
     function fetchNotifications() {
-        // Only fetch if a user is authenticated
         if ("{% if user.is_authenticated %}true{% else %}false{% endif %}" === "true") {
-            fetch("{% url 'notifications:get_unread_notifications' %}")
+            fetch("{% url 'notifications:unread_count' %}")
                 .then(response => response.json())
                 .then(data => {
-                    // Update badge
-                    const badge = document.querySelector('.bottom-nav .notifications-link .badge');
-                    if (badge) {
-                        badge.textContent = data.count > 0 ? data.count : "";
-                        badge.style.display = data.count > 0 ? 'inline-block' : 'none';
+                    // Update badges (no change here)
+                    const desktopBadge = document.querySelector('#navbarDropdownNotifications .badge');
+                    const mobileBadge = document.querySelector('.bottom-nav .notifications-link .badge');
+                    if (desktopBadge) {
+                        desktopBadge.textContent = data.count > 0 ? data.count : "";
+                        desktopBadge.style.display = data.count > 0 ? 'inline-block' : 'none';
                     }
-
-                    // Update dropdown (only for desktop)
+                    if (mobileBadge) {
+                        mobileBadge.textContent = data.count > 0 ? data.count : "";
+                        mobileBadge.style.display = data.count > 0 ? 'inline-block' : 'none';
+                    }
+                    // Update desktop dropdown
                     const dropdown = document.querySelector('#navbarDropdownNotifications + .dropdown-menu');
                     if (dropdown) {
                         dropdown.innerHTML = "";
                         if (data.notifications.length === 0) {
-                            dropdown.innerHTML = `<li><a class="dropdown-item notification-item" href="#">No notifications yet.</a></li>`;
+                            dropdown.innerHTML = `<li><a class="dropdown-item notification-item" href="{% url 'notifications:notification_list' %}">No notifications yet.</a></li>`;
                         } else {
                             data.notifications.forEach(n => {
                                 dropdown.innerHTML += `
                                     <li>
-                                        <a class="dropdown-item notification-item" href="#">
-                                            ${n.actor} ${n.verb}
-                                            <small>${n.timestamp}</small>
+                                        <a class="dropdown-item notification-item" href="${n.actor_url}">
+                                            <span class="fw-bold">${n.actor}</span> ${n.verb}
+                                            <small class="text-muted">${n.timestamp}</small>
                                         </a>
                                     </li>`;
                             });
@@ -805,13 +805,12 @@
                 });
         }
     }
-
-    // Fetch every 10s
+    // Call fetchNotifications every 5 seconds
     setInterval(fetchNotifications, 5000);
+    // Call it once on page load to ensure initial display is correct
     document.addEventListener("DOMContentLoaded", fetchNotifications);
 </script>
 
-<!-- Mobile Bottom Navigation Bar -->
 <nav class="bottom-nav d-lg-none">
     <a href="{% url 'home' %}" class="nav-link active">
         <i class="fas fa-home"></i>
@@ -826,7 +825,7 @@
         <span>Search</span>
     </a>
     {% if user.is_authenticated %}
-    <a href="#" class="nav-link notifications-link">
+    <a href="{% url 'notifications:notification_list' %}" class="nav-link notifications-link">
         <i class="fas fa-bell"></i>
         <span>Notifications</span>
         {% if request.user.notifications.unread %}
