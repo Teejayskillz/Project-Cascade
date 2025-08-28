@@ -51,7 +51,7 @@ class StoryListView(LoginRequiredMixin, ListView):
     ordering = ['-published_date']
 
    
-class StoryDetailView(LoginRequiredMixin, DetailView):
+class StoryDetailView(DetailView):
     model = Story
     template_name = 'books/story_detail.html'
     context_object_name = 'story'
@@ -105,16 +105,16 @@ class ChapterDetailView(DetailView):
         
         current_chapter = self.get_object()
         
-        # Find the next chapter in the same story with a higher order number
+        # Find the next chapter in the same story with a higher chapter number
         next_chapter = Chapter.objects.filter(
             story=current_chapter.story,
-            order__gt=current_chapter.chapter_number
+            chapter_number__gt=current_chapter.chapter_number
         ).order_by('chapter_number').first()
         
-        # Find the previous chapter with a lower order number
+        # Find the previous chapter with a lower chapter number
         previous_chapter = Chapter.objects.filter(
             story=current_chapter.story,
-            order__lt=current_chapter.chapter_number
+            chapter_number__lt=current_chapter.chapter_number
         ).order_by('-chapter_number').first()
 
         # Add the chapters to the context
@@ -122,8 +122,6 @@ class ChapterDetailView(DetailView):
         context['previous_chapter'] = previous_chapter
         
         return context
-
-
 class StoryDeleteView(AuthorRequiredMixin, IsObjectAuthorMixin, DeleteView):
     model = Story
     template_name = 'books/story_confirm_delete.html'
