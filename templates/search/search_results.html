@@ -1,0 +1,96 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Search | JARAFLIX{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+  <!-- Search header -->
+  <div class="text-center mb-4">
+    <h1 class="display-5 fw-bold" style="color: var(--netflix-red);">Find Your Next Story</h1>
+    <form method="get" action="{% url 'search:search' %}" class="mt-3">
+      <div class="input-group input-group-lg shadow-sm" style="border-radius: 50px;">
+        <input type="search" name="q" class="form-control"
+               placeholder="Search titles, genres, or authors…"
+               value="{{ query|default:'' }}"
+               style="border:none; border-radius: 50px 0 0 50px; padding-left: 1.5rem;">
+        <button class="btn btn-danger" type="submit"
+                style="border-radius: 0 50px 50px 0;">
+          <i class="fas fa-search"></i>
+        </button>
+      </div>
+    </form>
+  </div>
+
+  {% if query %}
+    {# ----- STORIES ----- #}
+    <h2 class="h4 mb-3">Stories</h2>
+    {% if stories %}
+      <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4">
+        {% for story in stories %}
+          <div class="col">
+            <div class="card h-100 shadow-sm border-0" style="border-radius: 15px; overflow: hidden;">
+              <!-- Cover -->
+              <img src="{% if story.cover_image %}{{ story.cover_image.url }}{% else %}{% static 'images/default-cover.jpg' %}{% endif %}"
+                   class="card-img-top" alt="{{ story.title }}"
+                   style="height: 200px; object-fit: cover;">
+              <div class="card-body d-flex flex-column">
+                <h5 class="card-title fw-bold mb-1">{{ story.title }}</h5>
+                <p class="text-muted small mb-2">
+                  By <a href="{% url 'users:user_profile' story.author.username %}"
+                         class="text-decoration-none"
+                         style="color: var(--netflix-red);">
+                      {{ story.author.get_full_name|default:story.author.username }}
+                    </a>
+                </p>
+                <p class="card-text flex-grow-1">
+                  {{ story.synopsis|truncatechars:120 }}
+                </p>
+                <a href="{{ story.get_absolute_url }}" class="btn btn-sm btn-danger mt-auto" style="border-radius: 20px;">
+                  Read More
+                </a>
+              </div>
+            </div>
+          </div>
+        {% endfor %}
+      </div>
+    {% else %}
+      <p class="text-muted">No stories matched your search.</p>
+    {% endif %}
+
+    {# ----- AUTHORS ----- #}
+    <h2 class="h4 mt-5 mb-3">Authors</h2>
+    {% if users %}
+      <div class="row row-cols-2 row-cols-md-3 row-cols-lg-4 g-4">
+        {% for user in users %}
+          <div class="col">
+            <div class="card border-0 shadow-sm text-center" style="border-radius: 15px;">
+              <!-- Avatar -->
+              <img src="{% if user.profile.profile_picture %}{{ user.profile.profile_picture.url }}{% else %}{% static 'images/default-avatar.jpg' %}{% endif %}"
+     class="card-img-top rounded-circle mx-auto mt-3"
+     alt="{{ user.username }}"
+     style="width: 80px; height: 80px; object-fit: cover;">
+              <div class="card-body">
+                <h6 class="card-title mb-1">{{ user.get_full_name|default:user.username }}</h6>
+                <a href="{% url 'users:user_profile' user.username %}"
+                   class="btn btn-sm btn-outline-danger">
+                  View Profile
+                </a>
+              </div>
+            </div>
+          </div>
+        {% endfor %}
+      </div>
+    {% else %}
+      <p class="text-muted">No authors matched your search.</p>
+    {% endif %}
+  {% else %}
+    <!-- Empty state when no query -->
+    <div class="text-center py-5">
+      <i class="fas fa-search display-3 mb-3" style="color: var(--netflix-red);"></i>
+      <h2 class="h3 fw-bold">Start Your Discovery</h2>
+      <p class="text-muted">Use the search bar above to find your next great read.</p>
+    </div>
+  {% endif %}
+</div>
+{% endblock %}

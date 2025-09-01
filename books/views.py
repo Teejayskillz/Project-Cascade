@@ -5,9 +5,10 @@ from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.urls import reverse_lazy
 from django.views.generic import CreateView, UpdateView, DetailView, ListView, DeleteView
 from .models import Story, Chapter, Genre
+from users.models import CustomUser
 from .forms import StoryForm, ChapterForm
 from django.core.exceptions import PermissionDenied
-
+from watson import search as watson_search 
 
 # A mixin to check if the user is an author
 class AuthorRequiredMixin(LoginRequiredMixin, UserPassesTestMixin):
