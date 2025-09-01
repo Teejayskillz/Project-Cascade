@@ -5,7 +5,7 @@
 {% block title %}{{ page_title }} - JARAFLIX{% endblock title %}
 
 {% block meta_description %}
-    View the profile of {{ profile_user.get_full_name|default:profile_user.username }} on JARAFLIX. See their stories, followers, and more.
+    View the profile of {{ profile_user.get_full_name|default:profile_user.username }} on JARAFLIX. See their stories, subscribers, and more.
 {% endblock meta_description %}
 
 {% block extra_head %}
@@ -105,13 +105,13 @@
         text-transform: uppercase;
     }
 
-    /* Beautiful Follow Button */
-    .follow-btn-container {
+    /* Beautiful Subscribe Button */
+    .subscribe-btn-container {
         margin-top: 2rem;
         width: 100%;
     }
 
-    .follow-btn {
+    .subscribe-btn {
         width: 100%;
         padding: 1rem;
         border: none;
@@ -123,24 +123,24 @@
         letter-spacing: 1px;
     }
 
-    .follow-btn-follow {
+    .subscribe-btn-subscribe {
         background: linear-gradient(45deg, var(--netflix-red), var(--netflix-dark-red));
         color: white;
         box-shadow: 0 5px 20px rgba(229, 9, 20, 0.3);
     }
 
-    .follow-btn-follow:hover {
+    .subscribe-btn-subscribe:hover {
         transform: translateY(-2px);
         box-shadow: 0 8px 25px rgba(229, 9, 20, 0.4);
     }
 
-    .follow-btn-unfollow {
+    .subscribe-btn-unsubscribe {
         background: transparent;
         color: var(--medium-gray);
         border: 2px solid var(--medium-gray);
     }
 
-    .follow-btn-unfollow:hover {
+    .subscribe-btn-unsubscribe:hover {
         background: rgba(220, 53, 69, 0.1);
         border-color: var(--netflix-red);
         color: var(--netflix-red);
@@ -228,33 +228,36 @@
                         <p class="profile-bio text-muted">No bio available.</p>
                     {% endif %}
 
-                    <!-- ✅ Followers / Following Counts -->
                     <div class="stats-container">
                         <div class="stats-item text-center">
-                            <strong>{{ profile_user.followers.count|intcomma }}</strong>
-                            <small class="d-block">Followers</small>
+                            <strong>{{ profile_user.subscriptions.count|intcomma }}</strong>
+                            <small class="d-block">Subscriptions</small>
                         </div>
                         <div class="stats-item text-center">
-                            <strong>{{ profile_user.following.count|intcomma }}</strong>
-                            <small class="d-block">Following</small>
+                            {% if is_author %}
+                                <strong>{{ profile_user.subscribers.count|intcomma }}</strong>
+                                <small class="d-block">Subscribers</small>
+                            {% else %}
+                                <strong>0</strong>
+                                <small class="d-block">Subscribers</small>
+                            {% endif %}
                         </div>
                     </div>
 
-                    <!-- ✅ Follow / Unfollow Button -->
-                    {% if request.user.is_authenticated and request.user != profile_user %}
-                    <div class="follow-btn-container">
-                        {% if is_following %}
-                            <form method="post" action="{% url 'users:user_unfollow' profile_user.username %}">
+                    {% if request.user.is_authenticated and request.user != profile_user and is_author %}
+                    <div class="subscribe-btn-container">
+                        {% if is_subscribed %}
+                            <form method="post" action="{% url 'users:user_unsubscribe' profile_user.username %}">
                                 {% csrf_token %}
-                                <button type="submit" class="follow-btn follow-btn-unfollow">
-                                    <i class="fas fa-user-minus me-2"></i>Unfollow
+                                <button type="submit" class="subscribe-btn subscribe-btn-unsubscribe">
+                                    <i class="fas fa-user-minus me-2"></i>Unsubscribe
                                 </button>
                             </form>
                         {% else %}
-                            <form method="post" action="{% url 'users:user_follow' profile_user.username %}">
+                            <form method="post" action="{% url 'users:user_subscribe' profile_user.username %}">
                                 {% csrf_token %}
-                                <button type="submit" class="follow-btn follow-btn-follow">
-                                    <i class="fas fa-user-plus me-2"></i>Follow
+                                <button type="submit" class="subscribe-btn subscribe-btn-subscribe">
+                                    <i class="fas fa-user-plus me-2"></i>Subscribe
                                 </button>
                             </form>
                         {% endif %}
@@ -263,8 +266,6 @@
                 </div>
             </div>
         </div>
-
-       
     </div>
 </div>
 {% endblock content %}

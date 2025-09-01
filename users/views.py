@@ -4,7 +4,7 @@ from .forms import UserRegistrationForm, UserUpdateForm, ProfileUpdateForm , Aut
 from django.contrib.auth.forms import AuthenticationForm
 from django.contrib.auth import login, authenticate, logout
 from django.contrib.auth.decorators import login_required, permission_required, user_passes_test
-from .models import CustomUser, Profile, AuthorApplication, Follow
+from .models import CustomUser, Profile, AuthorApplication, Subscribe
 from django.contrib import messages
 
 
@@ -135,22 +135,31 @@ def user_delete_view(request, user_id):
 
 @login_required(login_url='login_user')
 def user_profile_view(request, username):
-    profile_user = get_object_or_404(CustomUser, username=username) 
+    profile_user = get_object_or_404(CustomUser, username=username)
 
     # Default to False
-    is_following = False  
+    is_subscribed = False
 
     # Only check if the user is not viewing their own profile
-    if request.user != profile_user:
-        from .models import Follow
-        is_following = Follow.objects.filter(
-            follower=request.user, following=profile_user
+    if request.user.is_authenticated and request.user != profile_user:
+        is_subscribed = Subscribe.objects.filter(
+            subscriber=request.user, subscribed_to=profile_user
         ).exists()
+     # Check if the user is an author based on their role
+    is_author = (profile_user.role == 'author')
+
+    if request.user.is_authenticated and request.user != profile_user:
+        # Check for subscription only if the profile user is an author
+        if is_author:
+            is_subscribed = Subscribe.objects.filter(
+                subscriber=request.user, subscribed_to=profile_user
+            ).exists()
 
     context = {
         'profile_user': profile_user,
         'page_title': f"{profile_user.username}'s Profile",
-        'is_following': is_following,   # ✅ added
+        'is_subscribed': is_subscribed, # ✅ changed from is_following to is_subscribed
+        'is_author': is_author,  # ✅ new context variable
     }
     return render(request, 'users/user_profile.html', context)
 
@@ -251,41 +260,49 @@ def approve_or_reject_application(request, app_id, action):
             messages.info(request, "Application rejected.")
         
     return redirect('users:manage_applications')
-
 @login_required
-def user_follow_view(request, username):
-    user_to_follow = get_object_or_404(CustomUser, username=username)
+def user_subscribe_view(request, username):
+    user_to_subscribe = get_object_or_404(CustomUser, username=username)
 
-    if request.user == user_to_follow:
-        messages.error(request, "You cannot follow yourself.")
-        return redirect('user_profile', username=username)
+    if user_to_subscribe.role != 'author':
+        messages.error(request, "You can only subscribe to authors.")
+        return redirect('users:user_profile', username=username)
 
-    follow, created = Follow.objects.get_or_create(
-        follower=request.user, following=user_to_follow
+
+    if request.user == user_to_subscribe:
+        messages.error(request, "You cannot subscribe to yourself.")
+        return redirect('users:user_profile', username=username)
+
+    subscription, created = Subscribe.objects.get_or_create(
+        subscriber=request.user, subscribed_to=user_to_subscribe
     )
     if created:
-        messages.success(request, f"You are now following {user_to_follow.username}.")
+        messages.success(request, f"You have successfully subscribed to {user_to_subscribe.username}.")
     else:
-        messages.info(request, f"You are already following {user_to_follow.username}.")
+        messages.info(request, f"You are already subscribed to {user_to_subscribe.username}.")
 
     return redirect('users:user_profile', username=username)
 
-
 @login_required
-def user_unfollow_view(request, username):
-    user_to_unfollow = get_object_or_404(CustomUser, username=username)
+def user_unsubscribe_view(request, username):
+    """
+    Handles unsubscribing a user from another user.
+    """
+    user_to_unsubscribe = get_object_or_404(CustomUser, username=username)
 
-    if request.user == user_to_unfollow:
-        messages.error(request, "You cannot unfollow yourself.")
-        return redirect('user_profile', username=username)
+    if request.user == user_to_unsubscribe:
+        messages.error(request, "You cannot unsubscribe from yourself.")
+        return redirect('users:user_profile', username=username)
 
-    deleted, _ = Follow.objects.filter(
-        follower=request.user, following=user_to_unfollow
+    # Use the new model 'Subscribe' and its new field names
+    deleted, _ = Subscribe.objects.filter(
+        subscriber=request.user, 
+        subscribed_to=user_to_unsubscribe
     ).delete()
 
     if deleted:
-        messages.success(request, f"You have unfollowed {user_to_unfollow.username}.")
+        messages.success(request, f"You have unsubscribed from {user_to_unsubscribe.username}.")
     else:
-        messages.info(request, f"You are not following {user_to_unfollow.username}.")
+        messages.info(request, f"You are not subscribed to {user_to_unsubscribe.username}.")
 
     return redirect('users:user_profile', username=username)
