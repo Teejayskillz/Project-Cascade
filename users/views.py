@@ -133,7 +133,7 @@ def user_delete_view(request, user_id):
     }
     return render(request, 'users/user_confirm_action.html', context)
 
-@login_required(login_url='login_user')
+
 def user_profile_view(request, username):
     profile_user = get_object_or_404(CustomUser, username=username)
 
