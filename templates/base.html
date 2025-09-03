@@ -249,7 +249,6 @@
             text-overflow: ellipsis;
             line-height: 1.2;
         }
-
         /* === Bottom Sidebar Toggle Indicator === */
         .sidebar-bottom-toggle {
             padding: 1rem 0;
@@ -260,12 +259,10 @@
             cursor: pointer;
             transition: background 0.3s ease;
         }
-
         .sidebar-bottom-toggle:hover {
             background: rgba(229, 9, 20, 0.05);
             border-radius: 10px 0 0 10px;
         }
-
         .arrow-indicator {
             width: 30px;
             height: 4px;
@@ -274,7 +271,6 @@
             position: relative;
             transition: all 0.3s ease;
         }
-
         .arrow-indicator::after {
             content: '';
             position: absolute;
@@ -287,13 +283,11 @@
             border-bottom: 4px solid transparent;
             transition: all 0.3s ease;
         }
-
         /* Flip arrow when sidebar is collapsed */
         .desktop-sidebar.collapsed .arrow-indicator::after {
             transform: rotate(180deg);
             right: -4px;
         }
-
         /* Main Content Area */
         .main-wrapper {
             margin-left: var(--sidebar-width);
@@ -728,12 +722,80 @@
             color: var(--medium-gray);
             font-size: 0.8rem;
         }
+        /* Login Modal Override */
+        .modal-backdrop.show {
+            opacity: 0.7;
+        }
+        .modal-content {
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
+        }
+        .modal-header {
+            background: linear-gradient(135deg, var(--netflix-red), var(--netflix-dark-red));
+            color: white;
+            border: none;
+            padding: 1.2rem 1.5rem;
+        }
+        .modal-body {
+            padding: 1.5rem;
+            font-size: 1.1rem;
+            text-align: center;
+            color: var(--text-dark);
+        }
+        .modal-footer {
+            padding: 1rem 1.5rem;
+            border-top: none;
+            justify-content: center;
+            gap: 1rem;
+        }
+        .btn-modal {
+            padding: 0.6rem 1.5rem;
+            font-weight: 600;
+            border-radius: 25px;
+            font-size: 0.95rem;
+            min-width: 120px;
+        }
+        .btn-login {
+            background: linear-gradient(45deg, var(--netflix-red), var(--netflix-dark-red));
+            color: white;
+            border: none;
+        }
+        .btn-register {
+            background: transparent;
+            color: var(--netflix-red);
+            border: 2px solid var(--netflix-red);
+        }
+        .btn-register:hover {
+            background: rgba(229, 9, 20, 0.1);
+        }
     </style>
 </head>
 <body>
     <div class="loading-overlay" id="loadingOverlay">
         <div class="spinner"></div>
     </div>
+
+    <!-- Login Required Modal -->
+    {% if not user.is_authenticated %}
+    <div class="modal fade" id="loginModal" tabindex="-1" aria-labelledby="loginModalLabel" aria-hidden="true" data-bs-backdrop="static" data-bs-keyboard="false">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="loginModalLabel">Welcome to JARAFLIX</h5>
+                </div>
+                <div class="modal-body">
+                    To access exclusive stories and content, please log in or create an account.
+                </div>
+                <div class="modal-footer">
+                    <a href="{% url 'users:register_user' %}" class="btn btn-modal btn-register">Register</a>
+                    <a href="{% url 'users:login_user' %}" class="btn btn-modal btn-login">Log In</a>
+                </div>
+            </div>
+        </div>
+    </div>
+    {% endif %}
+
     <!-- Mobile Header -->
     <header class="mobile-top-header d-lg-none d-flex justify-content-between align-items-center">
         <a class="profile-pic me-2" href="#" data-bs-toggle="offcanvas" data-bs-target="#sidebarOffcanvas" aria-controls="sidebarOffcanvas">
@@ -751,6 +813,7 @@
             <i class="fas fa-search"></i>
         </a>
     </header>
+
     <!-- Desktop Sidebar Navigation -->
     <nav class="desktop-sidebar d-none d-lg-block" id="desktopSidebar">
         <a href="/" class="sidebar-logo">
@@ -859,12 +922,12 @@
             </a>
         </div>
         {% endif %}
-
         <!-- Bottom Arrow Toggle -->
         <div class="sidebar-bottom-toggle" onclick="toggleSidebar()">
             <div class="arrow-indicator"></div>
         </div>
     </nav>
+
     <!-- Main Content Wrapper -->
     <div class="main-wrapper" id="mainWrapper">
         <!-- Desktop Top Bar -->
@@ -918,13 +981,13 @@
         </main>
         <footer>
             <div class="container">
-             
                 <div class="footer-bottom">
                     <p>&copy; {% now "Y" %} JARAFLIX. All Rights Reserved. | Made with <i class="fas fa-heart text-danger"></i> for book lovers</p>
                 </div>
             </div>
         </footer>
     </div>
+
     <!-- Mobile Offcanvas Menu -->
     <div class="offcanvas offcanvas-start" tabindex="-1" id="sidebarOffcanvas" aria-labelledby="sidebarOffcanvasLabel">
       <div class="offcanvas-header">
@@ -966,6 +1029,7 @@
         </div>
       </div>
     </div>
+
     <!-- Mobile Bottom Navigation -->
     <nav class="bottom-nav d-lg-none">
         <a href="{% url 'home' %}" class="nav-link active">
@@ -1001,12 +1065,29 @@
         </a>
         {% endif %}
     </nav>
+
     <!-- White spacer to prevent overlap on iPhone XR (home indicator) -->
     <div style="position: fixed; bottom: 0; left: 0; width: 100%; height: 15px; background: white; z-index: 999;" class="d-lg-none"></div>
+
     <script src="{% static 'js/main.js' %}"></script>
     {% block extra_scripts %}
     {% endblock extra_scripts %}
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/js/bootstrap.bundle.min.js" integrity="sha384-ndDqU0Gzau9qJ1lfW4pNLlhNTkCfHzAVBReH9diLvGRem5+R9g2FzA8ZGN954O5Q" crossorigin="anonymous"></script>
+
+    <!-- Show Login Modal on Page Load -->
+    {% if not user.is_authenticated %}
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            if (!sessionStorage.getItem('loginModalShown')) {
+                var modalElement = document.getElementById('loginModal');
+                var modal = new bootstrap.Modal(modalElement);
+                modal.show();
+                sessionStorage.setItem('loginModalShown', 'true');
+            }
+        });
+    </script>
+    {% endif %}
+
     <script>
         // PWA Loading functionality
         window.addEventListener('load', function() {
@@ -1017,25 +1098,15 @@
                 }
             }, 500);
         });
+
         // Twitter-style sidebar toggle functionality
         function toggleSidebar() {
             const sidebar = document.getElementById('desktopSidebar');
             const mainWrapper = document.getElementById('mainWrapper');
-            const toggleIcon = document.getElementById('toggleIcon');
             sidebar.classList.toggle('collapsed');
             mainWrapper.classList.toggle('sidebar-collapsed');
-            if (sidebar.classList.contains('collapsed')) {
-                if (toggleIcon) {
-                    toggleIcon.classList.remove('fa-chevron-left');
-                    toggleIcon.classList.add('fa-chevron-right');
-                }
-            } else {
-                if (toggleIcon) {
-                    toggleIcon.classList.remove('fa-chevron-right');
-                    toggleIcon.classList.add('fa-chevron-left');
-                }
-            }
         }
+
         // Smooth scrolling for anchor links
         document.querySelectorAll('a[href^="#"]').forEach(anchor => {
             anchor.addEventListener('click', function (e) {
@@ -1048,6 +1119,7 @@
                 }
             });
         });
+
         // Active state management for navigation
         document.querySelectorAll('.sidebar-nav-link').forEach(link => {
             link.addEventListener('click', function() {
@@ -1055,6 +1127,7 @@
                 this.classList.add('active');
             });
         });
+
         // Mobile bottom nav active state
         document.querySelectorAll('.bottom-nav .nav-link').forEach(link => {
             link.addEventListener('click', function() {
@@ -1062,6 +1135,7 @@
                 this.classList.add('active');
             });
         });
+
         // Search functionality
         document.querySelector('.search-input')?.addEventListener('keypress', function(e) {
             if (e.key === 'Enter') {
@@ -1071,31 +1145,28 @@
                 }
             }
         });
+
         // Enhanced notification fetching
         function fetchNotifications() {
             if ("{% if user.is_authenticated %}true{% else %}false{% endif %}" === "true") {
                 fetch("{% url 'notifications:unread_count' %}")
                     .then(response => response.json())
                     .then(data => {
-                        // Update desktop notification badge
                         const desktopBadge = document.querySelector('#notificationDropdown .badge');
                         if (desktopBadge) {
                             desktopBadge.textContent = data.count > 0 ? data.count : "";
                             desktopBadge.style.display = data.count > 0 ? 'inline-block' : 'none';
                         }
-                        // Update sidebar notification badge
                         const sidebarBadge = document.querySelector('.sidebar-nav .notification-badge');
                         if (sidebarBadge) {
                             sidebarBadge.textContent = data.count > 0 ? data.count : "";
                             sidebarBadge.style.display = data.count > 0 ? 'inline-block' : 'none';
                         }
-                        // Update mobile notification badge
                         const mobileBadge = document.querySelector('.bottom-nav .notifications-link .badge');
                         if (mobileBadge) {
                             mobileBadge.textContent = data.count > 0 ? data.count : "";
                             mobileBadge.style.display = data.count > 0 ? 'inline-block' : 'none';
                         }
-                        // Update dropdown content
                         const dropdown = document.querySelector('#notificationDropdown + .dropdown-menu');
                         if (dropdown) {
                             dropdown.innerHTML = "";
@@ -1119,9 +1190,9 @@
         }
         setInterval(fetchNotifications, 5000);
         document.addEventListener("DOMContentLoaded", fetchNotifications);
+
         // Keyboard shortcuts (Twitter-style)
         document.addEventListener('keydown', function(e) {
-            // Only if not typing in an input
             if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') return;
             switch(e.key) {
                 case 'h':
@@ -1136,22 +1207,6 @@
                     }
                     break;
             }
-        });
-        // Auto-hide sidebar on scroll (optional)
-        let lastScrollTop = 0;
-        window.addEventListener('scroll', function() {
-            const st = window.pageYOffset || document.documentElement.scrollTop;
-            const sidebar = document.getElementById('desktopSidebar');
-            if (window.innerWidth >= 992) {
-                if (st > lastScrollTop && st > 100) {
-                    sidebar.style.transform = 'translateX(-20px)';
-                    sidebar.style.opacity = '0.8';
-                } else {
-                    sidebar.style.transform = 'translateX(0)';
-                    sidebar.style.opacity = '1';
-                }
-            }
-            lastScrollTop = st <= 0 ? 0 : st;
         });
     </script>
 </body>
