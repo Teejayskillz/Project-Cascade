@@ -1,22 +1,15 @@
+<!-- book_jra/templates/book_jra/register.html -->
+{% extends 'base.html' %}
 {% load static %}
-{% load humanize %}
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-    <meta name="description" content="{% block meta_description %}JARAFLIX - Subscribe to your favorite authors and get exclusive access to their latest works, behind-the-scenes content, and personal stories.{% endblock meta_description %}">
-    <meta name="keywords" content="{% block meta_keywords %}books, authors, subscription, exclusive content, reading, literature, publishing{% endblock meta_keywords %}">
-    <meta name="author" content="JARAFLIX">
-    <meta name="theme-color" content="#E50914">
-    <meta name="apple-mobile-web-app-capable" content="yes">
-    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-LN+7fdVzj6u52u30Kp6M/trliBMCMKTyK833zpbD+pXdCLuTusPj697FH4R/5mcr" crossorigin="anonymous">
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
-    <title>{% block title %}JARAFLIX - Subscribe to Authors{% endblock title %}</title>
-    <link rel="stylesheet" href="{% static 'css/main.css' %}">
-    {% block extra_head %}
-    {% endblock extra_head %}
+
+{% block title %}Join JARAFLIX - Connect with Authors{% endblock %}
+
+{% block meta_description %}Join jaraflix today and get exclusive access to your favorite authors' latest works, behind-the-scenes content, and personal stories. Subscribe to premium literary content.{% endblock %}
+
+{% block meta_keywords %}book subscription, author platform, exclusive content, literary community, premium books, author access, reading subscription{% endblock %}
+
+{% block extra_head %}
+    <link rel="canonical" href="https://www.jaraflix.com/register/">
     <style>
         :root {
             --netflix-red: #E50914;
@@ -26,1149 +19,444 @@
             --medium-gray: #6C757D;
             --text-white: #FFFFFF;
             --text-dark: #212529;
-            --primary-color: #E50914;
-            --secondary-color: #F44336;
-            --sidebar-width: 260px;
-            --sidebar-collapsed-width: 75px;
-            --max-content-width: 1200px;
+            --success-green: #28A745;
+            --warning-orange: #FD7E14;
+            --danger-red: #DC3545;
         }
-        * {
-            box-sizing: border-box;
-        }
+
         body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            line-height: 1.6;
-            color: var(--text-dark);
-            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             min-height: 100vh;
-            margin: 0;
-            padding: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
         }
-        /* Desktop Twitter-Style Left Sidebar */
-        .desktop-sidebar {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: var(--sidebar-width);
-            height: 100vh;
-            background: rgba(255, 255, 255, 0.98);
-            backdrop-filter: blur(20px);
-            border-right: 1px solid rgba(0, 0, 0, 0.08);
-            box-shadow: 2px 0 20px rgba(0, 0, 0, 0.05);
-            padding-top: 1rem;
-            padding-bottom: 4rem;
-            z-index: 1000;
-            overflow-y: auto;
-            overflow-x: visible;
-            transition: width 0.3s ease;
-            display: flex;
-            flex-direction: column;
-        }
-        .desktop-sidebar.collapsed {
-            width: var(--sidebar-collapsed-width);
-        }
-        .desktop-sidebar::-webkit-scrollbar {
-            width: 4px;
-        }
-        .desktop-sidebar::-webkit-scrollbar-track {
-            background: transparent;
-        }
-        .desktop-sidebar::-webkit-scrollbar-thumb {
-            background: rgba(229, 9, 20, 0.2);
-            border-radius: 2px;
-        }
-        .sidebar-logo {
-            padding: 0 1.25rem;
-            margin-bottom: 1.5rem;
+
+        .registration-wrapper {
+            min-height: calc(100vh - 160px);
             display: flex;
             align-items: center;
-            gap: 0.75rem;
-            font-size: 1.4rem;
-            font-weight: 800;
+            justify-content: center;
+            padding: 2rem 1rem;
+        }
+
+        .registration-container {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(20px);
+            border-radius: 24px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.15);
+            width: 100%;
+            max-width: 520px;
+            padding: 3rem;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .registration-container::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 6px;
+            background: linear-gradient(90deg, var(--netflix-red), var(--netflix-dark-red));
+            border-radius: 24px 24px 0 0;
+        }
+
+        .registration-header {
+            text-align: center;
+            margin-bottom: 2.5rem;
+        }
+
+        .registration-header h2 {
+            color: var(--text-dark);
+            font-size: 2.2rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+            background: linear-gradient(45deg, var(--netflix-red), var(--netflix-dark-red));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .registration-header p {
+            color: var(--medium-gray);
+            font-size: 1.1rem;
+            margin: 0;
+        }
+
+        .registration-icon {
+            background: linear-gradient(45deg, var(--netflix-red), var(--netflix-dark-red));
+            color: white;
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 1.5rem;
+            font-size: 2rem;
+            box-shadow: 0 10px 30px rgba(229, 9, 20, 0.3);
+        }
+
+        .form-group {
+            margin-bottom: 1.8rem;
+            position: relative;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 0.75rem;
+            font-weight: 600;
+            color: var(--text-dark);
+            font-size: 0.95rem;
+            transition: color 0.3s ease;
+        }
+
+        .form-control {
+            width: 100%;
+            padding: 1rem 1.25rem;
+            border: 2px solid #E9ECEF;
+            border-radius: 12px;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+            background: rgba(255, 255, 255, 0.8);
+            backdrop-filter: blur(10px);
+        }
+
+        .form-control:focus {
+            border-color: var(--netflix-red);
+            box-shadow: 0 0 0 4px rgba(229, 9, 20, 0.15);
+            outline: none;
+            background: rgba(255, 255, 255, 0.95);
+            transform: translateY(-2px);
+        }
+
+        .form-control:hover {
+            border-color: var(--netflix-red);
+            background: rgba(255, 255, 255, 0.9);
+        }
+
+        .btn-register {
+            width: 100%;
+            padding: 1.2rem;
+            background: linear-gradient(45deg, var(--netflix-red), var(--netflix-dark-red));
+            color: white;
+            border: none;
+            border-radius: 12px;
+            font-size: 1.1rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 8px 25px rgba(229, 9, 20, 0.3);
+            margin-top: 1rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .btn-register::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+            transition: left 0.5s;
+        }
+
+        .btn-register:hover::before {
+            left: 100%;
+        }
+
+        .btn-register:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 12px 35px rgba(229, 9, 20, 0.4);
+        }
+
+        .btn-register:active {
+            transform: translateY(-1px);
+        }
+
+        .btn-register i {
+            margin-right: 0.75rem;
+        }
+
+        .errorlist {
+            color: var(--danger-red);
+            font-size: 0.85rem;
+            margin: 0.5rem 0 0 0;
+            padding: 0;
+            list-style: none;
+            font-weight: 500;
+        }
+
+        .errorlist li {
+            background: rgba(220, 53, 69, 0.1);
+            padding: 0.5rem 0.75rem;
+            border-radius: 8px;
+            border-left: 4px solid var(--danger-red);
+        }
+
+        .helptext {
+            font-size: 0.8rem;
+            color: var(--medium-gray);
+            margin-top: 0.5rem;
+            line-height: 1.5;
+            padding: 0.5rem 0.75rem;
+            background: rgba(108, 117, 125, 0.1);
+            border-radius: 8px;
+            border-left: 4px solid var(--medium-gray);
+        }
+
+        .auth-links {
+            text-align: center;
+            margin-top: 2rem;
+            padding-top: 2rem;
+            border-top: 1px solid rgba(108, 117, 125, 0.2);
+        }
+
+        .auth-links p {
+            color: var(--medium-gray);
+            font-size: 0.95rem;
+            margin-bottom: 1rem;
+        }
+
+        .auth-links a {
             color: var(--netflix-red);
             text-decoration: none;
+            font-weight: 600;
             transition: all 0.3s ease;
         }
-        .sidebar-logo:hover {
+
+        .auth-links a:hover {
             color: var(--netflix-dark-red);
-            transform: scale(1.02);
+            text-decoration: underline;
         }
-        .sidebar-logo i {
-            font-size: 1.6rem;
-            min-width: 28px;
-            text-align: center;
+
+        .benefits-list {
+            background: rgba(229, 9, 20, 0.05);
+            border-radius: 12px;
+            padding: 1.5rem;
+            margin: 2rem 0;
+            border-left: 4px solid var(--netflix-red);
         }
-        .sidebar-logo-text {
-            font-weight: 800;
-            letter-spacing: -0.5px;
-            transition: all 0.3s ease;
+
+        .benefits-list h4 {
+            color: var(--netflix-red);
+            font-size: 1.1rem;
+            font-weight: 600;
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
         }
-        .desktop-sidebar.collapsed .sidebar-logo-text,
-        .desktop-sidebar.collapsed .nav-text,
-        .desktop-sidebar.collapsed .user-info-text,
-        .desktop-sidebar.collapsed .notification-badge,
-        .desktop-sidebar.collapsed .wallet-display {
-            opacity: 0;
-            width: 0;
-            overflow: hidden;
-            pointer-events: none;
+
+        .benefits-list h4 i {
+            margin-right: 0.5rem;
         }
-        .sidebar-nav {
+
+        .benefits-list ul {
             list-style: none;
             padding: 0;
             margin: 0;
-            flex: 1;
         }
-        .sidebar-nav-item {
-            margin-bottom: 0.15rem;
-        }
-        .sidebar-nav-link {
-            display: flex;
-            align-items: center;
-            padding: 0.9rem 1.25rem;
+
+        .benefits-list li {
             color: var(--text-dark);
-            text-decoration: none;
-            border-radius: 0 50px 50px 0;
-            margin-right: 0.75rem;
-            font-weight: 500;
-            font-size: 1rem;
-            transition: all 0.25s ease;
-            position: relative;
-            overflow: hidden;
-            min-height: 50px;
-        }
-        .sidebar-nav-link:hover {
-            background: linear-gradient(135deg, rgba(229, 9, 20, 0.08), rgba(229, 9, 20, 0.04));
-            color: var(--netflix-red);
-            transform: translateX(3px);
-        }
-        .sidebar-nav-link.active {
-            background: linear-gradient(135deg, var(--netflix-red), var(--netflix-dark-red));
-            color: white;
-            box-shadow: 0 3px 12px rgba(229, 9, 20, 0.3);
-        }
-        .sidebar-nav-link i {
-            font-size: 1.2rem;
-            min-width: 28px;
-            text-align: center;
-            margin-right: 0.9rem;
-            flex-shrink: 0;
-        }
-        .nav-text {
-            transition: all 0.3s ease;
-            white-space: nowrap;
-            flex: 1;
-        }
-        .notification-badge {
-            background: var(--netflix-red);
-            color: white;
-            border-radius: 20px;
-            padding: 0.2rem 0.4rem;
-            font-size: 0.7rem;
-            font-weight: 600;
-            min-width: 18px;
-            height: 18px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            margin-left: auto;
-            flex-shrink: 0;
-        }
-        .wallet-display {
-            background: rgba(25, 135, 84, 0.1);
-            color: #198754;
-            border-radius: 20px;
-            padding: 0.3rem 0.6rem;
-            font-weight: 600;
-            margin-left: auto;
-            font-size: 0.8rem;
-            white-space: nowrap;
-            flex-shrink: 0;
-        }
-        .sidebar-user-section {
-            padding: 0 1rem;
-            margin-top: auto;
-            margin-bottom: 1rem;
-        }
-        .sidebar-user-info {
-            display: flex;
-            align-items: center;
-            gap: 0.75rem;
-            padding: 0.8rem;
-            background: rgba(229, 9, 20, 0.04);
-            border-radius: 50px;
-            transition: all 0.3s ease;
-            cursor: pointer;
-            text-decoration: none;
-            color: inherit;
-            border: 1px solid rgba(229, 9, 20, 0.1);
-        }
-        .sidebar-user-info:hover {
-            background: rgba(229, 9, 20, 0.08);
-            transform: scale(1.02);
-            color: inherit;
-            border-color: rgba(229, 9, 20, 0.2);
-        }
-        .user-avatar {
-            width: 36px;
-            height: 36px;
-            border-radius: 50%;
-            background: var(--netflix-red);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: white;
-            font-size: 1rem;
-            flex-shrink: 0;
-            overflow: hidden;
-        }
-        .user-avatar img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-            border-radius: 50%;
-        }
-        .user-info-text {
-            flex: 1;
-            min-width: 0;
-            transition: all 0.3s ease;
-        }
-        .user-name {
-            font-weight: 600;
-            font-size: 0.85rem;
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
-            line-height: 1.2;
-        }
-        .user-handle {
-            font-size: 0.75rem;
-            color: var(--medium-gray);
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
-            line-height: 1.2;
-        }
-        /* === Bottom Sidebar Toggle Indicator === */
-        .sidebar-bottom-toggle {
-            padding: 1rem 0;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            margin-top: auto;
-            cursor: pointer;
-            transition: background 0.3s ease;
-        }
-        .sidebar-bottom-toggle:hover {
-            background: rgba(229, 9, 20, 0.05);
-            border-radius: 10px 0 0 10px;
-        }
-        .arrow-indicator {
-            width: 30px;
-            height: 4px;
-            background: linear-gradient(90deg, var(--netflix-red), var(--netflix-dark-red));
-            border-radius: 2px;
-            position: relative;
-            transition: all 0.3s ease;
-        }
-        .arrow-indicator::after {
-            content: '';
-            position: absolute;
-            top: -6px;
-            right: -8px;
-            width: 0;
-            height: 0;
-            border-left: 6px solid var(--netflix-red);
-            border-top: 4px solid transparent;
-            border-bottom: 4px solid transparent;
-            transition: all 0.3s ease;
-        }
-        .desktop-sidebar.collapsed .arrow-indicator::after {
-            transform: rotate(180deg);
-            right: -4px;
-        }
-        /* Main Content Area */
-        .main-wrapper {
-            margin-left: var(--sidebar-width);
-            min-height: 100vh;
-            transition: margin-left 0.3s ease;
-        }
-        .main-wrapper.sidebar-collapsed {
-            margin-left: var(--sidebar-collapsed-width);
-        }
-        .main-content {
-            padding: 0;
-            min-height: calc(100vh - 200px);
-            max-width: var(--max-content-width);
-            margin: 0 auto;
-        }
-        /* Top Bar for Desktop */
-        .desktop-top-bar {
-            background: rgba(255, 255, 255, 0.95);
-            backdrop-filter: blur(10px);
-            border-bottom: 1px solid rgba(0, 0, 0, 0.05);
-            padding: 1rem 2rem;
-            position: sticky;
-            top: 0;
-            z-index: 500;
-            display: flex;
-            align-items: center;
-            gap: 1rem;
-            max-width: var(--max-content-width);
-            margin: 0 auto;
-        }
-        .search-bar {
-            flex: 1;
-            max-width: 400px;
-            position: relative;
-        }
-        .search-input {
-            width: 100%;
-            padding: 0.75rem 1rem 0.75rem 2.5rem;
-            border: 1px solid #e9ecef;
-            border-radius: 25px;
-            background: #f8f9fa;
-            font-size: 0.95rem;
-            transition: all 0.3s ease;
-        }
-        .search-input:focus {
-            outline: none;
-            border-color: var(--netflix-red);
-            background: white;
-            box-shadow: 0 0 0 3px rgba(229, 9, 20, 0.1);
-        }
-        .search-icon {
-            position: absolute;
-            left: 0.9rem;
-            top: 50%;
-            transform: translateY(-50%);
-            color: var(--medium-gray);
             font-size: 0.9rem;
-        }
-        /* Content Container */
-        .content-container {
-            max-width: var(--max-content-width);
-            margin: 0 auto;
-            padding: 2rem;
-        }
-        /* Twitter-style content layout */
-        .twitter-layout {
-            display: grid;
-            grid-template-columns: 1fr 300px;
-            gap: 2rem;
-            max-width: var(--max-content-width);
-            margin: 0 auto;
-        }
-        .main-feed {
-            min-height: 600px;
-        }
-        .sidebar-widget {
-            background: rgba(255, 255, 255, 0.9);
-            border-radius: 15px;
-            padding: 1.5rem;
-            backdrop-filter: blur(10px);
-            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
-            height: fit-content;
-            position: sticky;
-            top: 120px;
-        }
-        /* Mobile Styles */
-        .mobile-top-header {
-            display: none;
-            padding: 0.5rem 1rem;
-            background: rgba(255, 255, 255, 0.95);
-            backdrop-filter: blur(10px);
-            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-            position: sticky;
-            top: 0;
-            z-index: 1000;
-            border-bottom-left-radius: 15px;
-            border-bottom-right-radius: 15px;
-        }
-        .mobile-top-header .profile-pic {
-            width: 38px;
-            height: 38px;
-            border-radius: 50%;
-            background-color: #e9ecef;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: #6c757d;
-            border: 2px solid var(--netflix-red);
-            transition: all 0.3s ease;
-        }
-        .mobile-top-header .profile-pic:hover {
-            transform: scale(1.1);
-        }
-        .mobile-top-header .profile-pic img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-            border-radius: 50%;
-        }
-        .logo {
-            font-size: 2rem;
-            font-weight: 800;
-            color: var(--netflix-red);
-            text-decoration: none;
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-            transition: transform 0.3s ease;
-        }
-        .logo:hover {
-            transform: scale(1.05);
-            color: var(--netflix-dark-red);
-        }
-        .logo i {
-            font-size: 2.2rem;
-            animation: pulse 2s infinite;
-        }
-        @keyframes pulse {
-            0%, 100% { transform: scale(1); }
-            50% { transform: scale(1.1); }
-        }
-        /* Bottom Navigation for Mobile */
-        .bottom-nav {
-            display: none;
-            position: fixed;
-            bottom: 10px;
-            left: 0;
-            width: 100%;
-            background: var(--text-white);
-            box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.1);
-            z-index: 1000;
-            justify-content: space-around;
-            align-items: center;
-            padding: 0.5rem 0;
-            border-top: 1px solid #e0e0e0;
-            border-radius: 15px 15px 0 0;
-        }
-        .bottom-nav .nav-link {
-            flex-grow: 1;
-            text-align: center;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            font-size: 0.75rem;
-            color: var(--medium-gray);
-            transition: color 0.3s ease;
-            position: relative;
-            text-decoration: none;
-        }
-        .bottom-nav .nav-link:hover,
-        .bottom-nav .nav-link.active {
-            color: var(--primary-color);
-        }
-        .bottom-nav .nav-link i {
-            font-size: 1.25rem;
-            margin-bottom: 0.25rem;
-        }
-        .bottom-nav .nav-link .badge {
-            position: absolute;
-            top: 0.25rem;
-            right: 0.25rem;
-            font-size: 0.6rem;
-        }
-        /* Offcanvas Menu for Mobile */
-        .offcanvas.offcanvas-start {
-            background: linear-gradient(135deg, #f5f7fa 0%, #e0e6ed 100%);
-            width: 75%;
-            max-width: 300px;
-            border-right: none;
-            box-shadow: 4px 0 20px rgba(0, 0, 0, 0.1);
-            backdrop-filter: blur(15px);
-            -webkit-backdrop-filter: blur(15px);
-            z-index: 1050;
-        }
-        .offcanvas-header {
-            border-bottom: 1px solid rgba(0, 0, 0, 0.1);
-            padding: 1rem 1.5rem;
-        }
-        .offcanvas-header .profile-pic-container {
-            width: 50px;
-            height: 50px;
-            border-radius: 50%;
-            background-color: #e9ecef;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: #6c757d;
-            border: 2px solid var(--netflix-red);
-            margin-right: 1rem;
-        }
-        .offcanvas-header .profile-pic-container img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-            border-radius: 50%;
-        }
-        .offcanvas-header .profile-pic-container i {
-            font-size: 1.5rem;
-        }
-        .offcanvas-header .offcanvas-title {
-            font-weight: 600;
-            color: var(--text-dark);
-        }
-        .offcanvas-body .list-group-item {
-            background-color: transparent;
-            border: none;
-            padding: 1rem 1.5rem;
-            transition: all 0.2s ease;
-            font-weight: 500;
-        }
-        .offcanvas-body .list-group-item i {
-            width: 25px;
-            text-align: center;
-            margin-right: 1rem;
-            color: var(--medium-gray);
-        }
-        .offcanvas-body .list-group-item:hover {
-            background-color: rgba(229, 9, 20, 0.1);
-            color: var(--netflix-red);
-            transform: translateX(5px);
-        }
-        .offcanvas-body .list-group-item:hover i {
-            color: var(--netflix-red);
-        }
-        /* Footer */
-        footer {
-            background: linear-gradient(135deg, var(--dark-bg) 0%, #2c2c2c 100%);
-            color: var(--text-white);
-            padding: 3rem 0 1rem;
-            margin-top: 4rem;
-        }
-        .footer-content {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 2rem;
-            margin-bottom: 2rem;
-        }
-        .footer-section h5 {
-            color: var(--netflix-red);
-            margin-bottom: 1rem;
-            font-weight: 600;
-        }
-        .footer-section a {
-            color: var(--medium-gray);
-            text-decoration: none;
-            transition: color 0.3s ease;
-            display: block;
             margin-bottom: 0.5rem;
+            display: flex;
+            align-items: center;
         }
-        .footer-section a:hover {
-            color: var(--netflix-red);
+
+        .benefits-list li i {
+            color: var(--success-green);
+            margin-right: 0.75rem;
+            font-size: 0.8rem;
         }
-        .social-links a {
-            color: var(--medium-gray);
-            font-size: 1.5rem;
-            margin-right: 1rem;
-            transition: all 0.3s ease;
-        }
-        .social-links a:hover {
-            color: var(--netflix-red);
-            transform: translateY(-3px);
-        }
-        .footer-bottom {
-            border-top: 1px solid #333;
-            padding-top: 1rem;
-            text-align: center;
-            color: var(--medium-gray);
-        }
-        /* Responsive Design */
-        @media (max-width: 1400px) {
-            .twitter-layout {
-                grid-template-columns: 1fr;
-                gap: 1rem;
-            }
-            .sidebar-widget {
-                position: static;
-                margin-top: 2rem;
-            }
-        }
-        @media (max-width: 991.98px) {
-            .desktop-sidebar {
-                display: none;
-            }
-            .main-wrapper {
-                margin-left: 0;
-            }
-            .bottom-nav {
-                display: flex;
-            }
-            .mobile-top-header {
-                display: flex;
-            }
-            .desktop-top-bar {
-                display: none;
-            }
-            .content-container {
+
+        /* Mobile Responsive */
+        @media (max-width: 768px) {
+            .registration-wrapper {
                 padding: 1rem;
+                min-height: calc(100vh - 120px);
             }
-            body {
-                padding-bottom: 80px;
+
+            .registration-container {
+                padding: 2rem 1.5rem;
+                border-radius: 20px;
+                margin: 0;
             }
-        }
-        @media (min-width: 992px) and (max-width: 1366px) {
-            :root {
-                --sidebar-width: 240px;
-                --sidebar-collapsed-width: 70px;
-                --max-content-width: 900px;
+
+            .registration-header h2 {
+                font-size: 1.8rem;
             }
-            .desktop-top-bar {
-                padding: 0.8rem 1.5rem;
+
+            .registration-icon {
+                width: 60px;
+                height: 60px;
+                font-size: 1.5rem;
+                margin-bottom: 1rem;
             }
-            .content-container {
-                padding: 1.5rem;
-            }
-            .sidebar-nav-link {
-                padding: 0.8rem 1rem;
+
+            .form-control {
+                padding: 0.9rem 1rem;
                 font-size: 0.95rem;
             }
-            .sidebar-nav-link i {
-                font-size: 1.1rem;
-                margin-right: 0.8rem;
-            }
-            .desktop-sidebar {
-                padding-bottom: 5rem;
+
+            .btn-register {
+                padding: 1rem;
+                font-size: 1rem;
             }
         }
-        @media (max-width: 575.98px) {
-            body {
-                font-size: 0.9rem;
+
+        @media (max-width: 480px) {
+            .registration-container {
+                padding: 1.5rem 1rem;
             }
-            .main-content {
+
+            .registration-header h2 {
+                font-size: 1.6rem;
+            }
+
+            .benefits-list {
                 padding: 1rem;
             }
-            footer {
-                padding: 2rem 0 1rem;
-            }
-            .footer-content {
-                grid-template-columns: 1fr;
-                gap: 1.5rem;
-            }
         }
-        /* Custom scrollbar */
-        ::-webkit-scrollbar {
-            width: 8px;
+
+        /* Loading state */
+        .btn-register.loading {
+            opacity: 0.7;
+            cursor: not-allowed;
         }
-        ::-webkit-scrollbar-track {
-            background: #f1f1f1;
-        }
-        ::-webkit-scrollbar-thumb {
-            background: var(--netflix-red);
-            border-radius: 4px;
-        }
-        ::-webkit-scrollbar-thumb:hover {
-            background: var(--netflix-dark-red);
-        }
-        /* Loading animation */
-        .loading-overlay {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: var(--dark-bg);
-            display: none;
-            justify-content: center;
-            align-items: center;
-            z-index: 9999;
-        }
-        .spinner {
-            width: 50px;
-            height: 50px;
-            border: 3px solid #333;
-            border-top: 3px solid var(--netflix-red);
+
+        .btn-register.loading::after {
+            content: '';
+            width: 20px;
+            height: 20px;
+            border: 2px solid transparent;
+            border-top: 2px solid white;
             border-radius: 50%;
             animation: spin 1s linear infinite;
+            display: inline-block;
+            margin-left: 0.5rem;
         }
+
         @keyframes spin {
             0% { transform: rotate(0deg); }
             100% { transform: rotate(360deg); }
         }
-        /* Dropdown styles */
-        .dropdown-menu-custom {
-            background: rgba(255, 255, 255, 0.98);
-            backdrop-filter: blur(20px);
-            border: none;
-            border-radius: 15px;
-            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.15);
-            padding: 0.5rem;
-            min-width: 300px;
-            max-height: 400px;
-            overflow-y: auto;
-        }
-        .notification-dropdown-item {
-            padding: 0.75rem 1rem;
-            border-radius: 10px;
-            margin-bottom: 0.25rem;
-            transition: all 0.2s ease;
-            border: none;
-            background: transparent;
-        }
-        .notification-dropdown-item:hover {
-            background: rgba(229, 9, 20, 0.05);
-            color: var(--netflix-red);
-        }
-        .notification-dropdown-item small {
-            color: var(--medium-gray);
-            font-size: 0.8rem;
-        }
-        /* Login Modal */
-        .modal {
-            z-index: 1100 !important;
-        }
-        .modal-backdrop {
-            z-index: 1090 !important;
-        }
-        .offcanvas {
-            z-index: 1050 !important;
-        }
-        .modal-content {
-            border: none;
-            border-radius: 15px;
-            overflow: hidden;
-            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
-        }
-        .modal-header {
-            background: linear-gradient(135deg, #E50914, #B20710);
-            color: white;
-            border: none;
-            padding: 1.2rem 1.5rem;
-        }
-        .modal-body {
-            padding: 1.5rem;
-            font-size: 1.1rem;
-            text-align: center;
-            color: var(--text-dark);
-        }
-        .modal-footer {
-            padding: 1rem 1.5rem;
-            border-top: none;
-            justify-content: center;
-            gap: 1rem;
-        }
-        .btn-modal {
-            padding: 0.6rem 1.5rem;
-            font-weight: 600;
-            border-radius: 25px;
-            font-size: 0.95rem;
-            min-width: 120px;
-        }
-        .btn-login {
-            background: linear-gradient(45deg, #E50914, #B20710);
-            color: white;
-            border: none;
-        }
-        .btn-register {
-            background: transparent;
-            color: #E50914;
-            border: 2px solid #E50914;
-        }
-        .btn-register:hover {
-            background: rgba(229, 9, 20, 0.1);
-        }
     </style>
-</head>
-<body>
-    <!-- Login Required Modal -->
-    {% if not user.is_authenticated %}
-    <div class="modal fade" id="loginModal" tabindex="-1" aria-labelledby="loginModalLabel" aria-hidden="true" data-bs-backdrop="static" data-bs-keyboard="false">
-        <div class="modal-dialog modal-dialog-centered">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="loginModalLabel">
-                        <i class="fas fa-user-shield me-2"></i>Welcome to JARAFLIX
-                    </h5>
+{% endblock %}
+
+{% block content %}
+    <div class="registration-wrapper">
+        <div class="registration-container">
+            <div class="registration-header">
+                <div class="registration-icon">
+                    <i class="fas fa-book-open"></i>
                 </div>
-                <div class="modal-body">
-                    <p class="lead mb-0">To continue exploring exclusive stories,</p>
-                    <p class="text-muted mb-0">please log in or create an account.</p>
-                </div>
-                <div class="modal-footer">
-                    <a href="{% url 'users:register_user' %}" class="btn btn-register btn-modal">Register</a>
-                    <a href="{% url 'users:login_user' %}" class="btn btn-login btn-modal">Log In</a>
-                </div>
+                <h2>Join JARAFLIX</h2>
+                <p>Connect with your favorite authors and unlock exclusive content</p>
             </div>
-        </div>
-    </div>
 
-    <!-- Show Modal on Page Load -->
-    <script>
-        document.addEventListener("DOMContentLoaded", function () {
-            if (!sessionStorage.getItem('loginModalShown')) {
-                const modalElement = document.getElementById('loginModal');
-                if (modalElement) {
-                    const modal = new bootstrap.Modal(modalElement);
-                    modal.show();
-                    sessionStorage.setItem('loginModalShown', 'true');
-                }
-            }
-        });
-    </script>
-    {% endif %}
+            <form method="post" id="registrationForm">
+                {% csrf_token %}
 
-    <!-- Loading Overlay -->
-    <div class="loading-overlay" id="loadingOverlay">
-        <div class="spinner"></div>
-    </div>
-
-    <!-- Mobile Header -->
-    <header class="mobile-top-header d-lg-none d-flex justify-content-between align-items-center">
-        <a class="profile-pic me-2" href="#" data-bs-toggle="offcanvas" data-bs-target="#sidebarOffcanvas" aria-controls="sidebarOffcanvas">
-             {% if user.profile.profile_picture %}
-                <img src="{{ user.profile.profile_picture.url }}" alt="{{ user.get_full_name|default:user.username }}'s Profile Picture">
-             {% else %}
-                <i class="fas fa-user"></i>
-             {% endif %}
-        </a>
-        <a href="/" class="logo me-auto ms-auto">
-            <i class="fas fa-book-open"></i>
-            <span>JARAFLIX</span>
-        </a>
-        <a href="{% url 'search:search' %}" class="btn btn-sm btn-light rounded-pill p-2" style="color: var(--netflix-red);">
-            <i class="fas fa-search"></i>
-        </a>
-    </header>
-
-    <!-- Desktop Sidebar -->
-    <nav class="desktop-sidebar d-none d-lg-block" id="desktopSidebar">
-        <a href="/" class="sidebar-logo">
-            <i class="fas fa-book-open"></i>
-            <span class="sidebar-logo-text">JARAFLIX</span>
-        </a>
-        <ul class="sidebar-nav">
-            <li class="sidebar-nav-item">
-                <a href="{% url 'home' %}" class="sidebar-nav-link active">
-                    <i class="fas fa-home"></i>
-                    <span class="nav-text">Home</span>
-                </a>
-            </li>
-            <li class="sidebar-nav-item">
-                <a href="{% url 'books:story-list' %}" class="sidebar-nav-link">
-                    <i class="fas fa-book"></i>
-                    <span class="nav-text">All Stories</span>
-                </a>
-            </li>
-            {% if user.is_authenticated and user.is_staff %}
-            <li class="sidebar-nav-item">
-                <a href="{% url 'users:user_list' %}" class="sidebar-nav-link">
-                    <i class="fas fa-users"></i>
-                    <span class="nav-text">Manage Users</span>
-                </a>
-            </li>
-            {% endif %}
-            <li class="sidebar-nav-item">
-                <a href="#" class="sidebar-nav-link">
-                    <i class="fas fa-bookmark"></i>
-                    <span class="nav-text">Library</span>
-                </a>
-            </li>
-            <li class="sidebar-nav-item">
-                <a href="{% url 'books:genre-list' %}" class="sidebar-nav-link">
-                    <i class="fas fa-tags"></i>
-                    <span class="nav-text">Genres</span>
-                </a>
-            </li>
-            {% if user.is_authenticated %}
-            <li class="sidebar-nav-item">
-                <a href="{% url 'notifications:notification_list' %}" class="sidebar-nav-link">
-                    <i class="fas fa-bell"></i>
-                    <span class="nav-text">Notifications</span>
-                    {% if request.user.notifications.unread %}
-                        <span class="notification-badge">{{ request.user.notifications.unread.count }}</span>
-                    {% endif %}
-                </a>
-            </li>
-            <li class="sidebar-nav-item">
-                <a href="{% url 'dashboard:dashboard' %}" class="sidebar-nav-link">
-                    <i class="fas fa-tachometer-alt"></i>
-                    <span class="nav-text">Dashboard</span>
-                </a>
-            </li>
-            <li class="sidebar-nav-item">
-                <a href="#" class="sidebar-nav-link">
-                    <i class="fas fa-wallet"></i>
-                    <span class="nav-text">Wallet</span>
-                    {% if user_wallet %}
-                        <span class="wallet-display">₦{{ user_wallet.balance|intcomma }}</span>
-                    {% endif %}
-                </a>
-            </li>
-            <li class="sidebar-nav-item">
-                <a href="#" class="sidebar-nav-link">
-                    <i class="fas fa-cog"></i>
-                    <span class="nav-text">Settings</span>
-                </a>
-            </li>
-            <li class="sidebar-nav-item">
-                <a href="{% url 'users:logout_user' %}" class="sidebar-nav-link">
-                    <i class="fas fa-sign-out-alt"></i>
-                    <span class="nav-text">Logout</span>
-                </a>
-            </li>
-            {% else %}
-            <li class="sidebar-nav-item">
-                <a href="{% url 'users:login_user' %}" class="sidebar-nav-link">
-                    <i class="fas fa-sign-in-alt"></i>
-                    <span class="nav-text">Login</span>
-                </a>
-            </li>
-            <li class="sidebar-nav-item">
-                <a href="{% url 'users:register_user' %}" class="sidebar-nav-link">
-                    <i class="fas fa-user-plus"></i>
-                    <span class="nav-text">Register</span>
-                </a>
-            </li>
-            {% endif %}
-        </ul>
-        {% if user.is_authenticated %}
-        <div class="sidebar-user-section">
-            <a href="{% url 'users:user_profile' username=request.user.username %}" class="sidebar-user-info">
-                <div class="user-avatar">
-                    {% if user.profile.profile_picture %}
-                        <img src="{{ user.profile.profile_picture.url }}" alt="{{ user.get_full_name|default:user.username }}">
-                    {% else %}
-                        <i class="fas fa-user"></i>
-                    {% endif %}
-                </div>
-                <div class="user-info-text">
-                    <div class="user-name">{{ user.get_full_name|default:user.username }}</div>
-                    <div class="user-handle">@{{ user.username }}</div>
-                </div>
-            </a>
-        </div>
-        {% endif %}
-        <div class="sidebar-bottom-toggle" onclick="toggleSidebar()">
-            <div class="arrow-indicator"></div>
-        </div>
-    </nav>
-
-    <!-- Main Wrapper -->
-    <div class="main-wrapper" id="mainWrapper">
-        <div class="desktop-top-bar d-none d-lg-flex">
-            <div class="search-bar">
-                <i class="fas fa-search search-icon"></i>
-                <input type="text" class="search-input" placeholder="Search stories, authors, genres...">
-            </div>
-            <div class="ms-auto d-flex align-items-center gap-3">
-                {% if user.is_authenticated %}
-                <div class="dropdown">
-                    <button class="btn btn-light rounded-pill px-3 py-2 dropdown-toggle" type="button" id="notificationDropdown" data-bs-toggle="dropdown" aria-expanded="false">
-                        <i class="fas fa-bell me-2"></i>
-                        {% if request.user.notifications.unread.count > 0 %}
-                            <span class="badge bg-danger rounded-pill">{{ request.user.notifications.unread.count }}</span>
+                {% for field in form %}
+                    <div class="form-group">
+                        {{ field.label_tag }}
+                        {% if field.name == 'username' %}
+                            <input type="text" name="{{ field.name }}" class="form-control" placeholder="Choose a unique username" value="{{ field.value|default:'' }}" required>
+                        {% elif field.name == 'email' %}
+                            <input type="email" name="{{ field.name }}" class="form-control" placeholder="your@email.com" value="{{ field.value|default:'' }}" required>
+                        {% elif field.name == 'password1' %}
+                            <input type="password" name="{{ field.name }}" class="form-control" placeholder="Create a strong password" required>
+                        {% elif field.name == 'password2' %}
+                            <input type="password" name="{{ field.name }}" class="form-control" placeholder="Confirm your password" required>
+                        {% else %}
+                            {{ field }}
                         {% endif %}
-                    </button>
-                    <ul class="dropdown-menu dropdown-menu-end dropdown-menu-custom" aria-labelledby="notificationDropdown">
-                        {% for notification in request.user.notifications.unread %}
-                            <li>
-                                <a class="dropdown-item notification-dropdown-item" href="{% url 'notifications:notification_list' %}">
-                                    {{ notification.actor }} {{ notification.verb }}
-                                    <small>{{ notification.timestamp|date:"P" }}</small>
-                                </a>
-                            </li>
-                        {% empty %}
-                            <li><a class="dropdown-item notification-dropdown-item" href="{% url 'notifications:notification_list' %}">No notifications yet.</a></li>
+                        
+                        {% if field.help_text %}
+                            <div class="helptext">{{ field.help_text }}</div>
+                        {% endif %}
+                        
+                        {% for error in field.errors %}
+                            <ul class="errorlist"><li>{{ error }}</li></ul>
                         {% endfor %}
+                    </div>
+                {% endfor %}
+
+                {% if form.non_field_errors %}
+                    <div class="form-group">
+                        {% for error in form.non_field_errors %}
+                            <ul class="errorlist"><li>{{ error }}</li></ul>
+                        {% endfor %}
+                    </div>
+                {% endif %}
+
+                <div class="benefits-list">
+                    <h4><i class="fas fa-star"></i>What you'll get:</h4>
+                    <ul>
+                        <li><i class="fas fa-check-circle"></i>Exclusive access to premium author content</li>
+                        <li><i class="fas fa-check-circle"></i>Early access to new releases and drafts</li>
+                        <li><i class="fas fa-check-circle"></i>Direct interaction with your favorite authors</li>
+                        <li><i class="fas fa-check-circle"></i>Ad-free reading experience</li>
                     </ul>
                 </div>
-                {% endif %}
-            </div>
-        </div>
-        <main class="main-content">
-            <div class="content-container">
-                {% block content %}
-                <div class="text-center py-5">
-                    <h1 class="display-4 mb-4">Welcome to JARAFLIX</h1>
-                    <p class="lead text-muted">Connect with your favorite authors and get exclusive access to their latest works.</p>
-                    <div class="mt-4">
-                        <a href="{% url 'search:search' %}" class="btn btn-lg me-3" style="background: linear-gradient(45deg, var(--netflix-red), var(--netflix-dark-red)); color: white; border: none; border-radius: 25px; padding: 12px 30px;">
-                            <i class="fas fa-rocket me-2"></i>Get Started
-                        </a>
-                        <a href="{% url 'search:search' %}" class="btn btn-outline-dark btn-lg" style="border-radius: 25px; padding: 12px 30px;">
-                            <i class="fas fa-info-circle me-2"></i>Learn More
-                        </a>
-                    </div>
-                </div>
-                {% endblock content %}
-            </div>
-        </main>
-        <footer>
-            <div class="container">
-                <div class="footer-bottom">
-                    <p>&copy; {% now "Y" %} JARAFLIX. All Rights Reserved. | Made with <i class="fas fa-heart text-danger"></i> for book lovers</p>
-                </div>
-            </div>
-        </footer>
-    </div>
 
-    <!-- Mobile Offcanvas -->
-    <div class="offcanvas offcanvas-start" tabindex="-1" id="sidebarOffcanvas" aria-labelledby="sidebarOffcanvasLabel">
-        <div class="offcanvas-header">
-            <div class="profile-pic-container">
-                {% if user.profile.profile_picture %}
-                    <img src="{{ user.profile.profile_picture.url }}" alt="{{ user.get_full_name|default:user.username }}">
-                {% else %}
-                    <i class="fas fa-user"></i>
-                {% endif %}
-            </div>
-            <h5 class="offcanvas-title">{{ user.get_full_name|default:user.username }}</h5>
-            <button type="button" class="btn-close" data-bs-dismiss="offcanvas"></button>
-        </div>
-        <div class="offcanvas-body">
-            <div class="list-group list-group-flush">
-                {% if user.is_authenticated %}
-                <a href="{% url 'users:user_profile' username=request.user.username %}" class="list-group-item list-group-item-action">
-                    <i class="fas fa-user"></i> Profile
-                </a>
-                {% else %}
-                <a href="{% url 'users:login_user' %}" class="list-group-item list-group-item-action">
-                    <i class="fas fa-sign-in-alt"></i> Login
-                </a>
-                {% endif %}
-                <a href="#" class="list-group-item list-group-item-action">
-                    <i class="fas fa-cogs"></i> Settings
-                </a>
-                <a href="{% url 'books:genre-list' %}" class="list-group-item list-group-item-action">
-                    <i class="fas fa-tags"></i> Genres
-                </a>
-                <a href="#" class="list-group-item list-group-item-action">
-                    <i class="fas fa-headset"></i> Help Center
-                </a>
-                <a href="{% url 'users:logout_user' %}" class="list-group-item list-group-item-action">
-                    <i class="fas fa-sign-out-alt"></i> Logout
-                </a>
+                <button type="submit" class="btn-register" id="submitBtn">
+                    <i class="fas fa-user-plus"></i>Create My Account
+                </button>
+            </form>
+
+            <div class="auth-links">
+                <p>Already have an account? <a href="{%url 'users:login_user'%}">Sign in here</a></p>
+                <p><a href="#">Browse authors</a> • <a href="#">Subscription plans</a> • <a href="#">Help center</a></p>
             </div>
         </div>
     </div>
 
-    <!-- Bottom Nav -->
-    <nav class="bottom-nav d-lg-none">
-        <a href="{% url 'home' %}" class="nav-link active">
-            <i class="fas fa-home"></i>
-            <span>Home</span>
-        </a>
-        <a href="{% url 'books:story-list' %}" class="nav-link">
-            <i class="fas fa-book"></i>
-            <span>Library</span>
-        </a>
-        <a href="{% url 'search:search' %}" class="nav-link">
-            <i class="fas fa-search"></i>
-            <span>Search</span>
-        </a>
-        {% if user.is_authenticated %}
-        <a href="{% url 'notifications:notification_list' %}" class="nav-link notifications-link">
-            <i class="fas fa-bell"></i>
-            <span>Notifications</span>
-            {% if request.user.notifications.unread %}
-                <span class="badge bg-danger rounded-pill">{{ request.user.notifications.unread.count }}</span>
-            {% else %}
-                <span class="badge bg-danger rounded-pill" style="display: none;"></span>
-            {% endif %}
-        </a>
-        <a href="{% url 'dashboard:dashboard' %}" class="nav-link">
-            <i class="fas fa-tachometer-alt"></i>
-            <span>Dashboard</span>
-        </a>
-        {% else %}
-        <a href="{% url 'users:login_user' %}" class="nav-link">
-            <i class="fas fa-sign-in-alt"></i>
-            <span>Login</span>
-        </a>
-        {% endif %}
-    </nav>
-
-    <!-- iPhone Spacer -->
-    <div style="position: fixed; bottom: 0; left: 0; width: 100%; height: 15px; background: white; z-index: 999;" class="d-lg-none"></div>
-
-    <!-- Scripts -->
-    <script src="{% static 'js/main.js' %}"></script>
-    {% block extra_scripts %}{% endblock extra_scripts %}
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/js/bootstrap.bundle.min.js" integrity="sha384-ndDqU0Gzau9qJ1lfW4pNLlhNTkCfHzAVBReH9diLvGRem5+R9g2FzA8ZGN954O5Q" crossorigin="anonymous"></script>
-
-    <!-- Rest of your JS -->
     <script>
-        window.addEventListener('load', function() {
-            const loadingOverlay = document.getElementById('loadingOverlay');
-            setTimeout(() => {
-                if (loadingOverlay) loadingOverlay.style.display = 'none';
-            }, 500);
+        // Form submission loading state
+        document.getElementById('registrationForm').addEventListener('submit', function() {
+            const submitBtn = document.getElementById('submitBtn');
+            submitBtn.classList.add('loading');
+            submitBtn.innerHTML = '<i class="fas fa-user-plus"></i>Creating Account...';
         });
 
-        function toggleSidebar() {
-            const sidebar = document.getElementById('desktopSidebar');
-            const mainWrapper = document.getElementById('mainWrapper');
-            sidebar.classList.toggle('collapsed');
-            mainWrapper.classList.toggle('sidebar-collapsed');
-        }
-
-        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-            anchor.addEventListener('click', function (e) {
-                e.preventDefault();
-                const target = document.querySelector(this.getAttribute('href'));
-                if (target) target.scrollIntoView({ behavior: 'smooth' });
-            });
-        });
-
-        document.querySelectorAll('.sidebar-nav-link').forEach(link => {
-            link.addEventListener('click', function() {
-                document.querySelectorAll('.sidebar-nav-link').forEach(l => l.classList.remove('active'));
-                this.classList.add('active');
-            });
-        });
-
-        document.querySelectorAll('.bottom-nav .nav-link').forEach(link => {
-            link.addEventListener('click', function() {
-                document.querySelectorAll('.bottom-nav .nav-link').forEach(l => l.classList.remove('active'));
-                this.classList.add('active');
-            });
-        });
-
-        document.querySelector('.search-input')?.addEventListener('keypress', function(e) {
-            if (e.key === 'Enter') {
-                const query = this.value.trim();
-                if (query) {
-                    window.location.href = `{% url 'search:search' %}?q=${encodeURIComponent(query)}`;
+        // Enhanced form validation feedback
+        document.querySelectorAll('.form-control').forEach(input => {
+            input.addEventListener('blur', function() {
+                if (this.checkValidity()) {
+                    this.style.borderColor = '#28A745';
+                } else {
+                    this.style.borderColor = '#DC3545';
                 }
-            }
+            });
+
+            input.addEventListener('input', function() {
+                this.style.borderColor = '#E9ECEF';
+            });
         });
 
-        function fetchNotifications() {
-            if ("{% if user.is_authenticated %}true{% else %}false{% endif %}" === "true") {
-                fetch("{% url 'notifications:unread_count' %}")
-                    .then(r => r.json())
-                    .then(data => {
-                        const desktopBadge = document.querySelector('#notificationDropdown .badge');
-                        if (desktopBadge) {
-                            desktopBadge.textContent = data.count > 0 ? data.count : "";
-                            desktopBadge.style.display = data.count > 0 ? 'inline-block' : 'none';
-                        }
-                        const sidebarBadge = document.querySelector('.sidebar-nav .notification-badge');
-                        if (sidebarBadge) {
-                            sidebarBadge.textContent = data.count > 0 ? data.count : "";
-                            sidebarBadge.style.display = data.count > 0 ? 'inline-block' : 'none';
-                        }
-                        const mobileBadge = document.querySelector('.bottom-nav .notifications-link .badge');
-                        if (mobileBadge) {
-                            mobileBadge.textContent = data.count > 0 ? data.count : "";
-                            mobileBadge.style.display = data.count > 0 ? 'inline-block' : 'none';
-                        }
-                    }).catch(console.error);
-            }
+        // Password strength indicator (basic)
+        const passwordField = document.querySelector('input[name="password1"]');
+        if (passwordField) {
+            passwordField.addEventListener('input', function() {
+                const strength = this.value.length;
+                const label = this.previousElementSibling;
+                
+                if (strength < 6) {
+                    label.style.color = '#DC3545';
+                } else if (strength < 10) {
+                    label.style.color = '#FD7E14';
+                } else {
+                    label.style.color = '#28A745';
+                }
+            });
         }
-        setInterval(fetchNotifications, 5000);
-        document.addEventListener("DOMContentLoaded", fetchNotifications);
-
-        document.addEventListener('keydown', function(e) {
-            if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') return;
-            if (e.key === 'h') window.location.href = "{% url 'home' %}";
-            if (e.key === 's' || e.key === '/') {
-                const search = document.querySelector('.search-input');
-                if (search) search.focus();
-            }
-        });
     </script>
-</body>
-</html>
+{% endblock %}
