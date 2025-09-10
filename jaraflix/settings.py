@@ -16,6 +16,9 @@ import environ
 import pymysql
 
 
+
+SITE_ID = 1
+
 pymysql.install_as_MySQLdb()
 
 env = environ.Env()
@@ -54,6 +57,12 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'django.contrib.humanize',
+    'django.contrib.sites',
+    'allauth',
+    'allauth.account',
+    'allauth.socialaccount',                    # Main social login functionality
+    'allauth.socialaccount.providers.google',   # Google (Gmail)
+    'allauth.socialaccount.providers.twitter',  # Twitter
     'crispy_forms', 
     'crispy_bootstrap5',
     'notifications',
@@ -81,6 +90,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'allauth.account.middleware.AccountMiddleware'
 ]
 
 ROOT_URLCONF = 'jaraflix.urls'
@@ -166,3 +176,13 @@ AUTH_USER_MODEL = 'users.CustomUser'
 
 LOGIN_URL = 'users:login_user'
 LOGOUT_REDIRECT_URL = 'users:login_user'
+LOGIN_REDURECT_URL = '/'
+
+AUTHENTICATION_BACKENDS = [
+    'django.contrib.auth.backends.ModelBackend',  # Default auth
+    'allauth.account.auth_backends.AuthenticationBackend',  # Allauth backend
+]
+
+ACCOUNT_EMAIL_REQUIRED = True
+ACCOUNT_EMAIL_VERIFICATION = 'none' 
+SOCIALACCOUNT_AUTO_SIGNUP = True    

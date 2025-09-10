@@ -28,6 +28,8 @@ urlpatterns = [
     path('', include('books.urls')),
     path("notifications/", include("user_notifications.urls")),
     path('search/', include('search.urls')),
+    path('accounts/', include('allauth.urls')),
+    
 ]
 if settings.DEBUG:
     urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

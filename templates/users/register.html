@@ -98,6 +98,39 @@
             box-shadow: 0 10px 30px rgba(229, 9, 20, 0.3);
         }
 
+        .social-login {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
+
+        .social-btn {
+            flex: 1;
+            padding: 0.875rem;
+            border: 2px solid #E9ECEF;
+            border-radius: 12px;
+            background: rgba(255, 255, 255, 0.9);
+            color: var(--text-dark);
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 0.9rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+            transition: all 0.3s ease;
+        }
+
+        .social-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+            border-color: var(--netflix-red);
+            color: var(--text-dark);
+        }
+
+        .social-btn.google:hover { border-color: #db4437; }
+        .social-btn.twitter:hover { border-color: #1DA1F2; }
+
         .form-group {
             margin-bottom: 1.8rem;
             position: relative;
@@ -300,6 +333,10 @@
                 margin-bottom: 1rem;
             }
 
+            .social-login {
+                flex-direction: column;
+            }
+
             .form-control {
                 padding: 0.9rem 1rem;
                 font-size: 0.95rem;
@@ -361,6 +398,20 @@
                 <p>Connect with your favorite authors and unlock exclusive content</p>
             </div>
 
+            <!-- Social Signup Buttons at the Top -->
+            <div class="social-login">
+                <a href="/accounts/google/login/" class="social-btn google">
+                    <i class="fab fa-google"></i> Sign up with Google
+                </a>
+                <a href="/accounts/twitter/login/" class="social-btn twitter">
+                    <i class="fab fa-twitter"></i> Sign up with Twitter
+                </a>
+            </div>
+
+            <div class="divider">
+                <span>or create an account</span>
+            </div>
+
             <form method="post" id="registrationForm">
                 {% csrf_token %}
 
@@ -413,7 +464,7 @@
             </form>
 
             <div class="auth-links">
-                <p>Already have an account? <a href="{%url 'users:login_user'%}">Sign in here</a></p>
+                <p>Already have an account? <a href="{% url 'users:login_user' %}">Sign in here</a></p>
                 <p><a href="#">Browse authors</a> • <a href="#">Subscription plans</a> • <a href="#">Help center</a></p>
             </div>
         </div>

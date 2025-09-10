@@ -343,7 +343,7 @@
         }
 
         .social-btn.google:hover { border-color: #db4437; }
-        .social-btn.facebook:hover { border-color: #4267B2; }
+        .social-btn.twitter:hover { border-color: #1DA1F2; }
 
         .auth-links {
             text-align: center;
@@ -522,6 +522,20 @@
                 <p>Sign in to continue your literary journey</p>
             </div>
 
+            <!-- Social Login Buttons at the Top -->
+            <div class="social-login">
+                <a href="/accounts/google/login/" class="social-btn google">
+                    <i class="fab fa-google"></i> Continue with Google
+                </a>
+                <a href="/accounts/twitter/login/" class="social-btn twitter">
+                    <i class="fab fa-twitter"></i> Continue with Twitter
+                </a>
+            </div>
+
+            <div class="divider">
+                <span>or sign in with email</span>
+            </div>
+
             <form method="post" id="loginForm">
                 {% csrf_token %}
 
@@ -593,21 +607,8 @@
                 </button>
             </form>
 
-            <div class="divider">
-                <span>or continue with</span>
-            </div>
-
-            <div class="social-login">
-                <a href="#" class="social-btn google">
-                    <i class="fab fa-google"></i>Google
-                </a>
-                <a href="#" class="social-btn facebook">
-                    <i class="fab fa-facebook-f"></i>Facebook
-                </a>
-            </div>
-
             <div class="auth-links">
-                <p>Don't have an account? <a href="{%url 'users:register_user' %}">Create one here</a></p>
+                <p>Don't have an account? <a href="{% url 'users:register_user' %}">Create one here</a></p>
                 <p><a href="#">Browse authors</a> • <a href="#">Subscription plans</a> • <a href="#">Help center</a></p>
             </div>
         </div>
