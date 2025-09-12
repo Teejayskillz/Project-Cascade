@@ -31,7 +31,7 @@ urlpatterns = [
     path("notifications/", include("user_notifications.urls")),
     path('search/', include('search.urls')),
     path('accounts/', include('allauth.urls')),
-    path("accounts/profile/", accounts_profile_redirect, name="accounts_profile_redirect"),    
+    path("accounts/profile/", accounts_profile_redirect, name="accounts_profile_redirect"),
 ]
 if settings.DEBUG:
     urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
