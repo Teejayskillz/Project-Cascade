@@ -9,8 +9,8 @@ from django.contrib import messages
 
 @login_required
 def accounts_profile_redirect(request):
+    return redirect('users:user_profile', username=request.user.username)
 
-    return redirect('users:profile', username=request.user.username)
 
 def register_user(request):
     if request.method == 'POST':
