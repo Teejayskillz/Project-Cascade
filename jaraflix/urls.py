@@ -19,6 +19,7 @@ from django.urls import path , include
 from django.conf.urls.static import static 
 from django.conf import settings
 from django.views.generic import RedirectView
+from users.views import accounts_profile_redirect
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -30,7 +31,7 @@ urlpatterns = [
     path("notifications/", include("user_notifications.urls")),
     path('search/', include('search.urls')),
     path('accounts/', include('allauth.urls')),
-    path("accounts/profile/", RedirectView.as_view(url="/profile/<str:username>/", permanent=True))
+    path("accounts/profile/", accounts_profile_redirect, name="accounts_profile_redirect"),
     
 ]
 if settings.DEBUG:

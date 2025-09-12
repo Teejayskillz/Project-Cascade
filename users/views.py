@@ -7,7 +7,10 @@ from django.contrib.auth.decorators import login_required, permission_required, 
 from .models import CustomUser, Profile, AuthorApplication, Subscribe
 from django.contrib import messages
 
+@login_required
+def accounts_profile_redirect(request):
 
+    return redirect('users:profile', username=request.user.username)
 
 def register_user(request):
     if request.method == 'POST':
