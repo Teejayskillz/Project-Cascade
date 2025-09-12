@@ -4,160 +4,271 @@
 {% block title %}Social Login - JARAFLIX{% endblock %}
 
 {% block content %}
-<div class="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100 flex items-center justify-center p-4">
-  <div class="bg-white rounded-2xl shadow-2xl w-full max-w-md overflow-hidden">
-    <!-- Header Section -->
-    <div class="bg-gradient-to-r from-red-600 to-red-700 px-8 py-6 text-center">
-      <div class="w-16 h-16 bg-white rounded-full mx-auto mb-4 flex items-center justify-center shadow-lg">
-        <svg class="w-8 h-8 text-red-600" fill="currentColor" viewBox="0 0 24 24">
-          <path d="M12 2C13.1 2 14 2.9 14 4C14 5.1 13.1 6 12 6C10.9 6 10 5.1 10 4C10 2.9 10.9 2 12 2ZM21 9V7L15 1H5C3.9 1 3 1.9 3 3V21C3 22.1 3.9 23 5 23H19C20.1 23 21 22.1 21 21V9H21ZM19 21H5V3H13V9H19V21Z"/>
-        </svg>
-      </div>
-      <h1 class="text-2xl font-bold text-white tracking-wide">JARAFLIX</h1>
-    </div>
-
-    <!-- Content Section -->
-    <div class="px-8 py-8">
-      {% if process == "connect" %}
-        <div class="text-center mb-6">
-          <h2 class="text-2xl font-bold text-gray-800 mb-2">{% trans "Connect Account" %}</h2>
-          <p class="text-gray-600 leading-relaxed">{% trans "You are about to connect a new third-party account to your JARAFLIX profile." %}</p>
-        </div>
-      {% else %}
-        <div class="text-center mb-6">
-          <h2 class="text-2xl font-bold text-gray-800 mb-2">{% trans "Welcome Back" %}</h2>
-          <p class="text-gray-600 leading-relaxed">{% trans "Sign in using your Google or Twitter account to continue watching." %}</p>
-        </div>
-      {% endif %}
-
-      <!-- Social Login Form -->
-      <form method="post" class="space-y-4">
-        {% csrf_token %}
-        
-        <!-- Custom form styling -->
-        <div class="space-y-4">
-          {{ form.as_p }}
-        </div>
-
-        <!-- Continue Button -->
-        <button type="submit" class="w-full bg-gradient-to-r from-red-600 to-red-700 hover:from-red-700 hover:to-red-800 text-white font-semibold py-3 px-6 rounded-xl shadow-lg transition-all duration-300 transform hover:scale-105 hover:shadow-xl">
-          <span class="flex items-center justify-center">
-            <svg class="w-5 h-5 mr-2" fill="currentColor" viewBox="0 0 24 24">
-              <path d="M13,20H11V8L5.5,13.5L4.08,12.08L12,4.16L19.92,12.08L18.5,13.5L13,8V20Z"/>
-            </svg>
-            {% trans "Continue" %}
-          </span>
-        </button>
-      </form>
-
-      <!-- Divider -->
-      <div class="relative my-6">
-        <div class="absolute inset-0 flex items-center">
-          <div class="w-full border-t border-gray-200"></div>
-        </div>
-        <div class="relative flex justify-center text-sm">
-          <span class="px-4 bg-white text-gray-500">or</span>
-        </div>
-      </div>
-
-      <!-- Back to Login Link -->
-      <div class="text-center">
-        <a href="{% url 'account_login' %}" class="inline-flex items-center text-sm text-gray-600 hover:text-red-600 transition-colors duration-200 font-medium">
-          <svg class="w-4 h-4 mr-1" fill="currentColor" viewBox="0 0 24 24">
-            <path d="M20,11V13H8L13.5,18.5L12.08,19.92L4.16,12L12.08,4.08L13.5,5.5L8,11H20Z"/>
-          </svg>
-          Back to Login
-        </a>
-      </div>
-    </div>
-
-    <!-- Footer accent -->
-    <div class="h-1 bg-gradient-to-r from-red-600 to-red-700"></div>
-  </div>
-
-  <!-- Background decorative elements -->
-  <div class="absolute top-0 left-0 w-full h-full overflow-hidden pointer-events-none">
-    <div class="absolute top-20 left-10 w-20 h-20 bg-red-100 rounded-full opacity-50"></div>
-    <div class="absolute bottom-20 right-10 w-32 h-32 bg-red-50 rounded-full opacity-30"></div>
-    <div class="absolute top-1/3 right-1/4 w-16 h-16 bg-red-200 rounded-full opacity-20"></div>
-  </div>
-</div>
-
-<!-- Custom Styles for Form Elements -->
 <style>
-  /* Custom styling for Django form fields */
-  .space-y-4 p {
+    .login-container {
+    background: none;  /* remove gradient */
+    min-height: 100vh;
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 1rem;
+  }
+  
+  .login-container::before {
+    content: none; /* remove the red glow overlays */
+  }
+  
+  .login-card {
+    background: rgba(255, 255, 255, 0.98);
+    backdrop-filter: blur(20px);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    box-shadow: 0 25px 50px rgba(0, 0, 0, 0.4);
+    border-radius: 1.5rem;
+    width: 100%;
+    max-width: 28rem;
+    position: relative;
+    z-index: 10;
+    overflow: hidden;
+  }
+  
+  .logo-text {
+    background: linear-gradient(45deg, #e50914, #ff3040);
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+    font-size: 1.875rem;
+    font-weight: 900;
+    margin-bottom: 0.5rem;
+  }
+  
+  .logo-underline {
+    width: 4rem;
+    height: 0.25rem;
+    background: linear-gradient(to right, #dc2626, #ef4444);
+    margin: 0 auto;
+    border-radius: 9999px;
+  }
+  
+  .header-section {
+    background: linear-gradient(to right, #f9fafb, white);
+    padding: 2rem;
+    text-align: center;
+    border-bottom: 1px solid #f3f4f6;
+  }
+  
+  .main-section {
+    padding: 2rem;
+    background: white;
+  }
+  
+  .icon-container {
+    width: 4rem;
+    height: 4rem;
+    background: linear-gradient(135deg, #fecaca, #fef2f2);
+    border-radius: 1rem;
+    margin: 0 auto 1rem auto;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  
+  .icon-svg {
+    width: 2rem;
+    height: 2rem;
+    color: #dc2626;
+    fill: none;
+    stroke: currentColor;
+    stroke-width: 2;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+  }
+  
+  .section-title {
+    font-size: 1.5rem;
+    font-weight: 700;
+    margin-bottom: 0.75rem;
+    color: #111827;
+  }
+  
+  .section-description {
+    color: #6b7280;
+    line-height: 1.6;
+    margin-bottom: 2rem;
+  }
+  
+  .form-container {
+    margin-bottom: 1.5rem;
+  }
+  
+  .form-container p {
     margin-bottom: 1rem;
   }
-
-  .space-y-4 label {
+  
+  .form-container label {
     display: block;
     font-weight: 600;
     color: #374151;
     margin-bottom: 0.5rem;
-    font-size: 0.875rem;
+    font-size: 0.9rem;
   }
-
-  .space-y-4 input,
-  .space-y-4 select {
+  
+  .form-container input[type="text"],
+  .form-container input[type="email"],
+  .form-container input[type="password"],
+  .form-container select {
     width: 100%;
-    padding: 0.75rem 1rem;
-    border: 2px solid #e5e7eb;
+    padding: 0.875rem 1rem;
+    border: 2px solid rgba(229, 9, 20, 0.1);
     border-radius: 0.75rem;
-    background-color: #f9fafb;
-    color: #374151;
-    font-size: 0.875rem;
-    transition: all 0.2s ease-in-out;
+    background: rgba(248, 250, 252, 0.8);
+    color: #111827;
+    transition: all 0.3s ease;
+    font-size: 0.95rem;
+    box-sizing: border-box;
   }
-
-  .space-y-4 input:focus,
-  .space-y-4 select:focus {
+  
+  .form-container input:focus {
     outline: none;
-    border-color: #dc2626;
-    background-color: #ffffff;
-    box-shadow: 0 0 0 3px rgba(220, 38, 38, 0.1);
+    border-color: #e50914;
+    background: white;
+    box-shadow: 0 0 0 3px rgba(229, 9, 20, 0.1);
   }
-
-  .space-y-4 .helptext {
-    font-size: 0.75rem;
+  
+  .form-container input[type="checkbox"] {
+    width: 1rem;
+    height: 1rem;
+    margin-right: 0.5rem;
+    accent-color: #e50914;
+  }
+  
+  .submit-btn {
+    background: linear-gradient(135deg, #e50914 0%, #b20710 100%);
+    color: white;
+    width: 100%;
+    padding: 1rem 1.5rem;
+    border: none;
+    border-radius: 0.75rem;
+    font-weight: 700;
+    font-size: 1.125rem;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    transform: translateY(0);
+    box-shadow: 0 4px 12px rgba(229, 9, 20, 0.3);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+  }
+  
+  .submit-btn:hover {
+    background: linear-gradient(135deg, #f40612 0%, #d40813 100%);
+    transform: translateY(-2px);
+    box-shadow: 0 8px 20px rgba(229, 9, 20, 0.4);
+  }
+  
+  .back-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
     color: #6b7280;
-    margin-top: 0.25rem;
+    text-decoration: none;
+    font-weight: 500;
+    transition: all 0.3s ease;
+    margin-top: 2rem;
   }
-
-  .space-y-4 .errorlist {
+  
+  .back-link:hover {
+    color: #e50914;
+    transform: translateX(-5px);
+  }
+  
+  .back-svg {
+    width: 1rem;
+    height: 1rem;
+    transition: transform 0.3s ease;
+  }
+  
+  .back-link:hover .back-svg {
+    transform: translateX(-4px);
+  }
+  
+  .bottom-accent {
+    height: 0.5rem;
+    background: linear-gradient(to right, #dc2626, #ef4444, #dc2626);
+  }
+  
+  .errorlist {
+    color: #dc2626;
+    font-size: 0.875rem;
+    margin-top: 0.25rem;
     list-style: none;
     padding: 0;
-    margin: 0.5rem 0 0 0;
-  }
-
-  .space-y-4 .errorlist li {
-    color: #dc2626;
-    font-size: 0.75rem;
-    background-color: #fef2f2;
-    border: 1px solid #fecaca;
-    border-radius: 0.375rem;
-    padding: 0.5rem;
-    margin-top: 0.25rem;
-  }
-
-  /* Animation for the decorative elements */
-  @keyframes float {
-    0%, 100% { transform: translateY(0px) rotate(0deg); }
-    50% { transform: translateY(-10px) rotate(2deg); }
-  }
-
-  .absolute.top-20,
-  .absolute.bottom-20,
-  .absolute.top-1\\/3 {
-    animation: float 6s ease-in-out infinite;
-  }
-
-  .absolute.bottom-20 {
-    animation-delay: -2s;
-  }
-
-  .absolute.top-1\\/3 {
-    animation-delay: -4s;
   }
 </style>
+
+<div class="login-container">
+  <div class="login-card">
+    
+    <!-- Header with JARAFLIX branding -->
+    <div class="header-section">
+      <h1 class="logo-text">JARAFLIX</h1>
+      <div class="logo-underline"></div>
+    </div>
+    
+    <!-- Main content -->
+    <div class="main-section">
+      {% if process == "connect" %}
+        <div style="text-align: center; margin-bottom: 2rem;">
+          <div class="icon-container">
+            <svg class="icon-svg" viewBox="0 0 24 24">
+              <path d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1"></path>
+            </svg>
+          </div>
+          <h2 class="section-title">{% trans "Connect Account" %}</h2>
+          <p class="section-description">{% trans "You are about to connect a new third-party account." %}</p>
+        </div>
+      {% else %}
+        <div style="text-align: center; margin-bottom: 2rem;">
+          <div class="icon-container">
+            <svg class="icon-svg" viewBox="0 0 24 24">
+              <path d="M11 16l-4-4m0 0l4-4m-4 4h14m-5 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h7a3 3 0 013 3v1"></path>
+            </svg>
+          </div>
+          <h2 class="section-title">{% trans "Sign In" %}</h2>
+          <p class="section-description">{% trans "You are about to sign in using your Google/Twitter account." %}</p>
+        </div>
+      {% endif %}
+
+      <!-- Form -->
+      <form method="post">
+        {% csrf_token %}
+        <div class="form-container">
+          {{ form.as_p }}
+        </div>
+
+        <!-- Submit Button -->
+        <button type="submit" class="submit-btn">
+          <span>{% trans "Continue" %}</span>
+          <svg style="width: 1.25rem; height: 1.25rem; fill: none; stroke: currentColor; stroke-width: 2;" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M13 7l5 5m0 0l-5 5m5-5H6"></path>
+          </svg>
+        </button>
+      </form>
+
+      <!-- Back Link -->
+      <div style="text-align: center;">
+        <a href="{% url 'users:login_user' %}" class="back-link">
+          <svg class="back-svg" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path>
+          </svg>
+          <span>{% trans "Back to Login" %}</span>
+        </a>
+      </div>
+    </div>
+
+    <!-- Bottom accent -->
+    <div class="bottom-accent"></div>
+  </div>
+</div>
 {% endblock %}
