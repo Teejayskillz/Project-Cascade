@@ -28,7 +28,7 @@ urlpatterns = [
     path('', include('books.urls')),
     path("notifications/", include("user_notifications.urls")),
     path('search/', include('search.urls')),
-    path('accounts/', include('allauth.urls')),
+    path('', include('allauth.urls')),
     
 ]
 if settings.DEBUG:
