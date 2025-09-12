@@ -30,7 +30,7 @@ urlpatterns = [
     path("notifications/", include("user_notifications.urls")),
     path('search/', include('search.urls')),
     path('accounts/', include('allauth.urls')),
-    path("accounts/profile/", RedirectView.as_view(url="/profile/", permanent=False))
+    path("accounts/profile/", RedirectView.as_view(url="/profile/", permanent=True))
     
 ]
 if settings.DEBUG:
