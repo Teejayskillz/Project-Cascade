@@ -68,7 +68,7 @@ def user_add_view(request):
             # Create the user, the signal will automatically create the profile.
             user = form.save()
             messages.success(request, f"User '{form.cleaned_data['username']}' added successfully.")
-            return redirect('user_list')
+            return redirect('users:user_list')
         else:
             messages.error(request, "Error adding user. Please correct the errors below.")
     else:
@@ -97,7 +97,7 @@ def user_toggle_active_view(request, user_id):
             messages.info(request, "Your account has been deactivated. You have been logged out.")
             return redirect('login_user')
 
-        return redirect('user_list')
+        return redirect('users:user_list')
     else: 
         context = {
             'user_obj': user_toggle,
@@ -105,7 +105,7 @@ def user_toggle_active_view(request, user_id):
             'page_title': f"{'Activate' if not user_toggle.is_active else 'Deactivate'} User",
             'confirm_message': f"Are you sure you want to {'activate' if not user_toggle.is_active else 'deactivate'} user '{user_toggle.username}'?",
             'confirm_button_text': f"{'Activate' if not user_toggle.is_active else 'Deactivate'} User",
-            'back_url': 'user_list'
+            'back_url': 'users:user_list'
         }
         return render(request, 'users/user_confirm_action.html', context)
 
@@ -116,20 +116,20 @@ def user_delete_view(request, user_id):
     user_to_delete = get_object_or_404(CustomUser, pk=user_id)
     if request.user == user_to_delete:
         messages.error(request, "You cannot delete your own account through this panel.")
-        return redirect('user_list')
+        return redirect('users:user_list')
     
     if request.method == 'POST':
         username = user_to_delete.username
         user_to_delete.delete()
         messages.success(request, f"User '{username}' has been successfully deleted")
-        return redirect('user_list')
+        return redirect('users:user_list')
     context = {
         'user_obj': user_to_delete, # Corrected variable name
         'action': 'delete',
         'page_title': 'Delete User',
         'confirm_message': f"Are you sure you want to permanently delete user '{user_to_delete.username}'? This action cannot be undone.",
         'confirm_button_text': 'Delete User',
-        'back_url': 'user_list'
+        'back_url': 'users:user_list'
     }
     return render(request, 'users/user_confirm_action.html', context)
 
