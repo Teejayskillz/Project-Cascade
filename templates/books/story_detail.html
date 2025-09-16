@@ -167,6 +167,23 @@
         border: none;
         color: white;
     }
+
+    /* ===== CONTINUE-READING BANNER ========================================= */
+.continue-banner {
+    background: linear-gradient(45deg, var(--netflix-red), var(--netflix-dark-red));
+    color: #fff;
+    padding: 1rem 0;
+    font-weight: 500;
+    position: sticky;
+    top: 0;
+    z-index: 1020;
+    box-shadow: 0 4px 12px rgba(0,0,0,.25);
+}
+.continue-banner .btn-light {
+    border-radius: 20px;
+    padding: .35rem 1rem;
+    font-size: .9rem;
+}
 </style>
 {% endblock extra_head %}
 
@@ -218,6 +235,26 @@
         <h2 class="section-heading">Synopsis</h2>
         <p>{{ story.synopsis|linebreaksbr }}</p>
     </div>
+
+{% if user.is_authenticated %}
+  {% with prog=user.readingprogress_set.filter|first %}
+    {% if prog and prog.story_id == story.id %}
+      <div class="continue-banner">
+        <div class="container d-flex justify-content-between align-items-center">
+          <span>
+            <i class="fas fa-redo me-2"></i>
+            Continue <strong>{{ story.title }}</strong> – last read:
+            Chapter {{ prog.last_read_chapter.chapter_number }}: {{ prog.last_read_chapter.title }}
+          </span>
+          <a href="{% url 'books:chapter-detail' story_pk=story.pk chapter_pk=prog.last_read_chapter_id %}"
+             class="btn btn-sm btn-light">
+            Resume <i class="fas fa-arrow-right ms-1"></i>
+          </a>
+        </div>
+      </div>
+    {% endif %}
+  {% endwith %}
+{% endif %}
 
     <div class="my-5">
         <h2 class="section-heading">Chapters</h2>

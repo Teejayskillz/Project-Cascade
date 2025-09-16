@@ -91,3 +91,29 @@ class Chapter(models.Model):
     def get_success_url(self):
         return reverse_lazy('books:story-detail', kwargs={'slug': self.story.slug})
 
+
+
+class ReadingProgressManager(models.Manager):
+    def filter_story_first(self, story):
+        return self.filter(story=story).first()
+
+class ReadingProgress(models.Model):          # ← ONE class only
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
+    story = models.ForeignKey(Story, on_delete=models.CASCADE)
+    last_read_chapter = models.ForeignKey(Chapter, on_delete=models.CASCADE)
+    scroll_position = models.PositiveIntegerField(default=0)
+    char_position = models.PositiveIntegerField(default=0)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    objects = ReadingProgressManager()        # ← manager attached here
+
+    class Meta:
+        constraints = [
+            models.UniqueConstraint(
+                fields=['user', 'story'],
+                name='unique_progress_per_user_story')
+        ]
+        ordering = ['-updated_at']
+
+    def __str__(self):
+        return f"{self.user.username} - {self.story.title} (Last: Ch. {self.last_read_chapter.chapter_number})"

@@ -1,5 +1,7 @@
 # books/urls.py
 from django.urls import path
+
+from books.views_api import save_story_progress, story_progress
 from . import views
 from .views import StoryManageView
 
@@ -40,4 +42,7 @@ urlpatterns = [
 
     path('genres/', views.genre_list, name='genre-list'),
     path('genres/<slug:genre_slug>/', views.stories_by_genre, name='stories-by-genre'),
+    path("api/story/<int:story_id>/progress/", story_progress, name="story-progress"),
+    path("api/story/<int:story_id>/save/", save_story_progress, name="save-story-progress"),
+
 ]

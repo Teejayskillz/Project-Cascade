@@ -166,24 +166,65 @@
         {% endif %}
 
         <div class="chapter-nav">
-    {% if previous_chapter %}
-    <div>
-        <a href="{% url 'books:chapter-detail' story_pk=previous_chapter.story.pk chapter_pk=previous_chapter.pk %}"
-           class="chapter-nav-btn">
-            <i class="fas fa-arrow-left me-2"></i>Previous Chapter
-        </a>
-    </div>
-    {% endif %}
+            {% if previous_chapter %}
+            <div>
+                <a href="{% url 'books:chapter-detail' story_pk=previous_chapter.story.pk chapter_pk=previous_chapter.pk %}"
+                   class="chapter-nav-btn">
+                    <i class="fas fa-arrow-left me-2"></i>Previous Chapter
+                </a>
+            </div>
+            {% endif %}
 
-    {% if next_chapter %}
-    <div>
-        <a href="{% url 'books:chapter-detail' story_pk=next_chapter.story.pk chapter_pk=next_chapter.pk %}"
-           class="chapter-nav-btn">
-            Next Chapter<i class="fas fa-arrow-right ms-2"></i>
-        </a>
+            {% if next_chapter %}
+            <div>
+                <a href="{% url 'books:chapter-detail' story_pk=next_chapter.story.pk chapter_pk=next_chapter.pk %}"
+                   class="chapter-nav-btn">
+                    Next Chapter<i class="fas fa-arrow-right ms-2"></i>
+                </a>
+            </div>
+            {% endif %}
+        </div>
     </div>
-    {% endif %}
 </div>
-    </div>
-</div>
+
+<script>
+  const STORY_ID = {{ chapter.story.id }};
+  const CHAPTER_ID = {{ chapter.id }};
+  const CSRF = "{{ csrf_token }}";
+
+  /* 1.  restore on load */
+  fetch(`/api/story/${STORY_ID}/progress/`)
+    .then(r => r.json())
+    .then(data => {
+      // Corrected URL: Use a variable or a correct Django URL tag
+      if (data.chapter_id && data.chapter_id !== CHAPTER_ID) {
+        // This part needs to be handled on the server-side to generate the correct URL
+        // A simple JavaScript solution is to dynamically replace the chapter ID
+        location.href = "{% url 'books:chapter-detail' story_pk=chapter.story.pk chapter_pk=999999 %}".replace('999999', data.chapter_id);
+      } else {
+        window.scrollTo({top: data.scroll, behavior: 'smooth'});
+      }
+    });
+
+  /* 2.  auto-save while reading */
+  let lastPos = window.pageYOffset;
+  let timer;
+  function save() {
+    fetch(`/api/story/${STORY_ID}/save/`, {
+      method: 'POST',
+      headers: {'Content-Type': 'application/json', 'X-CSRFToken': CSRF},
+      body: JSON.stringify({
+        chapter_id: CHAPTER_ID,
+        scroll: window.pageYOffset,
+        char: 0
+      })
+    });
+  }
+  window.addEventListener('scroll', () => {
+    if (Math.abs(window.pageYOffset - lastPos) < 60) return;
+    lastPos = window.pageYOffset;
+    clearTimeout(timer);
+    timer = setTimeout(save, 2000);   // 2-second debounce
+  });
+</script>
 {% endblock %}
