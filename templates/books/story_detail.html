@@ -243,7 +243,7 @@
         <div class="container d-flex justify-content-between align-items-center">
           <span>
             <i class="fas fa-redo me-2"></i>
-            Continue <strong>{{ story.title }}</strong> – last read:
+            Continue reading <strong>{{ story.title }}</strong> – last read:
             Chapter {{ prog.last_read_chapter.chapter_number }}: {{ prog.last_read_chapter.title }}
           </span>
           <a href="{% url 'books:chapter-detail' story_pk=story.pk chapter_pk=prog.last_read_chapter_id %}"
